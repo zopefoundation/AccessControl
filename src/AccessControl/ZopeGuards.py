@@ -11,8 +11,11 @@
 #
 ##############################################################################
 
+import math
+import random
 import sys
-import string, math, random
+import string
+import warnings
 
 import RestrictedPython
 from RestrictedPython.Guards import safe_builtins, full_write_guard
@@ -27,6 +30,19 @@ _marker = []  # Create a new marker object.
 
 safe_builtins = safe_builtins.copy()
 safe_builtins.update(utility_builtins)
+
+_old_filters = warnings.filters[:]
+warnings.filterwarnings('ignore', category=DeprecationWarning)
+try:
+    try:
+        import sets
+    except ImportError:
+        sets = None
+    else:
+        sets.__allow_access_to_unprotected_subobjects__ = 1
+finally:
+    warnings.filters[:] = _old_filters
+
 
 # Allow access to unprotected attributes
 string.__allow_access_to_unprotected_subobjects__ = 1
