@@ -11,9 +11,8 @@
 #
 ##############################################################################
 
-__version__='$Revision: 1.18 $'[11:-2]
-
 import sys
+import string, math, random
 
 import RestrictedPython
 from RestrictedPython.Guards import safe_builtins, full_write_guard
@@ -28,6 +27,11 @@ _marker = []  # Create a new marker object.
 
 safe_builtins = safe_builtins.copy()
 safe_builtins.update(utility_builtins)
+
+# Allow access to unprotected attributes
+string.__allow_access_to_unprotected_subobjects__ = 1
+math.__allow_access_to_unprotected_subobjects__ = 1
+random.__allow_access_to_unprotected_subobjects__ = 1
 
 # AccessControl.Implementation inserts these names into this module as
 # module globals:  aq_validate, guarded_getattr
@@ -70,7 +74,7 @@ def guarded_getitem(object, index):
         return v
     if getSecurityManager().validate(object, object, None, v):
         return v
-    raise Unauthorized, 'unauthorized access to element %s' % `i`
+    raise Unauthorized('unauthorized access to element %s' % index)
 
 # Create functions using nested scope to store state
 # This is less expensive then instantiating and calling instances
@@ -277,7 +281,6 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None):
     if locals is None:
         locals = {}
     mnameparts = mname.split('.')
-    firstmname = mnameparts[0]
     validate = getSecurityManager().validate
     module = load_module(None, None, mnameparts, validate, globals, locals)
     if module is None:
