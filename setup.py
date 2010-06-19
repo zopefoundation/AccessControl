@@ -35,7 +35,6 @@ setup(name='AccessControl',
                      join('include', 'Acquisition', 'Acquisition.h')]),
       ],
       install_requires=[
-        'setuptools',
         'Acquisition',
         'ExtensionClass',
       ],
