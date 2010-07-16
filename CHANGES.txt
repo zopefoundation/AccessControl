@@ -4,6 +4,7 @@ Changelog
 2.13.2 (unreleased)
 -------------------
 
+- Added ``override_existing_protection`` parameter to the protectName helper.
 
 2.13.1 (2010-06-19)
 -------------------
