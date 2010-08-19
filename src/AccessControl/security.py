@@ -16,6 +16,9 @@
 
 from zope.component import getUtility
 from zope.component import queryUtility
+from zope.component.zcml import utility
+from zope.configuration.config import GroupingContextDecorator
+from zope.configuration.interfaces import IConfigurationContext
 from zope.interface import classProvides
 from zope.interface import implements
 from zope.security.checker import CheckerPublic
@@ -23,7 +26,9 @@ from zope.security.interfaces import IInteraction
 from zope.security.interfaces import ISecurityPolicy
 from zope.security.interfaces import IPermission
 from zope.security.management import thread_local
+from zope.security.permission import Permission
 from zope.security.simplepolicies import ParanoidSecurityPolicy
+from zope.security.zcml import IPermissionDirective
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
@@ -160,7 +165,7 @@ def protectClass(klass, permission_id):
         perm = str(permission.title)
         security.declareObjectProtected(perm)
 
-
+# XXX what to do with this?
 def create_permission_from_permission_directive(permission, event):
     """When a new IPermission utility is registered (via the <permission />
     directive), create the equivalent Zope2 style permission.
@@ -168,3 +173,27 @@ def create_permission_from_permission_directive(permission, event):
     # Zope 2 uses string, not unicode yet
     zope2_permission = str(permission.title)
     addPermission(zope2_permission)
+
+class PermissionDirective(GroupingContextDecorator):
+    implements(IConfigurationContext, IPermissionDirective)
+    
+    def __init__(self, context, id, title, description=''):
+        self.context = context
+        self.id, self.title, self.description = id, title, description
+        self.roles = []
+    
+    def after(self):
+        permission = Permission(self.id, self.title, self.description)
+        utility(self.context, IPermission, permission, name=self.id)
+        
+        zope2_permission = str(self.title)
+        if self.roles:
+            addPermission(zope2_permission, default_roles=tuple(self.roles))
+        else:
+            addPermission(zope2_permission)
+
+def RoleDirective(context):
+    role_name = str(context.info.text.strip())
+    permission_directive = context.context
+    if role_name not in permission_directive.roles:
+        permission_directive.roles.append(role_name)
