@@ -36,6 +36,17 @@
         handler="zope.security.zcml.securityPolicy"
         />
 
+    <meta:groupingDirective
+        name="permission"
+        schema="zope.security.zcml.IPermissionDirective"
+        handler=".security.PermissionDirective"/>
+    
+    <meta:directive
+        name="role"
+        usedIn="zope.security.zcml.IPermissionDirective"
+        schema=".security.IRoleDirective"
+        handler=".security.RoleDirective"/>
+
   </meta:directives>
 
 </configure>

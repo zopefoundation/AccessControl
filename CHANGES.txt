@@ -4,6 +4,9 @@ Changelog
 2.13.3 (unreleased)
 -------------------
 
+- Added a ``role`` subdirective for the ``permission`` ZCML directive. If any
+  roles are specified, they will override the default set of default roles
+  (Manager).
 
 2.13.2 (2010-07-16)
 -------------------

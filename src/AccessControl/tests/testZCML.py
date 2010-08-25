@@ -393,6 +393,51 @@ def test_register_permission():
       >>> tearDown()
     """
 
+def test_register_permission_with_non_default_roles():
+    """This test demonstrates that the <permission /> directive can be used
+    as a grouping directive with <role/> subdirectives that specify the default
+    roles for the permission.
+
+      >>> from zope.component.testing import setUp, tearDown
+      >>> setUp()
+
+    First, we need to configure the relevant parts of AccessControl:
+
+      >>> import AccessControl
+      >>> from zope.configuration.xmlconfig import XMLConfig
+      >>> XMLConfig('meta.zcml', AccessControl)()
+      >>> XMLConfig('permissions.zcml', AccessControl)()
+
+    We can now register a permission in ZCML:
+
+      >>> from StringIO import StringIO
+      >>> configure_zcml = StringIO('''
+      ... <configure xmlns="http://namespaces.zope.org/zope"
+      ...            i18n_domain="test">
+      ...
+      ...   <permission
+      ...       id="AccessControl.tests.DummyPermission2"
+      ...       title="AccessControl: Dummy permission 2">
+      ...       <role name="Anonymous"/>
+      ...   </permission>
+      ...
+      ... </configure>
+      ... ''')
+      >>> from zope.configuration.xmlconfig import xmlconfig
+      >>> xmlconfig(configure_zcml)
+      
+    The permission will be made available globally, with the specified role set
+    of ('Anonymous',).
+
+      >>> from AccessControl.Permission import getPermissions
+      >>> permissions = getPermissions()
+      >>> [p[2] for p in permissions
+      ...          if p[0] == 'AccessControl: Dummy permission 2']
+      [('Anonymous',)]
+
+      >>> tearDown()
+    """
+
 def test_suite():
     import doctest
     return doctest.DocTestSuite(optionflags=doctest.ELLIPSIS)
