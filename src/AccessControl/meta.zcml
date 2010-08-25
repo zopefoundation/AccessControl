@@ -44,7 +44,7 @@
     <meta:directive
         name="role"
         usedIn="zope.security.zcml.IPermissionDirective"
-        schema="zope.interface.Interface"
+        schema=".security.IRoleDirective"
         handler=".security.RoleDirective"/>
 
   </meta:directives>

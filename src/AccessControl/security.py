@@ -21,6 +21,8 @@ from zope.configuration.config import GroupingContextDecorator
 from zope.configuration.interfaces import IConfigurationContext
 from zope.interface import classProvides
 from zope.interface import implements
+from zope.interface import Interface
+from zope.schema import ASCIILine
 from zope.security.checker import CheckerPublic
 from zope.security.interfaces import IInteraction
 from zope.security.interfaces import ISecurityPolicy
@@ -192,8 +194,11 @@ class PermissionDirective(GroupingContextDecorator):
         else:
             addPermission(zope2_permission)
 
-def RoleDirective(context):
-    role_name = str(context.info.text.strip())
+class IRoleDirective(Interface):
+    
+    name = ASCIILine()
+
+def RoleDirective(context, name):
     permission_directive = context.context
-    if role_name not in permission_directive.roles:
-        permission_directive.roles.append(role_name)
+    if name not in permission_directive.roles:
+        permission_directive.roles.append(name)

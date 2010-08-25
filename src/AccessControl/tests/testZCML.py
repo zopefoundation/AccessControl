@@ -418,7 +418,7 @@ def test_register_permission_with_non_default_roles():
       ...   <permission
       ...       id="AccessControl.tests.DummyPermission2"
       ...       title="AccessControl: Dummy permission 2">
-      ...       <role>Anonymous</role>
+      ...       <role name="Anonymous"/>
       ...   </permission>
       ...
       ... </configure>
