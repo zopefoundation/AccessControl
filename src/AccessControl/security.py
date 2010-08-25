@@ -167,15 +167,6 @@ def protectClass(klass, permission_id):
         perm = str(permission.title)
         security.declareObjectProtected(perm)
 
-# XXX what to do with this?
-def create_permission_from_permission_directive(permission, event):
-    """When a new IPermission utility is registered (via the <permission />
-    directive), create the equivalent Zope2 style permission.
-    """
-    # Zope 2 uses string, not unicode yet
-    zope2_permission = str(permission.title)
-    addPermission(zope2_permission)
-
 class PermissionDirective(GroupingContextDecorator):
     implements(IConfigurationContext, IPermissionDirective)
     
