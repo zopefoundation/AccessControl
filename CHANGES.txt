@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.13.3 (unreleased)
+2.13.3 (2010-08-28)
 -------------------
 
 - Added a ``role`` subdirective for the ``permission`` ZCML directive. If any
