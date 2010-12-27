@@ -89,6 +89,7 @@ class IPermissionMappingSupport(Interface):
 
 
 class IRoleManager(IPermissionMappingSupport):
+
     """An object that has configurable permissions"""
 
     permissionMappingPossibleValues = Attribute("""Acquired attribute""")
@@ -215,9 +216,50 @@ class IStandardUserFolder(Interface):
         """
 
 
+class IUser(Interface):
+
+    """Public User object interface.
+
+    This interface needs to be supported by objects that are returned by user
+    validation and used for access control.
+    """
+
+    def getId():
+        """Get the ID of the user.
+
+        The ID can be used from Python to get the user from the user's
+        UserDatabase.
+        """
+
+    def getUserName():
+        """Get the name used by the user to log into the system.
+
+        Note that this may not be identical to the user's 'getId' (to allow
+        users to change their login names without changing their identity).
+        """
+
+    def getRoles():
+        """Get a sequence of the global roles assigned to the user.
+        """
+
+    def getRolesInContext(object):
+        """Get a sequence of the roles assigned to the user in a context.
+
+        Roles include both global roles (ones assigned to the user directly
+        inside the user folder) and local roles (assigned in context of the
+        passed in object).
+        """
+
+    def getDomains():
+        """Get a sequence of the domain restrictions for the user.
+        """
+
+
 class ISecurityPolicy(Interface):
+
     """Plug-in policy for checking access to objects within untrusted code.
     """
+
     def validate(accessed, container, name, value, context, roles=_noroles):
         """Check that the current user (from context) has access.
 
@@ -244,9 +286,12 @@ class ISecurityPolicy(Interface):
         """Check whether the current user has a permission w.r.t. an object.
         """
 
+
 class ISecurityManager(Interface):
+
     """Check access and manages executable context and policies.
     """
+
     _policy = Attribute(u'Current Security Policy')
 
     def validate(accessed=None,

@@ -24,6 +24,12 @@ class BasicUserTests(unittest.TestCase):
     def _makeOne(self, name, password, roles, domains):
         return self._getTargetClass()(name, password, roles, domains)
 
+    def test_interfaces(self):
+        from AccessControl.interfaces import IUser
+        from zope.interface.verify import verifyClass
+
+        verifyClass(IUser, self._getTargetClass())
+
     def _makeDerived(self, **kw):
         class Derived(self._getTargetClass()):
             def __init__(self, **kw):
@@ -80,6 +86,12 @@ class SimpleUserTests(unittest.TestCase):
             domains = []
         return self._getTargetClass()(name, password, roles, domains)
 
+    def test_interfaces(self):
+        from AccessControl.interfaces import IUser
+        from zope.interface.verify import verifyClass
+
+        verifyClass(IUser, self._getTargetClass())
+
     def test_overrides(self):
         simple = self._makeOne()
         self.assertEqual(simple.getUserName(), 'admin')
@@ -113,6 +125,12 @@ class SpecialUserTests(unittest.TestCase):
             domains = []
         return self._getTargetClass()(name, password, roles, domains)
 
+    def test_interfaces(self):
+        from AccessControl.interfaces import IUser
+        from zope.interface.verify import verifyClass
+
+        verifyClass(IUser, self._getTargetClass())
+
     def test_overrides(self):
         special = self._makeOne()
         self.assertEqual(special.getUserName(), 'admin')
@@ -137,6 +155,12 @@ class UnrestrictedUserTests(unittest.TestCase):
         if domains is None:
             domains = []
         return self._getTargetClass()(name, password, roles, domains)
+
+    def test_interfaces(self):
+        from AccessControl.interfaces import IUser
+        from zope.interface.verify import verifyClass
+
+        verifyClass(IUser, self._getTargetClass())
 
     def test_allowed__what_not_even_god_should_do(self):
         from AccessControl.PermissionRole import _what_not_even_god_should_do
@@ -181,6 +205,12 @@ class NullUnrestrictedUserTests(unittest.TestCase):
 
     def _makeOne(self):
         return self._getTargetClass()()
+
+    def test_interfaces(self):
+        from AccessControl.interfaces import IUser
+        from zope.interface.verify import verifyClass
+
+        verifyClass(IUser, self._getTargetClass())
 
     def test_overrides(self):
         simple = self._makeOne()

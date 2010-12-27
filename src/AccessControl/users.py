@@ -17,13 +17,15 @@ import os
 import re
 import socket
 
-from Acquisition import aq_parent
 from Acquisition import aq_inContextOf
+from Acquisition import aq_parent
 from Acquisition import Implicit
 from Persistence import Persistent
+from zope.interface import implements
 
 from AccessControl import AuthEncoding
 from AccessControl import SpecialUsers
+from .interfaces import IUser
 from .PermissionRole import _what_not_even_god_should_do
 from .PermissionRole import rolesForPermissionOn
 
@@ -32,7 +34,10 @@ _marker=[]
 
 
 class BasicUser(Implicit):
+
     """Base class for all User objects"""
+
+    implements(IUser)
 
     # ----------------------------
     # Public User object interface
@@ -58,28 +63,24 @@ class BasicUser(Implicit):
     def __init__(self, name, password, roles, domains):
         raise NotImplementedError
 
-    def getUserName(self):
-        """Return the username of a user"""
-        raise NotImplementedError
-
     def getId(self):
-        """Get the ID of the user. The ID can be used, at least from
-        Python, to get the user from the user's
-        UserDatabase"""
+        """Get the ID of the user.
+        """
         return self.getUserName()
 
-    def _getPassword(self):
-        """Return the password of the user."""
+    def getUserName(self):
+        """Get the name used by the user to log into the system.
+        """
         raise NotImplementedError
 
     def getRoles(self):
-        """Return the list of roles assigned to a user."""
+        """Get a sequence of the global roles assigned to the user.
+        """
         raise NotImplementedError
 
     def getRolesInContext(self, object):
-        """Return the list of roles assigned to the user,
-           including local roles assigned in context of
-           the passed in object."""
+        """Get a sequence of the roles assigned to the user in a context.
+        """
         userid=self.getId()
         roles=self.getRoles()
         local={}
@@ -106,12 +107,18 @@ class BasicUser(Implicit):
         return roles
 
     def getDomains(self):
-        """Return the list of domain restrictions for a user"""
+        """Get a sequence of the domain restrictions for the user.
+        """
         raise NotImplementedError
 
     # ------------------------------
     # Internal User object interface
     # ------------------------------
+
+    def _getPassword(self):
+        """Return the password of the user.
+        """
+        raise NotImplementedError
 
     def authenticate(self, password, request):
         passwrd=self._getPassword()
@@ -120,7 +127,6 @@ class BasicUser(Implicit):
         if domains:
             return result and domainSpecMatch(domains, request)
         return result
-
 
     def _shared_roles(self, parent):
         r=[]
@@ -232,7 +238,10 @@ class BasicUser(Implicit):
     domains=[]
 
     def has_role(self, roles, object=None):
-        """Check to see if a user has a given role or roles."""
+        """Check if the user has at least one role from a list of roles.
+
+        If object is specified, check in the context of the passed in object.
+        """
         if isinstance(roles, str):
             roles=[roles]
         if object is not None:
@@ -246,7 +255,11 @@ class BasicUser(Implicit):
         return 0
 
     def has_permission(self, permission, object):
-        """Check to see if a user has a given permission on an object."""
+        """Check if the user has a permission on an object.
+
+        This method is just for inspecting permission settings. For access
+        control use getSecurityManager().checkPermission() instead.
+        """
         roles=rolesForPermissionOn(permission, object)
         if isinstance(roles, str):
             roles=[roles]
@@ -274,23 +287,27 @@ class SimpleUser(BasicUser):
         self.domains = domains
 
     def getUserName(self):
-        """Return the username of a user"""
+        """Get the name used by the user to log into the system.
+        """
         return self.name
 
-    def _getPassword(self):
-        """Return the password of the user."""
-        return self.__
-
     def getRoles(self):
-        """Return the list of roles assigned to a user."""
+        """Get a sequence of the global roles assigned to the user.
+        """
         if self.name == 'Anonymous User':
             return tuple(self.roles)
         else:
             return tuple(self.roles) + ('Authenticated', )
 
     def getDomains(self):
-        """Return the list of domain restrictions for a user"""
+        """Get a sequence of the domain restrictions for the user.
+        """
         return tuple(self.domains)
+
+    def _getPassword(self):
+        """Return the password of the user.
+        """
+        return self.__
 
 
 class SpecialUser(SimpleUser):
