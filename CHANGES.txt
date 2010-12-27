@@ -4,6 +4,8 @@ Changelog
 2.13.4 (unreleased)
 -------------------
 
+- Added IUser interface.
+
 - LP #659968: Added support for level argument to the ``__import__`` function
   as introduced in Python 2.5. Currently only level=-1 is supported.
 
