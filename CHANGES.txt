@@ -4,6 +4,8 @@ Changelog
 2.13.4 (unreleased)
 -------------------
 
+- Return the created user in _doAddUser.
+
 - Added IUser interface.
 
 - LP #659968: Added support for level argument to the ``__import__`` function

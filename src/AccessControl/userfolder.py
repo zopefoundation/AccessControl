@@ -92,7 +92,8 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
         """Create a new user. This should be implemented by subclasses to
            do the actual adding of a user. The 'password' will be the
            original input password, unencrypted. The implementation of this
-           method is responsible for performing any needed encryption."""
+           method is responsible for performing any needed encryption.
+           The implementation should return the created user or None."""
         raise NotImplementedError
 
     def _doChangeUser(self, name, password, roles, domains, **kw):
@@ -398,11 +399,14 @@ class UserFolder(BasicUserFolder):
         return not not len(self.data)
 
     def _doAddUser(self, name, password, roles, domains, **kw):
-        """Create a new user"""
+        """Create a new user
+
+        Note that an existing user of this name is simply overwritten."""
         if password is not None and self.encrypt_passwords \
                                 and not self._isPasswordEncrypted(password):
             password = self._encryptPassword(password)
         self.data[name] = User(name, password, roles, domains)
+        return self.data[name]
 
     def _doChangeUser(self, name, password, roles, domains, **kw):
         user=self.data[name]
