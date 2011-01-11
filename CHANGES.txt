@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.13.4 (unreleased)
+2.13.4 (2011-01-11)
 -------------------
 
 - Return the created user in _doAddUser.
