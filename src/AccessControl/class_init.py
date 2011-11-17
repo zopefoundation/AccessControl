@@ -52,7 +52,7 @@ def InitializeClass(self):
             name=name+'__roles__'
             if not have(name):
                 setattr(self, name, ('Manager',))
-                
+
     # Look for a SecurityInfo object on the class. If found, call its
     # apply() method to generate __ac_permissions__ for the class. We
     # delete the SecurityInfo from the class dict after it has been
