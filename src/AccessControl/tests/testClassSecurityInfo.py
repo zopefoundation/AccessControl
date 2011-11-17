@@ -50,8 +50,16 @@ class ClassSecurityInfoTests(unittest.TestCase):
                 ('Manager', 'Role A', 'Role B', 'Role C')
                 )
 
-            security.declareProtected('Test permission', 'foo')
-            def foo(self, REQUEST=None):
+            security.declarePublic('public')
+            def public(self, REQUEST=None):
+                """ """
+
+            security.declarePrivate('private')
+            def private(self, REQUEST=None):
+                """ """
+
+            security.declareProtected('Test permission', 'protected')
+            def protected(self, REQUEST=None):
                 """ """
 
         # Do class initialization.
@@ -61,7 +69,9 @@ class ClassSecurityInfoTests(unittest.TestCase):
         # correctly. Note that this uses carnal knowledge of the internal
         # structures used to store this information!
         object = Test()
-        imPermissionRole = [r for r in object.foo__roles__
+        self.assertEqual(object.public__roles__, None)
+        self.assertEqual(object.private__roles__, ())
+        imPermissionRole = [r for r in object.protected__roles__
                             if not r.endswith('_Permission')]
         self.failUnless(len(imPermissionRole) == 4)
 
