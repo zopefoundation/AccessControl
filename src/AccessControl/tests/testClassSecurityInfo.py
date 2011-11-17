@@ -53,7 +53,6 @@ class ClassSecurityInfoTests(unittest.TestCase):
             security.declareProtected('Test permission', 'foo')
             def foo(self, REQUEST=None):
                 """ """
-                pass
 
         # Do class initialization.
         InitializeClass(Test)
