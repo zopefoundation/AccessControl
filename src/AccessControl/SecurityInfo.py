@@ -104,6 +104,26 @@ class SecurityInfo(Implicit):
         """Declare the object to be associated with a permission."""
         self._setaccess(('',), permission_name)
 
+    public__roles__=ACCESS_PRIVATE
+    def public(self, func):
+        """Decorate a function to be publicly accessible."""
+        self.declarePublic(self, func.__name__)
+        return func
+
+    private__roles__=ACCESS_PRIVATE
+    def private(self, func):
+        """Decorate a function to be inaccessible to restricted code."""
+        self.declarePrivate(self, func.__name__)
+        return func
+
+    protected__roles__=ACCESS_PRIVATE
+    def protected(self, permission_name):
+        """Return a decorator to associate a function with a permission."""
+        def decor(func):
+            self.declareProtected(permission_name, func.__name__)
+            return func
+        return decor
+
     setPermissionDefault__roles__=ACCESS_PRIVATE
     def setPermissionDefault(self, permission_name, roles):
         """Declare default roles for a permission"""

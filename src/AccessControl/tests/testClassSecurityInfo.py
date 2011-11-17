@@ -62,6 +62,20 @@ class ClassSecurityInfoTests(unittest.TestCase):
             def protected(self, REQUEST=None):
                 """ """
 
+            # same with decorators
+
+            @security.public
+            def public_new(self, REQUEST=None):
+                """ """
+
+            @security.private
+            def private_new(self, REQUEST=None):
+                """ """
+
+            @security.protected('Test permission')
+            def protected_new(self, REQUEST=None):
+                """ """
+
         # Do class initialization.
         InitializeClass(Test)
 
@@ -72,6 +86,21 @@ class ClassSecurityInfoTests(unittest.TestCase):
         self.assertEqual(object.public__roles__, None)
         self.assertEqual(object.private__roles__, ())
         imPermissionRole = [r for r in object.protected__roles__
+                            if not r.endswith('_Permission')]
+        self.failUnless(len(imPermissionRole) == 4)
+
+        for item in ('Manager', 'Role A', 'Role B', 'Role C'):
+            self.failUnless(item in imPermissionRole)
+
+        # functions exist, i.e. decorators returned them
+        self.assertEqual(object.public_new.__name__, 'public_new')
+        self.assertEqual(object.private_new.__name__, 'private_new')
+        self.assertEqual(object.protected_new.__name__, 'protected_new')
+
+        # roles for functions have been set via decorators
+        self.assertEqual(object.public_new__roles__, None)
+        self.assertEqual(object.private_new__roles__, ())
+        imPermissionRole = [r for r in object.protected_new__roles__
                             if not r.endswith('_Permission')]
         self.failUnless(len(imPermissionRole) == 4)
 
