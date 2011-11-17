@@ -66,6 +66,7 @@ class SecurityInfo(Implicit):
     def __init__(self):
         self.names = {}
         self.roles = {}
+        self._unused_protected_decorators = set()
 
     def _setaccess(self, names, access):
         for name in names:
@@ -119,9 +120,18 @@ class SecurityInfo(Implicit):
     protected__roles__=ACCESS_PRIVATE
     def protected(self, permission_name):
         """Return a decorator to associate a function with a permission."""
+        # the decorator returned is remembered in a set and will
+        # remove itself upon call. self.apply will check for an empty
+        # set and raise an AssertionError otherwise.
+        key = "'%s':%s" % (permission_name, id(lambda x:x))
         def decor(func):
             self.declareProtected(permission_name, func.__name__)
+            self._unused_protected_decorators.remove(key)
             return func
+        # make sure our key algo creates unique-enough keys
+        if key in self._unused_protected_decorators:
+            raise KeyError("Duplicate key: %s" % (key,))
+        self._unused_protected_decorators.add(key)
         return decor
 
     setPermissionDefault__roles__=ACCESS_PRIVATE
@@ -162,6 +172,12 @@ class ClassSecurityInfo(SecurityInfo):
     apply__roles__ = ACCESS_PRIVATE
     def apply(self, classobj):
         """Apply security information to the given class object."""
+
+        # make sure all decorators handed out by security.protected were used
+        if self._unused_protected_decorators:
+            msg = "Class '%r' has %d non-decorator security.protected calls!"
+            raise AssertionError(msg % (classobj,
+                                        len(self._unused_protected_decorators)))
 
         dict = classobj.__dict__
 

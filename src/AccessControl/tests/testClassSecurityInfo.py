@@ -112,6 +112,35 @@ class ClassSecurityInfoTests(unittest.TestCase):
         self.assertEquals([t for t in Test.__ac_permissions__ if not t[1]],
                           [('Make food', (), ('Chef',))])
 
+    def test_EnsureProtectedDecoCall(self):
+        from AccessControl.class_init import InitializeClass
+        from ExtensionClass import Base
+
+        ClassSecurityInfo = self._getTargetClass()
+
+        class Test(Base):
+            """Test class
+            """
+            meta_type = "Test"
+
+            security = ClassSecurityInfo()
+
+            security.protected('Test permission 1')
+            def unprotected1(self, REQUEST=None):
+                """ """
+
+            security.protected('Test permission 2')
+            def unprotected2(self, REQUEST=None):
+                """ """
+
+            @security.protected('Test permission 3')
+            def protected(self, REQUEST=None):
+                """ """
+
+        # Do class initialization.
+        with self.assertRaisesRegexp(AssertionError, 'has 2 non-decorator'):
+            InitializeClass(Test)
+
 
 def test_suite():
     suite = unittest.TestSuite()
