@@ -355,6 +355,8 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
         """ returns true if domain auth mode is set to true"""
         return getattr(self, '_domain_auth_mode', None)
 
+InitializeClass(BasicUserFolder)
+
 
 class UserFolder(BasicUserFolder):
     """Standard UserFolder object
