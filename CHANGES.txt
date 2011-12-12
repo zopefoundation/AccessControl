@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.13.7 (unreleased)
+2.13.7 (2011-12-12)
 -------------------
 
 - Exclude compiled `.so` and `.dll` files from source distributions.
