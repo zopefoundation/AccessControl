@@ -1,9 +1,10 @@
 Changelog
 =========
 
-2.13.5 (unreleased)
--------------------
+4.0 (unreleased)
+----------------
 
+- Added decorators for public, private and protected security declarations.
 
 2.13.4 (2011-01-11)
 -------------------
