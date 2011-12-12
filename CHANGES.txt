@@ -6,7 +6,7 @@ Changelog
 
 - Added decorators for public, private and protected security declarations.
 
-2.13.5 (unreleased)
+2.13.5 (2011-12-12)
 -------------------
 
 - Apply changes made available in `Products.Zope_Hotfix_20111024` and make them
