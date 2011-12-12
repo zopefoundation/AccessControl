@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.13.6 (unreleased)
+2.13.6 (2011-12-12)
 -------------------
 
 - Added `manifest.in` to ensure the inclusion of the `include` directory into
