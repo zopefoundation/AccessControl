@@ -1,0 +1,9 @@
+include *.txt
+
+recursive-include include *
+recursive-include src/AccessControl *
+
+global-exclude *.dll
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.so
