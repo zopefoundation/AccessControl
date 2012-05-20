@@ -51,15 +51,15 @@ Persistent.__class_init__ = InitializeClass
 
 LOG = getLogger('SecurityInfo')
 
-
 # Security constants - these are imported into the AccessControl
 # namespace and can be referenced as AccessControl.PUBLIC etc.
 
-ACCESS_NONE    = _what_not_even_god_should_do
+ACCESS_NONE = _what_not_even_god_should_do
 ACCESS_PRIVATE = ()
-ACCESS_PUBLIC  = None
+ACCESS_PUBLIC = None
 
 _marker = []
+
 
 class SecurityInfo(Implicit):
     """Encapsulate security information."""
@@ -80,49 +80,49 @@ class SecurityInfo(Implicit):
                 self._warnings = 1
             self.names[name] = access
 
-    declarePublic__roles__=ACCESS_PRIVATE
+    declarePublic__roles__ = ACCESS_PRIVATE
     def declarePublic(self, name, *names):
         """Declare names to be publicly accessible."""
         self._setaccess((name,) + names, ACCESS_PUBLIC)
 
-    declarePrivate__roles__=ACCESS_PRIVATE
+    declarePrivate__roles__ = ACCESS_PRIVATE
     def declarePrivate(self, name, *names):
         """Declare names to be inaccessible to restricted code."""
         self._setaccess((name,) + names, ACCESS_PRIVATE)
 
-    declareProtected__roles__=ACCESS_PRIVATE
+    declareProtected__roles__ = ACCESS_PRIVATE
     def declareProtected(self, permission_name, name, *names):
         """Declare names to be associated with a permission."""
         self._setaccess((name,) + names, permission_name)
 
-    declareObjectPublic__roles__=ACCESS_PRIVATE
+    declareObjectPublic__roles__ = ACCESS_PRIVATE
     def declareObjectPublic(self):
         """Declare the object to be publicly accessible."""
         self._setaccess(('',), ACCESS_PUBLIC)
 
-    declareObjectPrivate__roles__=ACCESS_PRIVATE
+    declareObjectPrivate__roles__ = ACCESS_PRIVATE
     def declareObjectPrivate(self):
         """Declare the object to be inaccessible to restricted code."""
         self._setaccess(('',), ACCESS_PRIVATE)
 
-    declareObjectProtected__roles__=ACCESS_PRIVATE
+    declareObjectProtected__roles__ = ACCESS_PRIVATE
     def declareObjectProtected(self, permission_name):
         """Declare the object to be associated with a permission."""
         self._setaccess(('',), permission_name)
 
-    public__roles__=ACCESS_PRIVATE
+    public__roles__ = ACCESS_PRIVATE
     def public(self, func):
         """Decorate a function to be publicly accessible."""
         self.declarePublic(self, func.__name__)
         return func
 
-    private__roles__=ACCESS_PRIVATE
+    private__roles__ = ACCESS_PRIVATE
     def private(self, func):
         """Decorate a function to be inaccessible to restricted code."""
         self.declarePrivate(self, func.__name__)
         return func
 
-    protected__roles__=ACCESS_PRIVATE
+    protected__roles__ = ACCESS_PRIVATE
     def protected(self, permission_name):
         """Return a decorator to associate a function with a permission."""
         # the decorator returned is remembered in a set and will
@@ -139,7 +139,7 @@ class SecurityInfo(Implicit):
         self._unused_protected_decorators.add(key)
         return decor
 
-    setPermissionDefault__roles__=ACCESS_PRIVATE
+    setPermissionDefault__roles__ = ACCESS_PRIVATE
     def setPermissionDefault(self, permission_name, roles):
         """Declare default roles for a permission"""
         rdict = {}
@@ -151,7 +151,7 @@ class SecurityInfo(Implicit):
             self._warnings = 1
         self.roles[permission_name] = rdict
 
-    setDefaultAccess__roles__=ACCESS_PRIVATE
+    setDefaultAccess__roles__ = ACCESS_PRIVATE
     def setDefaultAccess(self, access):
         """Declare default attribute access policy.
 
@@ -237,12 +237,14 @@ class ClassSecurityInfo(SecurityInfo):
             LOG.warn('Class "%s" had conflicting '
                 'security declarations' % classobj.__name__)
 
+
 class ClassSecurityInformation(ClassSecurityInfo):
     # Default policy is disallow
     access = 0
 
 _moduleSecurity = {}
 _appliedModuleSecurity = {}
+
 
 def secureModule(mname, *imp):
     modsec = _moduleSecurity.get(mname, None)
@@ -256,6 +258,7 @@ def secureModule(mname, *imp):
     modsec.apply(module.__dict__)
     _appliedModuleSecurity[mname] = modsec
     return module
+
 
 def ModuleSecurityInfo(module_name=None):
     if module_name is not None:
@@ -283,6 +286,7 @@ def ModuleSecurityInfo(module_name=None):
             if not pmodsec.names.has_key(modname):
                 pmodsec.declarePublic(modname)
     return _ModuleSecurityInfo(module_name)
+
 
 class _ModuleSecurityInfo(SecurityInfo):
     """Encapsulate security information for modules."""
@@ -317,22 +321,23 @@ class _ModuleSecurityInfo(SecurityInfo):
             LOG.warn('Module "%s" had conflicting '
                 'security declarations' % dict['__name__'])
 
-    declareProtected__roles__=ACCESS_PRIVATE
+    declareProtected__roles__ = ACCESS_PRIVATE
     def declareProtected(self, permission_name, *names):
         """Cannot declare module names protected."""
         pass
 
-    declareObjectProtected__roles__=ACCESS_PRIVATE
+    declareObjectProtected__roles__ = ACCESS_PRIVATE
     def declareObjectProtected(self, permission_name):
         """Cannot declare module protected."""
         pass
 
-    setDefaultRoles__roles__=ACCESS_PRIVATE
+    setDefaultRoles__roles__ = ACCESS_PRIVATE
     def setDefaultRoles(self, permission_name, roles):
         """Cannot set default roles for permissions in a module."""
         pass
 
 # Handy little utility functions
+
 
 def allow_module(module_name):
     """Allow a module and all its contents to be used from a
@@ -344,6 +349,7 @@ def allow_module(module_name):
     while dot > 0:
         ModuleSecurityInfo(module_name[:dot]).setDefaultAccess(1)
         dot = module_name.find('.', dot + 1)
+
 
 def allow_class(Class):
     """Allow a class and all of its methods to be used from a
