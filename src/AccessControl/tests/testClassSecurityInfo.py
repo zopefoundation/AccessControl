@@ -130,3 +130,32 @@ class ClassSecurityInfoTests(unittest.TestCase):
         # Do class initialization.
         with self.assertRaisesRegexp(AssertionError, 'has 2 non-decorator'):
             InitializeClass(Test)
+
+    def test_aq_context_in_decorators(self):
+        from Acquisition import Implicit
+        info = self._getTargetClass()
+
+        class A(Implicit):
+            security = info()
+            a = 1
+
+            @security.public
+            def public(self):
+                return self.a
+
+            @security.private
+            def private(self):
+                # make sure the acquisition context is still intact
+                return self.b
+
+        class B(Implicit):
+            security = info()
+            b = 2
+
+        a = A()
+        b = B()
+        a = a.__of__(b)
+
+        self.assertEqual(a.b, 2)
+        self.assertEqual(a.public(), 1)
+        self.assertEqual(a.private(), 2)
