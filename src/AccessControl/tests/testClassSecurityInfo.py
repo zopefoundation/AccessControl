@@ -10,24 +10,18 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-""" Unit tests for ClassSecurityInfo.
-"""
 
 import unittest
 
 
 class ClassSecurityInfoTests(unittest.TestCase):
 
-
     def _getTargetClass(self):
-
         from AccessControl.SecurityInfo import ClassSecurityInfo
         return ClassSecurityInfo
 
     def test_SetPermissionDefault(self):
-
         # Test setting default roles for permissions.
-
         from AccessControl.class_init import InitializeClass
         from ExtensionClass import Base
 
@@ -38,13 +32,9 @@ class ClassSecurityInfoTests(unittest.TestCase):
             """Test class
             """
             __ac_roles__ = ('Role A', 'Role B', 'Role C')
-
             meta_type = "Test"
-
             security = ClassSecurityInfo()
-
             security.setPermissionDefault('Make food', ('Chef',))
-
             security.setPermissionDefault(
                 'Test permission',
                 ('Manager', 'Role A', 'Role B', 'Role C')
