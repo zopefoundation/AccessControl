@@ -14,18 +14,16 @@
 from zope.interface import implements
 from zope.publisher.interfaces.browser import IBrowserRequest
 
+
 class DummyRequest:
     implements(IBrowserRequest)
-    
+
     def __init__(self, method):
         self.method = method
+
 
 def test_suite():
     from doctest import DocFileSuite
     return DocFileSuite('../requestmethod.txt',
                         globs=dict(GET=DummyRequest('GET'),
                                    POST=DummyRequest('POST')))
-
-if __name__ == '__main__':
-    import unittest
-    unittest.main(defaultTest='test_suite')

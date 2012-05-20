@@ -438,6 +438,7 @@ def test_register_permission_with_non_default_roles():
       >>> tearDown()
     """
 
+
 def test_suite():
     import doctest
     return doctest.DocTestSuite(optionflags=doctest.ELLIPSIS)

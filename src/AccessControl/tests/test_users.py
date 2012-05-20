@@ -252,13 +252,3 @@ class NullUnrestrictedUserTests(unittest.TestCase):
         # See https://bugs.launchpad.net/zope2/+bug/142563
         null = self._makeOne()
         self.assertEqual(str(null), "<NullUnrestrictedUser (None, None)>")
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(BasicUserTests))
-    suite.addTest(unittest.makeSuite(SimpleUserTests))
-    suite.addTest(unittest.makeSuite(SpecialUserTests))
-    suite.addTest(unittest.makeSuite(UnrestrictedUserTests))
-    suite.addTest(unittest.makeSuite(NullUnrestrictedUserTests))
-    return suite

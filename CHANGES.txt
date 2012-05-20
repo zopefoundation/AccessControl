@@ -6,6 +6,8 @@ Changelog
 
 - Added decorators for public, private and protected security declarations.
 
+- Update tests to take advantage of automatic test suite discovery.
+
 2.13.7 (2011-12-12)
 -------------------
 

@@ -60,7 +60,3 @@ class SafeIterTestCase(unittest.TestCase):
         self.assertEqual(self.checks, [(contid, 1),
                                        (contid, 2),
                                        (contid, 3)])
-
-
-def test_suite():
-    return unittest.makeSuite(SafeIterTestCase)

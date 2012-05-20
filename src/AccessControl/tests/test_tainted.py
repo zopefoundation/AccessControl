@@ -151,9 +151,3 @@ class TestTaintedString(unittest.TestCase):
 
     def testQuoted(self):
         self.assertEquals(self.tainted.quoted(), self.quoted)
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestTaintedString))
-    return suite

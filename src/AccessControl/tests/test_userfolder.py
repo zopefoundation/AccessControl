@@ -168,9 +168,3 @@ class UserFolderTests(unittest.TestCase):
         self.assertEqual(user.__, ENCRYPTED)
         self.failUnless(uf._isPasswordEncrypted(user.__))
         self.failUnless(pw_validate(user.__, PASSWORD))
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(UserFolderTests))
-    return suite

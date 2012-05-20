@@ -62,6 +62,3 @@ class AccessControlImplementationTest(unittest.TestCase):
 
 def test_suite():
     return unittest.makeSuite(AccessControlImplementationTest)
-
-if __name__ == "__main__":
-    unittest.main(defaultTest="test_suite")

@@ -114,14 +114,3 @@ class PermissionRoleTests (unittest.TestCase):
         self.failUnless(getattr(a, '_d') == ('Manager',))
         self.failUnless(getattr(a, '__name__') == 'a')
         self.failUnless(getattr(a, '_p') == '_a_Permission')
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(PermissionRoleTests))
-    return suite
-
-def main():
-    unittest.TextTestRunner().run(test_suite())
-
-if __name__ == '__main__':
-    main()

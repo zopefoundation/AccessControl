@@ -78,15 +78,3 @@ class PasswordDigestTests (unittest.TestCase):
         # Sanity check
         pw = 'my-password'
         assert AuthEncoding.pw_validate(pw, pw)
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest( unittest.makeSuite( PasswordDigestTests ) )
-    return suite
-
-def main():
-    unittest.TextTestRunner().run(test_suite())
-
-if __name__ == '__main__':
-    main()

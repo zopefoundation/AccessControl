@@ -9,9 +9,3 @@ class TestRoleManager(unittest.TestCase):
         from zope.interface.verify import verifyClass
 
         verifyClass(IPermissionMappingSupport, RoleManager)
-
-
-def test_suite():
-    return unittest.TestSuite((
-        unittest.makeSuite(TestRoleManager),
-        ))

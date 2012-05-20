@@ -861,8 +861,8 @@ protected_inplacevar allows inplce ops on sets:
     [2, 7, 8, 9]
     >>> sorted(s)
     [2, 7, 8, 9]
-
 """
+
 
 def test_suite():
     suite = unittest.TestSuite([
@@ -878,7 +878,3 @@ def test_suite():
                 ):
         suite.addTest(unittest.makeSuite(cls))
     return suite
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -290,10 +290,3 @@ class OwnershipChangeTests(unittest.TestCase):
         self.assertEquals( self.root.parent.child.grandchild._owner
                          , previous_grandchild_owner
                          )
-
-
-def test_suite():
-    return unittest.TestSuite((
-        unittest.makeSuite(OwnedTests),
-        unittest.makeSuite(OwnershipChangeTests),
-        ))

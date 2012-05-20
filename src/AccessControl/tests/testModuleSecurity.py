@@ -81,7 +81,3 @@ class ModuleSecurityTests(unittest.TestCase):
 
     def test_level_nondefault(self):
         self.assertUnauth('AccessControl.tests.public_module', (), level=1)
-
-
-def test_suite():
-    return unittest.makeSuite(ModuleSecurityTests)

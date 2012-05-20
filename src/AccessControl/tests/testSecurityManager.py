@@ -262,10 +262,6 @@ class C_SecurityManagerTests(SecurityManagerTestBase,
 
 def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest( unittest.makeSuite( PythonSecurityManagerTests ) )
-    suite.addTest( unittest.makeSuite( C_SecurityManagerTests ) )
+    suite.addTest(unittest.makeSuite(PythonSecurityManagerTests))
+    suite.addTest(unittest.makeSuite(C_SecurityManagerTests))
     return suite
-
-if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')
-

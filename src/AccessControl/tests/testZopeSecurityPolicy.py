@@ -13,6 +13,7 @@
 """Tests of ZopeSecurityPolicy
 """
 
+from doctest import DocTestSuite
 import sys
 import unittest
 
@@ -565,10 +566,8 @@ def test_zsp_gets_right_roles_for_methods():
     >>> c.__allow_access_to_unprotected_subobjects__ = 1
     >>> bool(zsp.validate(c, c, 'bar', c.bar, Context(User(['spam']))))
     True
-    
     """
 
-from doctest import DocTestSuite
 
 def test_suite():
     suite = unittest.TestSuite()

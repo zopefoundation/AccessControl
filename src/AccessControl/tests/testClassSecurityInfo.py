@@ -130,12 +130,3 @@ class ClassSecurityInfoTests(unittest.TestCase):
         # Do class initialization.
         with self.assertRaisesRegexp(AssertionError, 'has 2 non-decorator'):
             InitializeClass(Test)
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(ClassSecurityInfoTests))
-    return suite
-
-if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')
