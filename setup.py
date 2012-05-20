@@ -16,7 +16,7 @@ from os.path import join
 from setuptools import setup, find_packages, Extension
 
 setup(name='AccessControl',
-      version = '3.0dev',
+      version='3.0',
       url='http://pypi.python.org/pypi/AccessControl',
       license='ZPL 2.1',
       description="Security framework for Zope2.",
@@ -24,7 +24,6 @@ setup(name='AccessControl',
       author_email='zope-dev@zope.org',
       long_description=open('README.txt').read() + '\n' +
                        open('CHANGES.txt').read(),
-
       packages=find_packages('src'),
       package_dir={'': 'src'},
       ext_modules=[Extension(
@@ -36,7 +35,7 @@ setup(name='AccessControl',
       ],
       install_requires=[
         'Acquisition',
-        'DateTime', # optional dependency of RestrictedPython
+        'DateTime',  # optional dependency of RestrictedPython
         'ExtensionClass',
         'Persistence',
         'Record',
