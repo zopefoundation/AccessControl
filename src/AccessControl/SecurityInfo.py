@@ -128,7 +128,8 @@ class SecurityInfo(Implicit):
         # the decorator returned is remembered in a set and will
         # remove itself upon call. self.apply will check for an empty
         # set and raise an AssertionError otherwise.
-        key = "'%s':%s" % (permission_name, id(lambda x:x))
+        key = "'%s':%s" % (permission_name, id(lambda x: x))
+
         def decor(func):
             self.declareProtected(permission_name, func.__name__)
             self._unused_protected_decorators.remove(key)
@@ -165,7 +166,7 @@ class SecurityInfo(Implicit):
             elif access == 'deny':
                 access = 0
             else:
-                raise ValueError, "'allow' or 'deny' expected"
+                raise ValueError("'allow' or 'deny' expected")
         self.access = access
 
 
@@ -182,15 +183,15 @@ class ClassSecurityInfo(SecurityInfo):
         if self._unused_protected_decorators:
             msg = "Class '%r' has %d non-decorator security.protected calls!"
             raise AssertionError(msg % (classobj,
-                                        len(self._unused_protected_decorators)))
+                len(self._unused_protected_decorators)))
 
-        dict = classobj.__dict__
+        cdict = classobj.__dict__
 
         # Check the class for an existing __ac_permissions__ and
         # incorporate that if present to support older classes or
         # classes that haven't fully switched to using SecurityInfo.
-        if dict.has_key('__ac_permissions__'):
-            for item in dict['__ac_permissions__']:
+        if '__ac_permissions__' in cdict:
+            for item in cdict['__ac_permissions__']:
                 permission_name = item[0]
                 self._setaccess(item[1], permission_name)
                 if len(item) > 2:
@@ -203,7 +204,7 @@ class ClassSecurityInfo(SecurityInfo):
             if access in (ACCESS_PRIVATE, ACCESS_PUBLIC, ACCESS_NONE):
                 setattr(classobj, '%s__roles__' % name, access)
             else:
-                if not ac_permissions.has_key(access):
+                if access not in ac_permissions:
                     ac_permissions[access] = []
                 ac_permissions[access].append(name)
 
@@ -283,7 +284,7 @@ def ModuleSecurityInfo(module_name=None):
             # leading to the module
             modname = module_name[dot + 1:]
             pmodsec = ModuleSecurityInfo(module_name[:dot])
-            if not pmodsec.names.has_key(modname):
+            if modname not in pmodsec.names:
                 pmodsec.declarePublic(modname)
     return _ModuleSecurityInfo(module_name)
 
