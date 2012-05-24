@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.0.1 (unreleased)
+3.0.1 (2012-05-24)
 ------------------
 
 - Fix tests under Python 2.6.
