@@ -4,6 +4,7 @@ Changelog
 3.0.1 (unreleased)
 ------------------
 
+- Fix tests under Python 2.6.
 
 3.0 (2012-05-12)
 ----------------
