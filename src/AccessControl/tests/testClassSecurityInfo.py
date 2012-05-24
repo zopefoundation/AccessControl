@@ -20,6 +20,27 @@ class ClassSecurityInfoTests(unittest.TestCase):
         from AccessControl.SecurityInfo import ClassSecurityInfo
         return ClassSecurityInfo
 
+    def assertRaises(self, excClass, callableObj, *args, **kwargs):
+        """Fail unless an exception of class excClass is thrown
+           by callableObj when invoked with arguments args and keyword
+           arguments kwargs. If a different type of exception is
+           thrown, it will not be caught, and the test case will be
+           deemed to have suffered an error, exactly as for an
+           unexpected exception.
+
+           Return the raised exception object, if it matches the expected type.
+        """
+        try:
+            callableObj(*args, **kwargs)
+        except excClass as e:
+            return e
+        else:
+            if getattr(excClass,'__name__', None) is not None:
+                excName = excClass.__name__
+            else:
+                excName = str(excClass)
+            raise self.failureException("%s not raised" % excName)
+
     def test_SetPermissionDefault(self):
         # Test setting default roles for permissions.
         from AccessControl.class_init import InitializeClass
@@ -128,8 +149,9 @@ class ClassSecurityInfoTests(unittest.TestCase):
                 """ """
 
         # Do class initialization.
-        with self.assertRaisesRegexp(AssertionError, 'has 2 non-decorator'):
-            InitializeClass(Test)
+        exc = self.assertRaises(AssertionError,
+                                InitializeClass, Test)
+        self.assertTrue('has 2 non-decorator' in str(exc))
 
     def test_aq_context_in_decorators(self):
         from Acquisition import Implicit
