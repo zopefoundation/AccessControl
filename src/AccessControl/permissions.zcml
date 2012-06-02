@@ -3,8 +3,9 @@
 
   <permission
     id="zope2.Public"
-    title="Public, everyone can access"
-    />
+    title="Public, everyone can access">
+      <role name="Anonymous"/>
+  </permission>
 
   <permission
     id="zope2.Private"

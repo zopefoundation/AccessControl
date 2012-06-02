@@ -4,6 +4,7 @@ Changelog
 2.13.8 (unreleased)
 -------------------
 
+- Add Anonymous as a default role for Public permission.
 
 2.13.7 (2011-12-12)
 -------------------
