@@ -4,6 +4,8 @@ Changelog
 3.0.2 (unreleased)
 ------------------
 
+- Add Anonymous as a default role for Public permission.
+
 
 3.0.1 (2012-05-24)
 ------------------
