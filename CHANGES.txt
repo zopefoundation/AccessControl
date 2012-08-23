@@ -1,10 +1,11 @@
 Changelog
 =========
 
-3.0.3 (unreleased)
+3.0.3 (2012-08-23)
 ------------------
+
 - Fix a bug in ZopeSecurityPolicy.py. Global variable `rolesForPermissionOn`
-  could be overridden if __role__ had custom rolesForPermissionOn.
+  could be overridden if `__role__` had custom rolesForPermissionOn.
 
 3.0.2 (2012-06-22)
 ------------------
