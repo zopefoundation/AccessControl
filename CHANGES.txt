@@ -4,6 +4,8 @@ Changelog
 2.13.9 (unreleased)
 -------------------
 
+- Fix a bug in ZopeSecurityPolicy.py. Global variable `rolesForPermissionOn`
+  could be overridden if `__role__` had custom rolesForPermissionOn.
 
 2.13.8 (2012-06-22)
 -------------------
