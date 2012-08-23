@@ -10,11 +10,10 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-"""Tests of ZopeSecurityPolicy
-"""
 
 from doctest import DocTestSuite
 import sys
+import thread
 import unittest
 
 from Acquisition import Implicit, Explicit
@@ -569,9 +568,58 @@ def test_zsp_gets_right_roles_for_methods():
     """
 
 
+class GetRolesWithMultiThreadTest(unittest.TestCase):
+
+    def setUp(self):
+        self._original_check_interval = sys.getcheckinterval()
+        sys.setcheckinterval(1)
+
+    def tearDown(self):
+        sys.setcheckinterval(self._original_check_interval)
+
+    def testGetRolesWithMultiThread(self):
+        from AccessControl.ZopeSecurityPolicy import getRoles
+
+        class C(object):
+            pass
+
+        class V1(object):
+            class __roles__(object):
+                @staticmethod
+                def rolesForPermissionOn(ob):
+                    return ['Member']
+
+        class V2(object):
+            class __roles__(object):
+                @staticmethod
+                def rolesForPermissionOn(ob):
+                    return ['User']
+
+        c = C()
+        c.v1 = V1()
+        c.v2 = V2()
+
+        self.assertEqual(getRoles(c, None, c.v1, 42), ['Member'])
+        self.assertEqual(getRoles(c, None, c.v2, 42), ['User'])
+        mark = []
+
+        def loop():
+            while 1:
+                getRoles(c, None, c.v2, 42)
+                if len(mark) > 0:
+                    return
+        thread.start_new_thread(loop, ())
+        try:
+            for i in range(1000):
+                self.assertEqual(getRoles(c, None, c.v1, 42), ['Member'])
+        finally:
+            mark.append(None)
+
+
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(Python_ZSPTests, 'test'))
     suite.addTest(unittest.makeSuite(C_ZSPTests, 'test'))
     suite.addTest(DocTestSuite())
+    suite.addTest(unittest.makeSuite(GetRolesWithMultiThreadTest))
     return suite

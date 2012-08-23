@@ -52,8 +52,7 @@ def getRoles(container, name, value, default):
     if roles is None or isinstance(roles, tuple_or_list):
         return roles
 
-    # XXX: Do not override global variable `rolesForPermissionOn`.
-    # XXX: Use different variable name instead.
+    # Do not override global variable `rolesForPermissionOn`.
     roles_rolesForPermissionOn = getattr(roles, 'rolesForPermissionOn', None)
     if roles_rolesForPermissionOn is not None:
         roles = roles_rolesForPermissionOn(value)
