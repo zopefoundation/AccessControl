@@ -344,20 +344,16 @@ def guarded_sum(sequence, start=0):
 safe_builtins['sum'] = guarded_sum
 
 def load_module(module, mname, mnameparts, validate, globals, locals):
-    modules = sys.modules
     while mnameparts:
         nextname = mnameparts.pop(0)
         if mname is None:
             mname = nextname
         else:
             mname = '%s.%s' % (mname, nextname)
-        nextmodule = modules.get(mname, None)
-        if nextmodule is None:
-            nextmodule = secureModule(mname, globals, locals)
-            if nextmodule is None:
-                return
-        else:
-            secureModule(mname)
+        # import (if not already imported) and  check for MSI
+        nextmodule = secureModule(mname, globals, locals)
+        if nextmodule is None: # not allowed
+            return
         if module and not validate(module, module, nextname, nextmodule):
             return
         module = nextmodule
