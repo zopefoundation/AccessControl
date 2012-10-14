@@ -4,6 +4,8 @@ Changelog
 2.13.11 (unreleased)
 --------------------
 
+- LP #966101: Recognize special `zope2.Private` permission in ZCML
+  role directive.
 
 2.13.10 (2012-09-09)
 --------------------

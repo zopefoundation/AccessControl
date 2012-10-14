@@ -167,27 +167,32 @@ def protectClass(klass, permission_id):
         perm = str(permission.title)
         security.declareObjectProtected(perm)
 
+
 class PermissionDirective(GroupingContextDecorator):
     implements(IConfigurationContext, IPermissionDirective)
-    
+
     def __init__(self, context, id, title, description=''):
         self.context = context
         self.id, self.title, self.description = id, title, description
         self.roles = []
-    
+
     def after(self):
         permission = Permission(self.id, self.title, self.description)
         utility(self.context, IPermission, permission, name=self.id)
-        
+
         zope2_permission = str(self.title)
         if self.roles:
             addPermission(zope2_permission, default_roles=tuple(self.roles))
+        elif self.id == CheckerPrivateId:
+            addPermission(zope2_permission, default_roles=())
         else:
             addPermission(zope2_permission)
 
+
 class IRoleDirective(Interface):
-    
+
     name = ASCIILine()
+
 
 def RoleDirective(context, name):
     permission_directive = context.context
