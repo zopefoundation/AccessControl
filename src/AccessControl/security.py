@@ -183,6 +183,8 @@ class PermissionDirective(GroupingContextDecorator):
         zope2_permission = str(self.title)
         if self.roles:
             addPermission(zope2_permission, default_roles=tuple(self.roles))
+        elif self.id == CheckerPrivateId:
+            addPermission(zope2_permission, default_roles=())
         else:
             addPermission(zope2_permission)
 
