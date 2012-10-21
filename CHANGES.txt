@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.0.5 (unreleased)
+3.0.5 (2012-10-21)
 ------------------
 
 - LP #966101: Recognize special `zope2.Private` permission in ZCML
