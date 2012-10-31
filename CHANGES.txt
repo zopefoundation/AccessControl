@@ -1,9 +1,11 @@
 Changelog
 =========
 
-3.0.6 (unreleased)
+3.0.6 (2012-10-31)
 ------------------
 
+- LP #1071067: Use a stronger random number generator and a constant time
+  comparison function.
 
 3.0.5 (2012-10-21)
 ------------------
