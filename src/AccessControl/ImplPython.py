@@ -510,7 +510,7 @@ def setDefaultBehaviors(ownerous, authenticated, verbose):
 setDefaultBehaviors(True, True, False)
 
 
-class SecurityManager:
+class SecurityManager(object):
     """A security manager provides methods for checking access and managing
     executable context and policies
     """
