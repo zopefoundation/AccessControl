@@ -4,6 +4,8 @@ Changelog
 2.13.13 (unreleased)
 --------------------
 
+- Update C implementation of SecurityManager not to rely on
+  ExtensionClass anymore.
 
 2.13.12 (2012-10-31)
 --------------------
