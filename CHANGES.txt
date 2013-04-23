@@ -4,6 +4,8 @@ Changelog
 3.0.7 (unreleased)
 ------------------
 
+- Fix a bug causing an infinite loop when looking up local roles in acquisition chain
+
 
 3.0.6 (2012-10-31)
 ------------------
