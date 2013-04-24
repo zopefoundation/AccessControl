@@ -105,8 +105,108 @@ class BasicUserTests(unittest.TestCase):
         self.assertEqual(derived.getRolesInContext(target.method),
                          ['Manager', 'Other'])
 
-    # TODO: def test_getRolesInContext (w/wo local, callable, aq)
-    # TODO: def test_authenticate (w/wo domains)
+    def test_authenticate_miss_wo_domains(self):
+        derived = self._makeDerived()
+        derived._getPassword = lambda *x: 'password'
+        derived.getDomains = lambda *x: ()
+        self.assertFalse(derived.authenticate('notpassword', {}))
+
+    def test_authenticate_hit_wo_domains(self):
+        derived = self._makeDerived()
+        derived._getPassword = lambda *x: 'password'
+        derived.getDomains = lambda *x: ()
+        self.assertTrue(derived.authenticate('password', {}))
+
+    def test_authenticate_hit_w_domains_any(self):
+        class Request(dict):
+            def getClientAddr(self):
+                return '192.168.1.1'
+        derived = self._makeDerived()
+        derived._getPassword = lambda *x: 'password'
+        derived.getDomains = lambda *x: ('*',)
+        request = Request(REMOTE_HOST='example.com')
+        self.assertTrue(derived.authenticate('password', request))
+
+    def test_authenticate_hit_w_domains_miss_both(self):
+        class Request(dict):
+            def getClientAddr(self):
+                return '192.168.1.1'
+        derived = self._makeDerived()
+        derived._getPassword = lambda *x: 'password'
+        derived.getDomains = lambda *x: ('127.0.0.1',)
+        request = Request(REMOTE_HOST='example.com')
+        self.assertFalse(derived.authenticate('password', request))
+
+    def test_authenticate_hit_w_domains_wo_host_wo_addr(self):
+        class Request(dict):
+            def getClientAddr(self):
+                return ''
+        derived = self._makeDerived()
+        derived._getPassword = lambda *x: 'password'
+        derived.getDomains = lambda *x: ('127.0.0.1',)
+        request = Request(REMOTE_HOST='')
+        self.assertFalse(derived.authenticate('password', request))
+
+    def test_authenticate_hit_w_domains_miss_host_hit_addr(self):
+        class Request(dict):
+            def getClientAddr(self):
+                return '127.0.0.1'
+        derived = self._makeDerived()
+        derived._getPassword = lambda *x: 'password'
+        derived.getDomains = lambda *x: ('127.0.0.1',)
+        request = Request(REMOTE_HOST='example.com')
+        self.assertTrue(derived.authenticate('password', request))
+
+    def test_authenticate_hit_w_domains_miss_host_hit_addr_wo_host(self):
+        class Request(dict):
+            def getClientAddr(self):
+                return '127.0.0.1'
+        derived = self._makeDerived()
+        derived._getPassword = lambda *x: 'password'
+        derived.getDomains = lambda *x: ('127.0.0.1',)
+        request = Request(REMOTE_HOST='')
+        self.assertTrue(derived.authenticate('password', request))
+
+    def test_authenticate_hit_w_domains_miss_host_hit_addr_wo_addr(self):
+        class Request(dict):
+            def getClientAddr(self):
+                return ''
+        derived = self._makeDerived()
+        derived._getPassword = lambda *x: 'password'
+        derived.getDomains = lambda *x: ('127.0.0.1',)
+        request = Request(REMOTE_HOST='localhost')
+        self.assertTrue(derived.authenticate('password', request))
+
+    def test_authenticate_hit_w_domains_miss_addr_hit_host(self):
+        class Request(dict):
+            def getClientAddr(self):
+                return '192.168.1.1'
+        derived = self._makeDerived()
+        derived._getPassword = lambda *x: 'password'
+        derived.getDomains = lambda *x: ('example.com',)
+        request = Request(REMOTE_HOST='host.example.com')
+        self.assertTrue(derived.authenticate('password', request))
+
+    def test_authenticate_hit_w_domains_miss_addr_hit_host_wo_addr(self):
+        class Request(dict):
+            def getClientAddr(self):
+                return ''
+        derived = self._makeDerived()
+        derived._getPassword = lambda *x: 'password'
+        derived.getDomains = lambda *x: ('example.com',)
+        request = Request(REMOTE_HOST='host.example.com')
+        self.assertTrue(derived.authenticate('password', request))
+
+    def test_authenticate_hit_w_domains_miss_addr_hit_host_wo_host(self):
+        class Request(dict):
+            def getClientAddr(self):
+                return '127.0.0.1'
+        derived = self._makeDerived()
+        derived._getPassword = lambda *x: 'password'
+        derived.getDomains = lambda *x: ('localhost',)
+        request = Request(REMOTE_HOST='')
+        self.assertTrue(derived.authenticate('password', request))
+
     # TODO: def test_allowed (...)
     # TODO: def test_has_role (w/wo str, context)
     # TODO: def test_has_permission (w/wo str)
