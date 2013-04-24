@@ -189,8 +189,8 @@ class BasicUser(Implicit):
                 return 1
 
         # Check for ancient role data up front, convert if found.
-        # This should almost never happen, and should probably be
-        # deprecated at some point.
+        # XXX this feature predates / has never been used in Zope.
+        #     To be removed shortly.
         if 'Shared' in object_roles:
             object_roles = self._shared_roles(object)
             if object_roles is None or 'Anonymous' in object_roles:
