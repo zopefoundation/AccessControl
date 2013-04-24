@@ -55,7 +55,7 @@ class BasicUser(Implicit):
     # functionality that we cant anticipate from the base scaffolding.
     def __allow_access_to_unprotected_subobjects__(self, name, value=None):
         deny_names=('name', '__', 'roles', 'domains', '_getPassword',
-                    'authenticate', '_shared_roles')
+                    'authenticate')
         if name in deny_names:
             return 0
         return 1
@@ -128,29 +128,6 @@ class BasicUser(Implicit):
             return result and domainSpecMatch(domains, request)
         return result
 
-    def _shared_roles(self, parent):
-        r=[]
-        while 1:
-            if hasattr(parent, '__roles__'):
-                roles = parent.__roles__
-                if roles is None:
-                    return 'Anonymous',
-                if 'Shared' in roles:
-                    roles=list(roles)
-                    roles.remove('Shared')
-                    r = r + roles
-                else:
-                    try:
-                        return r + list(roles)
-                    except:
-                        return r
-            if getattr(parent, '__parent__', None) is not None:
-                while hasattr(parent.aq_self, 'aq_self'):
-                    parent = parent.aq_self
-                parent = aq_parent(parent)
-            else:
-                return r
-
     def _check_context(self, object):
         # Check that 'object' exists in the acquisition context of
         # the parent of the acl_users object containing this user,
@@ -186,14 +163,6 @@ class BasicUser(Implicit):
         if 'Authenticated' in object_roles and (
             self.getUserName() != 'Anonymous User'):
             if self._check_context(object):
-                return 1
-
-        # Check for ancient role data up front, convert if found.
-        # XXX this feature predates / has never been used in Zope.
-        #     To be removed shortly.
-        if 'Shared' in object_roles:
-            object_roles = self._shared_roles(object)
-            if object_roles is None or 'Anonymous' in object_roles:
                 return 1
 
         # Check for a role match with the normal roles given to

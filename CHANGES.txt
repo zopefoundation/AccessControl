@@ -4,8 +4,11 @@ Changelog
 3.0.7 (unreleased)
 ------------------
 
-- Fix a bug causing an infinite loop when looking up local roles in acquisition chain
+- Remove long-deprecated 'Shared' roles support (pre-dates Zope, never
+  used by Zope itself)
 
+- Prevent infinite loop when looking up local roles in an acquisition chain
+  with cycles.
 
 3.0.6 (2012-10-31)
 ------------------
