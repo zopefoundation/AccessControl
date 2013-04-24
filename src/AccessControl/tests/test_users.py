@@ -54,6 +54,57 @@ class BasicUserTests(unittest.TestCase):
         self.assertRaises(NotImplementedError, derived.getRoles)
         self.assertRaises(NotImplementedError, derived.getDomains)
 
+    def test_getRolesInContext_no_aq_no_local_roles(self):
+        derived = self._makeDerived()
+        derived.getId = lambda *x: 'user'
+        derived.getRoles = lambda *x: ['Manager']
+        self.assertEqual(derived.getRolesInContext(self), ['Manager'])
+
+    def test_getRolesInContext_no_aq_w_local_roles_as_dict(self):
+        class Target(object):
+            __ac_local_roles__ = {'user': ['Other']}
+        derived = self._makeDerived()
+        derived.getId = lambda *x: 'user'
+        derived.getRoles = lambda *x: ['Manager']
+        self.assertEqual(derived.getRolesInContext(Target()),
+                         ['Manager', 'Other'])
+
+    def test_getRolesInContext_no_aq_w_local_roles_as_callable(self):
+        class Context(object):
+            def __ac_local_roles__(self):
+                return {'user': ['Other']}
+        derived = self._makeDerived()
+        derived.getId = lambda *x: 'user'
+        derived.getRoles = lambda *x: ['Manager']
+        self.assertEqual(derived.getRolesInContext(Context()),
+                         ['Manager', 'Other'])
+
+    def test_getRolesInContext_w_aq(self):
+        class Context(object):
+            pass
+        derived = self._makeDerived()
+        derived.getId = lambda *x: 'user'
+        derived.getRoles = lambda *x: ['Manager']
+        parent = Context()
+        parent.__ac_local_roles__ = {'user': ['Another']}
+        target = Context()
+        target.__ac_local_roles__ = {'user': ['Other']}
+        target.__parent__ = parent
+        self.assertEqual(derived.getRolesInContext(target),
+                         ['Manager', 'Other', 'Another'])
+
+    def test_getRolesInContext_w_method(self):
+        class Context(object):
+            __ac_local_roles__ = {'user': ['Other']}
+            def method(self):
+                pass
+        derived = self._makeDerived()
+        derived.getId = lambda *x: 'user'
+        derived.getRoles = lambda *x: ['Manager']
+        target = Context()
+        self.assertEqual(derived.getRolesInContext(target.method),
+                         ['Manager', 'Other'])
+
     # TODO: def test_getRolesInContext (w/wo local, callable, aq)
     # TODO: def test_authenticate (w/wo domains)
     # TODO: def test_allowed (...)
