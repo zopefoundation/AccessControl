@@ -349,8 +349,68 @@ class BasicUserTests(unittest.TestCase):
         derived.getRoles = lambda *x: ['Author']
         self.assertTrue(derived.allowed(other, ['Editor']))
 
-    # TODO: def test_has_role (w/wo str, context)
-    # TODO: def test_has_permission (w/wo str)
+    def test_has_role_w_str_wo_context_miss(self):
+        derived = self._makeDerived()
+        derived.getRoles = lambda *x: ['Author']
+        self.assertFalse(derived.has_role('Editor'))
+
+    def test_has_role_w_list_wo_context_hit(self):
+        derived = self._makeDerived()
+        derived.getRoles = lambda *x: ['Author']
+        self.assertTrue(derived.has_role(['Author']))
+
+    def test_has_role_w_list_w_context_miss(self):
+        from Acquisition import Implicit
+        class Root(Implicit):
+            pass
+        class Folder(Implicit):
+            pass
+        root = Root()
+        root.__ac_local_roles__ = {'user': ['Editor']}
+        folder = Folder().__of__(root)
+        derived = self._makeDerived()
+        derived.getUserName = lambda *x: 'user'
+        derived.getRoles = lambda *x: []
+        self.assertFalse(derived.has_role(['Author'], folder))
+
+    def test_has_role_w_list_w_context_hit(self):
+        from Acquisition import Implicit
+        class Root(Implicit):
+            pass
+        class Folder(Implicit):
+            pass
+        root = Root()
+        root.__ac_local_roles__ = {'user': ['Editor']}
+        folder = Folder().__of__(root)
+        derived = self._makeDerived()
+        derived.getUserName = lambda *x: 'user'
+        derived.getRoles = lambda *x: []
+        self.assertTrue(derived.has_role(['Editor'], folder))
+
+    def test_has_permission_miss(self):
+        from Acquisition import Implicit
+        class Root(Implicit):
+            pass
+        class UserFolder(Implicit):
+            pass
+        root = Root()
+        folder = UserFolder().__of__(root)
+        derived = self._makeDerived().__of__(folder)
+        derived.getUserName = lambda *x: 'user'
+        derived.getRoles = lambda *x: []
+        self.assertFalse(derived.has_permission('Permission', folder))
+
+    def test_has_permission_hit(self):
+        from Acquisition import Implicit
+        class Root(Implicit):
+            pass
+        class UserFolder(Implicit):
+            pass
+        root = Root()
+        folder = UserFolder().__of__(root)
+        derived = self._makeDerived().__of__(folder)
+        derived.getRoles = lambda *x: ['Manager']
+        self.assertTrue(derived.has_permission('Permission', folder))
 
     def test___len__(self):
         derived = self._makeDerived()
