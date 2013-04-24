@@ -211,6 +211,7 @@ class BasicUser(Implicit):
         # we can incur only the overhead required to find a match.
         inner_obj = getattr(object, 'aq_inner', object)
         userid = self.getId()
+        parents = set()
         while 1:
             local_roles = getattr(inner_obj, '__ac_local_roles__', None)
             if local_roles:
@@ -226,6 +227,9 @@ class BasicUser(Implicit):
             inner = getattr(inner_obj, 'aq_inner', inner_obj)
             parent = getattr(inner, '__parent__', None)
             if parent is not None:
+                if parent in parents:
+                    break
+                parents.add(parent)
                 inner_obj = parent
                 continue
             if hasattr(inner_obj, 'im_self'):
