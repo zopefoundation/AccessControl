@@ -13,7 +13,7 @@
 """Place to find special users
 
 This is needed to avoid a circular import problem.  The 'real' values
-are stored here by the AccessControl.User module as part of it's
+are stored here by the AccessControl.User module as part of its
 initialization.
 """
 
