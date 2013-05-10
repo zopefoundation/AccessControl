@@ -871,7 +871,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 		/*| # We have an object without roles and we didn't get
 		**| # a list of roles passed in.  Presumably, the value
 		**| # is some simple object like a string or a list.
-		**| # We'll try to get roles from it's container
+		**| # We'll try to get roles from its container
 		**|
 		**| if container is None: raise Unauthorized(name, value)
 		*/
