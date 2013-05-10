@@ -212,7 +212,7 @@ static PyExtensionClass NAME ## Type = { PyObject_HEAD_INIT(NULL) 0, # NAME, \
 (PyMethod_Check((M)) ? ((PyMethodObject*)(M))->im_self : NULL)
 
 /* Check whether an object has an __of__ method for returning itself
-   in the context of it's container. */
+   in the context of its container. */
 #define has__of__(O) (PyObject_TypeCheck((O)->ob_type, ECExtensionClassType) \
                       && (O)->ob_type->tp_descr_get != NULL)
 
