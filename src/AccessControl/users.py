@@ -202,13 +202,13 @@ class BasicUser(Implicit):
                 inner_obj = parent
                 continue
             if hasattr(inner_obj, 'im_self'):
-                inner_obj=inner_obj.im_self
-                inner_obj=getattr(inner_obj, 'aq_inner', inner_obj)
+                inner_obj = inner_obj.im_self
+                inner_obj = getattr(inner_obj, 'aq_inner', inner_obj)
                 continue
             break
         return None
 
-    domains=[]
+    domains = []
 
     def has_role(self, roles, object=None):
         """Check if the user has at least one role from a list of roles.
