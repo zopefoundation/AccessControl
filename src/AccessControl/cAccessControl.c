@@ -2179,7 +2179,7 @@ module_setDefaultBehaviors(PyObject *ignored, PyObject *args)
       return NULL;
     }
     ownerous = own;
-    authenticated = authenticated;
+    authenticated = auth;
     result = Py_None;
     Py_INCREF(result);
   }
