@@ -346,6 +346,8 @@ typedef struct {
 */
 
 static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args);
+static PyObject *ZopeSecurityPolicy_getattro(ZopeSecurityPolicy *self,
+                                             PyObject *name);
 static void ZopeSecurityPolicy_dealloc(ZopeSecurityPolicy *self);
 
 
@@ -446,7 +448,7 @@ static PyExtensionClass ZopeSecurityPolicyType = {
 	NULL,					/* tp_hash	*/
 	NULL,					/* tp_call	*/
 	NULL,					/* tp_str	*/
-	NULL,					/* tp_getattro	*/
+	(getattrofunc)ZopeSecurityPolicy_getattro,/* tp_getattro*/
 	NULL,					/* tp_setattro	*/
 	/* Reserved fields	*/
 	0,					/* tp_xxx3	*/
@@ -758,6 +760,27 @@ static void unauthErr(PyObject *name, PyObject *value) {
             PyErr_SetObject(Unauthorized, v);
             Py_DECREF(v);
           }
+}
+
+static PyObject *
+ZopeSecurityPolicy_getattro(ZopeSecurityPolicy *self, PyObject *name)
+{
+  if (PyString_Check(name) || PyUnicode_Check(name))  {
+    char *name_s = PyString_AsString(name);
+    if (name_s == NULL)
+        return NULL;
+
+    if (name_s[0] == '_') {
+      if (! strcmp(name_s, "_ownerous")) {
+          return PyInt_FromLong(ownerous);
+      }
+      else if (! strcmp(name_s, "_authenticated")) {
+          return PyInt_FromLong(authenticated);
+      }
+    }
+  }
+
+  return Py_FindAttr(OBJECT(self), name);
 }
 
 /*
@@ -2179,7 +2202,7 @@ module_setDefaultBehaviors(PyObject *ignored, PyObject *args)
       return NULL;
     }
     ownerous = own;
-    authenticated = authenticated;
+    authenticated = auth;
     result = Py_None;
     Py_INCREF(result);
   }
