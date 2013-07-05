@@ -7,6 +7,9 @@ For changes before verison 3.0, see ``HISTORY.txt``.
 3.0.8 (unreleased)
 ------------------
 
+- LP #1159923:  ensure initialization of shared ``ImplPython`` state
+  (used by ``ImplC``) when using the "C" security policy.  Thanks to
+  Arnaud Fontaine for the patch.
 
 3.0.7 (2013-05-14)
 ------------------
