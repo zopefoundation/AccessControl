@@ -3,6 +3,10 @@ Changelog
 
 For changes before verison 3.0, see ``HISTORY.txt``.
 
+3.0.9 (unreleased)
+------------------
+
+
 3.0.8 (2013-07-16)
 ------------------
 
