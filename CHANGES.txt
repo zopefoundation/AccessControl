@@ -8,7 +8,7 @@ Changelog
 2.13.13 (2013-07-16)
 --------------------
 
-- LP #1159923:  ensure initialization of shared ``ImplPython`` state
+- LP #1169923:  ensure initialization of shared ``ImplPython`` state
   (used by ``ImplC``) when using the "C" security policy.  Thanks to
   Arnaud Fontaine for the patch.
 
