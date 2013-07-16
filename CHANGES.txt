@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.13.13 (unreleased)
+2.13.13 (2013-07-16)
 --------------------
 
 - LP #1159923:  ensure initialization of shared ``ImplPython`` state
