@@ -6,8 +6,8 @@ For changes before verison 3.0, see ``HISTORY.txt``.
 3.0.9 (unreleased)
 ------------------
 
-- LP #1248529: No longer create a new security manager in
-  RoleManager.manage_getUserRolesAndPermissions
+- LP #1248529: Leave existing security manager in place inside
+  ``RoleManager.manage_getUserRolesAndPermissions``.
 
 3.0.8 (2013-07-16)
 ------------------
