@@ -158,7 +158,6 @@ class RoleManager(Base, RoleManager):
             else:
                 current = current.__parent__
 
-        newSecurityManager(None, userObj) # necessary?
         userObj = userObj.__of__(uf)
 
         d = {'user_defined_in': '/' + uf.absolute_url(1)}
