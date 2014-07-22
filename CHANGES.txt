@@ -6,6 +6,10 @@ For changes before verison 3.0, see ``HISTORY.txt``.
 3.0.9 (unreleased)
 ------------------
 
+- GitHub #6: Do not pass SecurityInfo instance itself to declarePublic/declarePrivate
+  when using the public/private decorator. This fixes ``Conflicting security declarations``
+  warnings on Zope startup.
+
 - LP #1248529: Leave existing security manager in place inside
   ``RoleManager.manage_getUserRolesAndPermissions``.
 
