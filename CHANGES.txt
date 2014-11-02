@@ -3,7 +3,7 @@ Changelog
 
 For changes before verison 3.0, see ``HISTORY.txt``.
 
-3.0.10 (unreleased)
+3.0.10 (2014-11-02)
 -------------------
 
 - Test fix for machines that do not define `localhost`.
