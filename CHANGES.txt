@@ -3,7 +3,7 @@ Changelog
 
 For changes before verison 3.0, see ``HISTORY.txt``.
 
-3.0.11 (unreleased)
+3.0.11 (2014-11-02)
 -------------------
 
 - Harden test fix for machines that do not define `localhost`.
