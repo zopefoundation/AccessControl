@@ -6,8 +6,7 @@ For changes before verison 3.0, see ``HISTORY.txt``.
 3.0.10 (unreleased)
 -------------------
 
-- ...
-
+- Test fix for machines that do not define `localhost`.
 
 3.0.9 (2014-08-08)
 ------------------

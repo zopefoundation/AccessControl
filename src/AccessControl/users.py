@@ -432,14 +432,18 @@ def domainSpecMatch(spec, request):
 
     if not host:
         try:
-            host=socket.gethostbyaddr(addr)[0]
-        except:
+            host = socket.gethostbyaddr(addr)[0]
+        except Exception:
             pass
+
     if not addr:
         try:
-            addr=socket.gethostbyname(host)
-        except:
-            pass
+            addr = socket.gethostbyname(host)
+        except Exception:
+            # always define localhost, even if the underlying system
+            # doesn't know about it, this fixes tests on travis
+            if host == 'localhost':
+                addr = '127.0.0.1'
 
     _host = host.split('.')
     _addr = addr.split('.')
