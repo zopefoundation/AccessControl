@@ -204,7 +204,7 @@ class BasicUserTests(unittest.TestCase):
         derived = self._makeDerived()
         derived._getPassword = lambda *x: 'password'
         derived.getDomains = lambda *x: ('localhost',)
-        request = Request(REMOTE_HOST='')
+        request = Request(REMOTE_HOST='localhost')
         self.assertTrue(derived.authenticate('password', request))
 
     def test_allowed__what_not_even_god_should_do(self):
