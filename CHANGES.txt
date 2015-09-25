@@ -4,6 +4,7 @@ Changelog
 2.13.14 (unreleased)
 --------------------
 
+- Extract ``.AuthEncoding`` to its own package for reuse.
 
 2.13.13 (2013-07-16)
 --------------------
