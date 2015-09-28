@@ -9,6 +9,7 @@ For changes before verison 3.0, see ``HISTORY.txt``.
 
 - Extract ``.AuthEncoding`` to its own package for reuse.
 
+
 3.0.11 (2014-11-02)
 -------------------
 
@@ -85,4 +86,3 @@ For changes before verison 3.0, see ``HISTORY.txt``.
 - Added decorators for public, private and protected security declarations.
 
 - Update tests to take advantage of automatic test suite discovery.
-
