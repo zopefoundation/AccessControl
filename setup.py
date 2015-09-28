@@ -38,6 +38,7 @@ setup(name='AccessControl',
         'Acquisition',
         'DateTime', # optional dependency of RestrictedPython
         'ExtensionClass',
+        'AuthEncoding',
         'Persistence',
         'Record',
         'RestrictedPython',
