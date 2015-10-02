@@ -60,9 +60,12 @@ class PasswordDigestTests (unittest.TestCase):
             assert AuthEncoding.pw_validate(enc, pw)
             assert not AuthEncoding.pw_validate(enc, enc)
             assert not AuthEncoding.pw_validate(enc, 'xxx')
-            if id != 'CRYPT':
+            if id not in ('CRYPT', 'BCRYPT'):
                 # crypt truncates passwords and would fail these tests.
-                assert not AuthEncoding.pw_validate(enc, pw[:-2])
+                # bcrypt works with password inputs where len(pw) <= 50
+                assert not AuthEncoding.pw_validate(enc, pw[:-2]), (
+                    '%r Failed: %s %s' % (id, enc, pw[:-2])
+                )
                 assert not AuthEncoding.pw_validate(enc, pw[2:])
 
     def testBlankPassword(self):

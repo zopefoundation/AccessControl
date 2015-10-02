@@ -11,15 +11,17 @@
 #
 ##############################################################################
 
-import binascii
 from binascii import b2a_base64, a2b_base64
 from hashlib import sha1 as sha
 from hashlib import sha256
 from os import getpid
+import binascii
+import random
 import time
 
+import bcrypt
+
 # Use the system PRNG if possible
-import random
 try:
     random = random.SystemRandom()
     using_sysrandom = True
@@ -190,6 +192,22 @@ class MySQLDigestScheme:
         return constant_time_compare(a, reference)
 
 registerScheme('MYSQL', MySQLDigestScheme())
+
+
+class BCRYPTHashingScheme(object):
+    """A BCRYPT hashing scheme."""
+
+    def encrypt(self, pw):
+        return bcrypt.hashpw(pw, bcrypt.gensalt())
+
+    def validate(self, reference, attempt):
+        try:
+            valid = bcrypt.hashpw(attempt, reference) == reference
+        except ValueError:
+            valid = False
+        return valid
+
+registerScheme('BCRYPT', BCRYPTHashingScheme())
 
 
 def pw_validate(reference, attempt):
