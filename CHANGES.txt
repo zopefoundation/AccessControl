@@ -3,6 +3,11 @@ Changelog
 
 For changes before verison 3.0, see ``HISTORY.txt``.
 
+3.0.12 (unreleased)
+-------------------
+- Adds bcrypt AuthEncoding scheme.
+
+
 3.0.11 (2014-11-02)
 -------------------
 
