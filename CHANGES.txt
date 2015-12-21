@@ -4,6 +4,9 @@ Changelog
 2.13.14 (unreleased)
 --------------------
 
+- Avoid acquiring ``access`` from module wrapped by
+  ``SecurityInfo._ModuleSecurityInfo``.  See:
+  https://github.com/zopefoundation/AccessControl/issues/12
 
 2.13.13 (2013-07-16)
 --------------------
