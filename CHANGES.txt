@@ -3,11 +3,17 @@ Changelog
 
 For changes before verison 3.0, see ``HISTORY.txt``.
 
+3.0.12 (unreleased)
+-------------------
+
+- Avoid acquiring ``access`` from module wrapped by
+  ``SecurityInfo._ModuleSecurityInfo``.  See:
+  https://github.com/zopefoundation/AccessControl/issues/12
+
 3.0.11 (2014-11-02)
 -------------------
 
 - Harden test fix for machines that do not define `localhost`.
-
 
 3.0.10 (2014-11-02)
 -------------------

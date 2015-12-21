@@ -295,6 +295,7 @@ class _ModuleSecurityInfo(SecurityInfo):
     """Encapsulate security information for modules."""
 
     __roles__ = ACCESS_PRIVATE
+    access = False  # deny by default, prevent acquiring 'access' from module
 
     def __init__(self, module_name=None):
         self.names = {}
