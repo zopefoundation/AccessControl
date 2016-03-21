@@ -54,7 +54,7 @@ setup(name='AccessControl',
         'RestrictedPython',
         'transaction',
         'zExceptions',
-        'ZODB3',
+        'ZODB',   # XXX this is only needed for tests and should be in an entry point
         'zope.component',
         'zope.configuration',
         'zope.deferredimport',
