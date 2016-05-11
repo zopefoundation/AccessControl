@@ -28,6 +28,7 @@ from AccessControl.Permission import Permission
 from AccessControl.PermissionMapping import RoleManager
 from AccessControl.Permissions import change_permissions
 from AccessControl.SecurityManagement import newSecurityManager
+from base64 import urlsafe_b64encode
 
 DEFAULTMAXLISTUSERS = 250
 
@@ -38,6 +39,10 @@ def _isBeingUsedAsAMethod(self):
 
 def _isNotBeingUsedAsAMethod(self):
     return not aq_get(self, '_isBeingUsedAsAMethod_', 0)
+
+
+def _string_hash(s):
+    return urlsafe_b64encode(str(s.__hash__()))
 
 
 class RoleManager(Base, RoleManager):
@@ -92,15 +97,17 @@ class RoleManager(Base, RoleManager):
             permissions = [p for p in permissions if p[0] == permission]
 
         for p in permissions:
+            permission_name = p[0]
             name, value = p[:2]
             p=Permission(name, value, self)
             roles = p.getRoles(default=[])
             d={'name': name,
+               'hashed_name': _string_hash(name),
                'acquire': isinstance(roles, list) and 'CHECKED' or '',
                'roles': map(
                    lambda ir, roles=roles, valid=valid, ip=ip:
                    {
-                       'name': "p%dr%d" % (ip, ir),
+                       'name': "permission_%srole_%s" % (_string_hash(permission_name), _string_hash(valid[ir])),
                        'checked': (valid[ir] in roles) and 'CHECKED' or '',
                        },
                    indexes)
