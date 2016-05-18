@@ -429,7 +429,7 @@ static PyMethodDef ZopeSecurityPolicy_methods[] = {
 };
 
 static PyExtensionClass ZopeSecurityPolicyType = {
-	PyObject_HEAD_INIT(NULL) 0,
+       PyVarObject_HEAD_INIT(NULL, 0)
 	"ZopeSecurityPolicy",			/* tp_name	*/
 	sizeof(ZopeSecurityPolicy),		/* tp_basicsize	*/
 	0,					/* tp_itemsize	*/
@@ -488,7 +488,7 @@ static PyMethodDef SecurityManager_methods[] = {
 };
 
 static PyExtensionClass SecurityManagerType = {
-	PyObject_HEAD_INIT(NULL) 0,
+       PyVarObject_HEAD_INIT(NULL, 0)
 	"SecurityManager",			/* tp_name	*/
 	sizeof(SecurityManager),		/* tp_basicsize	*/
 	0,					/* tp_itemsize	*/
@@ -547,7 +547,7 @@ static PyMethodDef PermissionRole_methods[] = {
 };
 
 static PyExtensionClass PermissionRoleType = {
-	PyObject_HEAD_INIT(NULL) 0,
+       PyVarObject_HEAD_INIT(NULL, 0)
 	"PermissionRole",			/* tp_name	*/
 	sizeof(PermissionRole),			/* tp_basicsize	*/
 	0,					/* tp_itemsize	*/
@@ -617,7 +617,7 @@ static PySequenceMethods imSequenceMethods = {
 };
 
 static PyExtensionClass imPermissionRoleType = {
-	PyObject_HEAD_INIT(NULL) 0,
+       PyVarObject_HEAD_INIT(NULL, 0)
 	"imPermissionRole",			/* tp_name	*/
 	sizeof(imPermissionRole),		/* tp_basicsize	*/
 	0,					/* tp_itemsize	*/
