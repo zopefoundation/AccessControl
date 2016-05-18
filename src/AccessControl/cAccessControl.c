@@ -959,7 +959,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 		**|        "__allow_access_to_unprotected_subobjects__", None)
 		*/
 
-		p = callfunction2(Containers, OBJECT(container->ob_type),
+		p = callfunction2(Containers, OBJECT(Py_TYPE(container)),
                                   Py_None);
 		if (p == NULL)
                   goto err;
@@ -1309,7 +1309,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 
 static void ZopeSecurityPolicy_dealloc(ZopeSecurityPolicy *self) {
 
-	Py_DECREF(self->ob_type);	/* Extensionclass init incref'd */
+       Py_DECREF(Py_TYPE(self));	/* Extensionclass init incref'd */
 	PyObject_DEL(self);  
 }
 
@@ -1393,7 +1393,7 @@ SecurityManager_dealloc(SecurityManager *self)
   Py_XDECREF(self->policy);
   Py_XDECREF(self->validate);
   Py_XDECREF(self->checkPermission);
-  Py_DECREF(self->ob_type);	/* Extensionclass init incref'd */
+  Py_DECREF(Py_TYPE(self));	/* Extensionclass init incref'd */
   PyObject_DEL(self);  
 }
 
@@ -1589,7 +1589,7 @@ static void PermissionRole_dealloc(PermissionRole *self) {
 
 	Py_XDECREF(self->__roles__);
 
-	Py_XDECREF(self->ob_type);	/* Extensionclass init incref'd */
+	Py_XDECREF(Py_TYPE(self));	/* Extensionclass init incref'd */
 
 	PyObject_DEL(self);  
 }
@@ -1735,7 +1735,7 @@ static void imPermissionRole_dealloc(imPermissionRole *self) {
 
 	Py_XDECREF(self->_v);
 
-	Py_DECREF(self->ob_type);	/* Extensionclass init incref'd */
+	Py_DECREF(Py_TYPE(self));	/* Extensionclass init incref'd */
 
 	PyObject_DEL(self);  
 }
@@ -2047,7 +2047,7 @@ guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
 
         assertion = Containers(type(inst))
       */
-      t = PyDict_GetItem(ContainerAssertions, OBJECT(inst->ob_type));
+      t = PyDict_GetItem(ContainerAssertions, OBJECT(Py_TYPE(inst)));
       if (t != NULL)
         {
 
@@ -2076,7 +2076,7 @@ guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
                   if (i < 0) goto err;
                   if (i) 
                     {
-                      if (attrv->ob_type->tp_call)
+                      if (Py_TYPE(attrv)->tp_call)
                         {
                           Py_DECREF(v);
                           v = callfunction2(attrv, inst, name);
