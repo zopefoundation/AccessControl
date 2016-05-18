@@ -6,7 +6,7 @@ For changes before verison 3.0, see ``HISTORY.txt``.
 3.0.13 (unreleased)
 -------------------
 
-- TBD
+- Modernised C code in preparation of porting to Python 3.
 
 3.0.12 (2015-12-21)
 -------------------
