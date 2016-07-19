@@ -1,10 +1,10 @@
 Changelog
 =========
 
-For changes before verison 3.0, see ``HISTORY.txt``.
+For changes before version 3.0, see ``HISTORY.rst``.
 
-3.0.13 (unreleased)
--------------------
+4.0 (unreleased)
+----------------
 
 - Modernised C code in preparation of porting to Python 3.
 

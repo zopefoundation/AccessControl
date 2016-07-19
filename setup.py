@@ -16,14 +16,14 @@ from os.path import join
 from setuptools import setup, find_packages, Extension
 
 setup(name='AccessControl',
-      version='3.0.13.dev0',
+      version='4.0.dev0',
       url='http://pypi.python.org/pypi/AccessControl',
       license='ZPL 2.1',
       description="Security framework for Zope2.",
       author='Zope Foundation and Contributors',
       author_email='zope-dev@zope.org',
-      long_description=(open('README.txt').read() + '\n' +
-                        open('CHANGES.txt').read()),
+      long_description=(open('README.rst').read() + '\n' +
+                        open('CHANGES.rst').read()),
       packages=find_packages('src'),
       package_dir={'': 'src'},
       classifiers=[
@@ -34,7 +34,6 @@ setup(name='AccessControl',
           "Operating System :: OS Independent",
           "Programming Language :: Python",
           "Programming Language :: Python :: 2 :: Only",
-          "Programming Language :: Python :: 2.6",
           "Programming Language :: Python :: 2.7",
           "Programming Language :: Python :: Implementation :: CPython",
       ],
