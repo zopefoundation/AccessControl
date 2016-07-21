@@ -3,10 +3,13 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.0 (unreleased)
-----------------
+4.0a1 (2016-07-21)
+------------------
 
 - Modernised C code in preparation of porting to Python 3.
+
+- #16: Fixed permission handling by avoiding column and row numbers as
+  identifiers for permissions and roles.
 
 3.0.12 (2015-12-21)
 -------------------
