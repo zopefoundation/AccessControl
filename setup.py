@@ -47,6 +47,7 @@ setup(name='AccessControl',
       ],
       install_requires=[
           'Acquisition',
+          'BTrees',
           'DateTime',  # optional dependency of RestrictedPython
           'ExtensionClass>=4.1a1',
           'Persistence',
