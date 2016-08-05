@@ -214,7 +214,7 @@ static PyExtensionClass NAME ## Type = { PyObject_HEAD_INIT(NULL) 0, # NAME, \
 /* Check whether an object has an __of__ method for returning itself
    in the context of its container. */
 #define has__of__(O) (PyObject_TypeCheck((O)->ob_type, ECExtensionClassType) \
-                      && (O)->ob_type->tp_descr_get != NULL)
+                      && Py_TYPE(O)->tp_descr_get != NULL)
 
 /* The following macros are used to check whether an instance
    or a class' instanses have instance dictionaries: */
@@ -256,9 +256,9 @@ static PyExtensionClass NAME ## Type = { PyObject_HEAD_INIT(NULL) 0, # NAME, \
 #undef PyObject_DEL
 
 #define PyMem_DEL(O)                                   \
-  if (((O)->ob_type->tp_flags & Py_TPFLAGS_HAVE_CLASS) \
-      && ((O)->ob_type->tp_free != NULL))              \
-    (O)->ob_type->tp_free((PyObject*)(O));             \
+  if ((Py_TYPE(O)->tp_flags & Py_TPFLAGS_HAVE_CLASS) \
+      && (Py_TYPE(O)->tp_free != NULL))              \
+    Py_TYPE(O)->tp_free((PyObject*)(O));             \
   else                                                 \
     PyObject_FREE((O));
 

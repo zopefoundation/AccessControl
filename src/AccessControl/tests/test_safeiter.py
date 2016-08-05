@@ -16,9 +16,6 @@
 
 import unittest
 
-# Persistence system must be initialized.
-import ZODB
-
 from AccessControl import ZopeGuards
 
 
