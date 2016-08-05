@@ -3,11 +3,10 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.0 (unreleased)
-----------------
+4.0a3 (2016-08-05)
+------------------
 
 - Extract ``.AuthEncoding`` to its own package for reuse.
-
 
 4.0a2 (2016-08-01)
 ------------------
@@ -28,7 +27,6 @@ For changes before version 3.0, see ``HISTORY.rst``.
 - Avoid acquiring ``access`` from module wrapped by
   ``SecurityInfo._ModuleSecurityInfo``.  See:
   https://github.com/zopefoundation/AccessControl/issues/12
-
 
 3.0.11 (2014-11-02)
 -------------------
