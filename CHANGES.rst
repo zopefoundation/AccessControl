@@ -1,20 +1,39 @@
 Changelog
 =========
 
-For changes before verison 3.0, see ``HISTORY.txt``.
+For changes before version 3.0, see ``HISTORY.rst``.
 
-
-3.1.0 (unreleased)
-------------------
+4.0 (unreleased)
+----------------
 
 - Extract ``.AuthEncoding`` to its own package for reuse.
+
+
+4.0a2 (2016-08-01)
+------------------
+
+- Declare missing dependency on BTrees.
+
+4.0a1 (2016-07-21)
+------------------
+
+- Modernised C code in preparation of porting to Python 3.
+
+- #16: Fixed permission handling by avoiding column and row numbers as
+  identifiers for permissions and roles.
+
+3.0.12 (2015-12-21)
+-------------------
+
+- Avoid acquiring ``access`` from module wrapped by
+  ``SecurityInfo._ModuleSecurityInfo``.  See:
+  https://github.com/zopefoundation/AccessControl/issues/12
 
 
 3.0.11 (2014-11-02)
 -------------------
 
 - Harden test fix for machines that do not define `localhost`.
-
 
 3.0.10 (2014-11-02)
 -------------------
