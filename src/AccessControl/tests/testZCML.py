@@ -14,7 +14,7 @@
 """Test security induced by ZCML
 """
 
-from zope.interface import implements
+from zope.interface import implementer
 from zope.interface import Interface
 from zope.schema import TextLine
 from AccessControl.SecurityInfo import ClassSecurityInfo
@@ -34,8 +34,8 @@ class IDummy(ISuperDummy):
         """
         """
 
-class Dummy1:
-    implements(IDummy)
+@implementer(IDummy)
+class Dummy1(object):
     def foo(self): pass
     def bar(self): pass
     def baz(self): pass
@@ -53,14 +53,14 @@ class Dummy2(Dummy1):
 class IDummy3(Interface):
     attr = TextLine(title=u"Attribute")
 
-class Dummy3:
-    implements(IDummy3)
+@implementer(IDummy3)
+class Dummy3(object):
     attr = None
 
-class Dummy4:
+class Dummy4(object):
     foo = None
 
-class Dummy5:
+class Dummy5(object):
     pass
 
 def test_security_equivalence():
@@ -217,10 +217,10 @@ def test_set_warnings():
       ...      warned.extend(list(trapped))
       >>> len(warned)
       2
-      >>> str(warned[0].message)
-      'The set_schema option...'
-      >>> str(warned[1].message)
-      'The set_attribute option...'
+      >>> str(warned[0].message).startswith('The set_schema option')
+      True
+      >>> str(warned[1].message).startswith('The set_attribute option')
+      True
       >>> tearDown()
     """
 

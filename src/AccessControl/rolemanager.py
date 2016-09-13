@@ -18,7 +18,7 @@ from Acquisition import Acquired
 from Acquisition import aq_base
 from Acquisition import aq_get
 from ExtensionClass import Base
-from zope.interface import implements
+from zope.interface import implementer
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
@@ -45,10 +45,9 @@ def _string_hash(s):
     return urlsafe_b64encode(str(s.__hash__()))
 
 
+@implementer(IRoleManager)
 class RoleManager(Base, RoleManager):
     """An object that has configurable permissions"""
-
-    implements(IRoleManager)
     permissionMappingPossibleValues=Acquired
     security = ClassSecurityInfo()
 

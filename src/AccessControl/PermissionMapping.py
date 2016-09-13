@@ -21,7 +21,7 @@ from cgi import escape
 
 from Acquisition import ImplicitAcquisitionWrapper
 from ExtensionClass import Base
-from zope.interface import implements
+from zope.interface import implementer
 
 from AccessControl.class_init import InitializeClass
 from AccessControl.interfaces import IPermissionMappingSupport
@@ -29,9 +29,8 @@ from AccessControl.owner import UnownableOwner
 from AccessControl.Permission import pname
 from AccessControl.requestmethod import requestmethod
 
+@implementer(IPermissionMappingSupport)
 class RoleManager:
-
-    implements(IPermissionMappingSupport)
 
     # XXX: No security declarations?
 

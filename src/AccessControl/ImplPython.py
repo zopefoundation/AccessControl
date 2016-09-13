@@ -23,7 +23,7 @@ from Acquisition import aq_inner
 from Acquisition import aq_inContextOf
 from Acquisition import aq_parent
 from ExtensionClass import Base
-from zope.interface import implements
+from zope.interface import implementer
 
 # This is used when a permission maps explicitly to no permission.  We
 # try and get this from cAccessControl first to make sure that if both
@@ -188,9 +188,8 @@ class imPermissionRole(Base):
 #
 from AccessControl.ZopeSecurityPolicy import getRoles  # XXX
 
+@implementer(ISecurityPolicy)
 class ZopeSecurityPolicy:
-
-    implements(ISecurityPolicy)
 
     def __init__(self, ownerous=1, authenticated=1, verbose=0):
         """Create a Zope security policy.
@@ -510,11 +509,11 @@ def setDefaultBehaviors(ownerous, authenticated, verbose):
 setDefaultBehaviors(True, True, False)
 
 
+@implementer(ISecurityManager)
 class SecurityManager:
     """A security manager provides methods for checking access and managing
     executable context and policies
     """
-    implements(ISecurityManager)
     __allow_access_to_unprotected_subobjects__ = {
         'validate': 1, 'checkPermission': 1,
         'getUser': 1, 'calledByExecutable': 1

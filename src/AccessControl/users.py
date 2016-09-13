@@ -21,7 +21,7 @@ from Acquisition import aq_inContextOf
 from Acquisition import aq_parent
 from Acquisition import Implicit
 from Persistence import Persistent
-from zope.interface import implements
+from zope.interface import implementer
 
 from AccessControl import AuthEncoding
 from AccessControl import SpecialUsers
@@ -33,11 +33,10 @@ from .PermissionRole import rolesForPermissionOn
 _marker=[]
 
 
+@implementer(IUser)
 class BasicUser(Implicit):
 
     """Base class for all User objects"""
-
-    implements(IUser)
 
     # ----------------------------
     # Public User object interface

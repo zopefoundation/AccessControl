@@ -18,7 +18,7 @@ from Acquisition import aq_get
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from ExtensionClass import Base
-from zope.interface import implements
+from zope.interface import implementer
 
 from AccessControl.class_init import InitializeClass
 from AccessControl.interfaces import IOwned
@@ -40,9 +40,8 @@ def ownableFilter(self):
 _mark=ownableFilter
 
 
+@implementer(IOwned)
 class Owned(Base):
-
-    implements(IOwned)
 
     security = ClassSecurityInfo()
     security.setPermissionDefault(take_ownership, ('Owner', ))

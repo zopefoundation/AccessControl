@@ -19,9 +19,9 @@ from zope.component import queryUtility
 from zope.component.zcml import utility
 from zope.configuration.config import GroupingContextDecorator
 from zope.configuration.interfaces import IConfigurationContext
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import implementer
 from zope.interface import Interface
+from zope.interface import provider
 from zope.schema import ASCIILine
 from zope.security.checker import CheckerPublic
 from zope.security.interfaces import IInteraction
@@ -87,14 +87,14 @@ def checkPermission(permission, object, interaction=None):
     return False
 
 
+@implementer(IInteraction)
+@provider(ISecurityPolicy)
 class SecurityPolicy(ParanoidSecurityPolicy):
     """Security policy that bridges between zope.security security mechanisms
     and Zope 2's security policy.
 
     Don't let the name of the base class fool you... This really just
     delegates to Zope 2's security manager."""
-    classProvides(ISecurityPolicy)
-    implements(IInteraction)
 
     def checkPermission(self, permission, object):
         return checkPermission(permission, object)
@@ -168,8 +168,8 @@ def protectClass(klass, permission_id):
         security.declareObjectProtected(perm)
 
 
+@implementer(IConfigurationContext, IPermissionDirective)
 class PermissionDirective(GroupingContextDecorator):
-    implements(IConfigurationContext, IPermissionDirective)
 
     def __init__(self, context, id, title, description=''):
         self.context = context

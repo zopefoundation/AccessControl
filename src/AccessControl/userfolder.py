@@ -22,7 +22,7 @@ from Persistence import Persistent
 from Persistence import PersistentMapping
 from zExceptions import BadRequest
 from zExceptions import Unauthorized
-from zope.interface import implements
+from zope.interface import implementer
 
 from AccessControl import AuthEncoding
 from AccessControl import ClassSecurityInfo
@@ -358,6 +358,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
 InitializeClass(BasicUserFolder)
 
 
+@implementer(IStandardUserFolder)
 class UserFolder(BasicUserFolder):
     """Standard UserFolder object
 
@@ -365,8 +366,6 @@ class UserFolder(BasicUserFolder):
     about users including name, password domain, and roles.
     UserFolders function chiefly to control access by authenticating
     users and binding them to a collection of roles."""
-
-    implements(IStandardUserFolder)
 
     meta_type = 'User Folder'
     id = 'acl_users'

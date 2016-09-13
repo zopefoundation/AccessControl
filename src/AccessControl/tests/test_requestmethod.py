@@ -11,12 +11,12 @@
 #
 ##############################################################################
 
-from zope.interface import implements
+from zope.interface import implementer
 from zope.publisher.interfaces.browser import IBrowserRequest
 
 
+@implementer(IBrowserRequest)
 class DummyRequest:
-    implements(IBrowserRequest)
 
     def __init__(self, method):
         self.method = method

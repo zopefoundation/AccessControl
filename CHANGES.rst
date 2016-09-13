@@ -6,6 +6,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0 (unreleased)
 ----------------
 
+- Use `@implementer` class decorator.
 
 4.0a3 (2016-08-05)
 ------------------
