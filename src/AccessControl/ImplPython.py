@@ -40,16 +40,12 @@ from AccessControl.interfaces import ISecurityManager
 from AccessControl.SimpleObjectPolicies import Containers
 from AccessControl.SimpleObjectPolicies import _noroles
 from AccessControl.ZopeGuards import guarded_getitem
+from AccessControl.Permission import getPermissionIdentifier
 
 LOG = getLogger('ImplPython')
 
 # AccessControl.PermissionRole
 # ----------------------------
-
-_ident_chars = string.ascii_letters + string.digits + "_"
-name_trans = filter(lambda c, an=_ident_chars: c not in an,
-                    map(chr, range(256)))
-name_trans = string.maketrans(''.join(name_trans), '_' * len(name_trans))
 
 _default_roles = ('Manager',)
 
@@ -63,7 +59,7 @@ _embed_permission_in_roles = 0
 def rolesForPermissionOn(perm, object, default=_default_roles, n=None):
     """Return the roles that have the given permission on the given object
     """
-    n = n or '_' + string.translate(perm, name_trans) + "_Permission"
+    n = n or getPermissionIdentifier(perm)
     r = None
     
     while 1:
@@ -134,7 +130,7 @@ class PermissionRole(Base):
 
     def __init__(self, name, default=('Manager',)):
         self.__name__ = name
-        self._p = '_' + string.translate(name, name_trans) + "_Permission"
+        self._p = getPermissionIdentifier(name)
         self._d = self.__roles__ = default
 
     def __of__(self, parent):

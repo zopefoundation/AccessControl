@@ -26,7 +26,7 @@ from zope.interface import implementer
 from AccessControl.class_init import InitializeClass
 from AccessControl.interfaces import IPermissionMappingSupport
 from AccessControl.owner import UnownableOwner
-from AccessControl.Permission import pname
+from AccessControl.Permission import getPermissionIdentifier
 from AccessControl.requestmethod import requestmethod
 
 @implementer(IPermissionMappingSupport)
@@ -49,7 +49,7 @@ class RoleManager:
 
         perms={}
         for p in self.possible_permissions():
-            perms[pname(p)]=p
+            perms[getPermissionIdentifier(p)]=p
 
         r=[]
         a=r.append
@@ -106,14 +106,14 @@ InitializeClass(RoleManager)
 
 def getPermissionMapping(name, obj, st=type('')):
     obj=getattr(obj, 'aq_base', obj)
-    name=pname(name)
+    name=getPermissionIdentifier(name)
     r=getattr(obj, name, '')
     if type(r) is not st: r=''
     return r
 
 def setPermissionMapping(name, obj, v):
-    name=pname(name)
-    if v: setattr(obj, name, pname(v))
+    name=getPermissionIdentifier(name)
+    if v: setattr(obj, name, getPermissionIdentifier(v))
     elif obj.__dict__.has_key(name): delattr(obj, name)
 
 class PM(Base):
