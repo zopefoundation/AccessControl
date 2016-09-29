@@ -318,9 +318,7 @@ class RoleManager(Base, RoleManager):
             item = getattr(item, '__parent__', _notfound)
             if item is _notfound:
                 break
-        keys=dict.keys()
-        keys.sort()
-        return tuple(keys)
+        return tuple(sorted(dict.keys()))
 
     def get_local_roles_for_userid(self, userid):
         dict=self.__ac_local_roles__ or {}

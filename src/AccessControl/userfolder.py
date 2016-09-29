@@ -377,15 +377,13 @@ class UserFolder(BasicUserFolder):
     def getUserNames(self):
         """Return a list of usernames"""
         names=self.data.keys()
-        names.sort()
-        return names
+        return sorted(names)
 
     def getUsers(self):
         """Return a list of user objects"""
         data=self.data
         names=data.keys()
-        names.sort()
-        return [data[n] for n in names]
+        return [data[n] for n in sorted(names)]
 
     def getUser(self, name):
         """Return the named user object or None"""
