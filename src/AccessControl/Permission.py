@@ -13,17 +13,17 @@
 """Permissions
 """
 
-import string
-
 from Acquisition import aq_base
+import re
 
-name_trans=filter(lambda c, an=string.letters+string.digits+'_': c not in an,
-                  map(chr, range(256)))
-name_trans=string.maketrans(''.join(name_trans), '_'*len(name_trans))
+_NOT_ALLOWED_CHARS = re.compile(r'[^a-zA-Z0-9_]')
 
 
-def pname(name, translate=string.translate, name_trans=name_trans):
-    return '_'+translate(name, name_trans) + "_Permission"
+def getPermissionIdentifier(name):
+    return '_' + re.sub(_NOT_ALLOWED_CHARS, '_', name) + "_Permission"
+
+# BBB
+pname = getPermissionIdentifier
 
 _marker=[]
 
@@ -36,7 +36,7 @@ class Permission:
 
     def __init__(self, name, data, obj, default=None):
         self.name = name
-        self._p = '_' + string.translate(name, name_trans) + "_Permission"
+        self._p = getPermissionIdentifier(name)
         self.data = data
         self.obj = aq_base(obj)
         self.default = default
@@ -152,7 +152,7 @@ def addPermission(perm, default_roles=('Manager', )):
     global _ac_permissions
     _ac_permissions = _ac_permissions + entry
     _registeredPermissions[perm] = 1
-    mangled = pname(perm) # get mangled permission name
+    mangled = getPermissionIdentifier(perm)
     if not hasattr(ApplicationDefaultPermissions, mangled):
         setattr(ApplicationDefaultPermissions, mangled, default_roles)
 
