@@ -330,9 +330,9 @@ class ZopeSecurityPolicy:
                 return 1
         except TypeError:
             # 'roles' isn't a sequence
-            LOG.error("'%s' passed as roles"
+            LOG.error("'%r' passed as roles"
                 " during validation of '%s' is not a sequence." % (
-                `roles`, name))
+                roles, name))
             raise
 
         # Check executable security
@@ -595,7 +595,7 @@ class SecurityManager:
         """
         stack = self._context.stack
         if len(stack) > max_stack_size:
-            raise SystemError, 'Excessive recursion'
+            raise SystemError('Excessive recursion')
         stack.append(anExecutableObject)
         p = getattr(anExecutableObject, '_customSecurityPolicy', None)
         if p is not None:
@@ -662,7 +662,7 @@ def guarded_getattr(inst, name, default=_marker):
     not allowed to access the attribute.
     """
     if name[:1] == '_':
-        raise Unauthorized, name
+        raise Unauthorized(name)
 
     # Try to get the attribute normally so that unusual
     # exceptions are caught early.
@@ -691,7 +691,7 @@ def guarded_getattr(inst, name, default=_marker):
 
             # Nope, it's boolean
             return v
-        raise Unauthorized, name
+        raise Unauthorized(name)
 
     if assertion:
         if callable(assertion):

@@ -82,11 +82,11 @@ def allow_type(Type, allowed=1):
     """Allow a type and all of its methods and attributes to be used from
     restricted code.  The argument Type must be a type."""
     if type(Type) is not type:
-        raise ValueError, "%s is not a type" % `Type`
+        raise ValueError("%r is not a type" % Type)
     if hasattr(Type, '__roles__'):
-        raise ValueError, "%s handles its own security" % `Type`
+        raise ValueError("%r handles its own security" % Type)
     if not (isinstance(allowed, int) or isinstance(allowed, dict)):
-        raise ValueError, "The 'allowed' argument must be an int or dict."
+        raise ValueError("The 'allowed' argument must be an int or dict.")
     ContainerAssertions[Type] = allowed
 
 #

@@ -73,7 +73,7 @@ class RoleManager:
             p=class_permissions[i]
             if p and (p not in perms):
                 __traceback_info__=perms, p, i
-                raise ValueError, (
+                raise ValueError(
                     """Attempted to map a permission to a permission, %s,
                     that is not valid. This should never happen. (Waaa).
                     """ % escape(p))
@@ -126,7 +126,7 @@ class PM(Base):
         # We want to make sure that any non-explicitly set methods are
         # private!
         if name.startswith('_') and name.endswith("_Permission"): return ''
-        raise AttributeError, escape(name)
+        raise AttributeError(escape(name))
 
 PermissionMapper=PM
 

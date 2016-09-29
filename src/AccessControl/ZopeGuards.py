@@ -11,6 +11,7 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 import math
 import random
 import sys
@@ -21,9 +22,9 @@ import RestrictedPython
 from RestrictedPython.Guards import safe_builtins, full_write_guard
 from RestrictedPython.Utilities import utility_builtins
 from RestrictedPython.Eval import RestrictionCapableEval
-from SecurityManagement import getSecurityManager
-from SecurityInfo import secureModule
-from SimpleObjectPolicies import Containers, ContainerAssertions
+from .SecurityManagement import getSecurityManager
+from .SecurityInfo import secureModule
+from .SimpleObjectPolicies import Containers, ContainerAssertions
 from zExceptions import Unauthorized
 
 _marker = []  # Create a new marker object.
@@ -205,7 +206,7 @@ class NullIter(SafeIter):
         return self._next()
 
 def _error(index):
-    raise Unauthorized, 'unauthorized access to element'
+    raise Unauthorized('unauthorized access to element')
 
 def guarded_iter(*args):
     if len(args) == 1:
@@ -242,7 +243,7 @@ def guarded_filter(f, seq, skip_unauthorized=0):
         if v(seq, seq, None, el):
             if f(el): a(el)
         elif not skip_unauthorized:
-            raise Unauthorized, 'unauthorized access to element'
+            raise Unauthorized('unauthorized access to element')
     return result
 safe_builtins['filter'] = guarded_filter
 
@@ -408,7 +409,7 @@ if sys.version_info >= (2, 5):
 def _metaclass(name, bases, dict):
     for k, v in dict.items():
         if k.endswith('__roles__') and k[:len('__roles__')] not in dict:
-          raise Unauthorized, "Can't override security: %s" % k
+          raise Unauthorized("Can't override security: %s" % k)
     ob = type(name, bases, dict)
     ob.__allow_access_to_unprotected_subobjects__ = 1
     ob._guarded_writes = 1

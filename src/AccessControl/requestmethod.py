@@ -31,7 +31,7 @@ def _buildFacade(name, spec, docstring):
 
 def requestmethod(*methods):
     """Create a request method specific decorator"""
-    methods = map(lambda m: m.upper(), methods)
+    methods = list(map(lambda m: m.upper(), methods))
     if len(methods) > 1:
         methodsstr = ', '.join(methods[:-1])
         methodsstr += ' or ' + methods[-1]
@@ -49,7 +49,7 @@ def requestmethod(*methods):
         
         arglen = len(args)
         if defaults is not None:
-            defaults = zip(args[arglen - len(defaults):], defaults)
+            defaults = list(zip(args[arglen - len(defaults):], defaults))
             arglen -= len(defaults)
             
         def _curried(*args, **kw):
@@ -72,7 +72,7 @@ def requestmethod(*methods):
         # Build a facade, with a reference to our locally-scoped _curried
         name = callable.__name__
         facade_globs = dict(_curried=_curried, _default=_default)
-        exec _buildFacade(name, spec, callable.__doc__) in facade_globs
+        exec(_buildFacade(name, spec, callable.__doc__), facade_globs)
         return facade_globs[name]
     
     return _methodtest

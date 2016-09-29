@@ -21,9 +21,9 @@ def InitializeClass(self):
     from AccessControl.Permission import registerPermissions
     from AccessControl.PermissionRole import PermissionRole
     dict=self.__dict__
-    have=dict.has_key
+    have=dict.__contains__
     ft=type(InitializeClass)
-    dict_items=dict.items()
+    dict_items=list(dict.items())
 
     for name, v in dict_items:
         if getattr(v, '_need__name__', 0):
@@ -33,9 +33,10 @@ def InitializeClass(self):
                 # Already supplied a name.
                 if name != oldname:
                     # Tried to implicitly assign a different name!
-                    try: classname = '%s.%s' % (
-                        self.__module__, self.__name__)
-                    except AttributeError: classname = `self`
+                    try:
+                        classname = '%s.%s' % (self.__module__, self.__name__)
+                    except AttributeError:
+                        classname = repr(self)
                     logging.getLogger("Init").warning(
                         'Ambiguous name for method of %s: %r != %r',
                         classname, d['__name__'], name)
@@ -64,7 +65,7 @@ def InitializeClass(self):
             delattr(self, key)
             break
 
-    if self.__dict__.has_key('__ac_permissions__'):
+    if '__ac_permissions__' in self.__dict__:
         registerPermissions(self.__ac_permissions__)
         for acp in self.__ac_permissions__:
             pname, mnames = acp[:2]

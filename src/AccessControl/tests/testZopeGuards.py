@@ -611,7 +611,7 @@ class TestActualPython(GuardTestCase):
         sm = SecurityManager()
         old = self.setSecurityManager(sm)
         try:
-            exec code in its_globals
+            exec(code, its_globals)
         finally:
             self.setSecurityManager(old)
 
@@ -624,7 +624,7 @@ class TestActualPython(GuardTestCase):
 
     def testPythonRealAC(self):
         code, its_globals = self._compile("actual_python.py")
-        exec code in its_globals
+        exec(code, its_globals)
 
     def test_derived_class_normal(self):
         from AccessControl import Unauthorized
@@ -644,7 +644,7 @@ print normal.private_method()
         self._initPolicyAndManager()
 
         try:
-            exec code in its_globals
+            exec(code, its_globals)
         except Unauthorized:
             pass
         else:
@@ -737,7 +737,7 @@ print foo(**kw)
         sm = SecurityManager()
         old = self.setSecurityManager(sm)
         try:
-            exec code in its_globals
+            exec(code, its_globals)
         finally:
             self.setSecurityManager(old)
 

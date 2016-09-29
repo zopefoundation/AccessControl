@@ -213,7 +213,7 @@ class ClassSecurityInfo(SecurityInfo):
         # it on the class object.
         getRoles = self.roles.get
         __ac_permissions__ = []
-        permissions = ac_permissions.items()
+        permissions = list(ac_permissions.items())
         permissions.sort()
         for permission_name, names in permissions:
             roles = getRoles(permission_name, ())

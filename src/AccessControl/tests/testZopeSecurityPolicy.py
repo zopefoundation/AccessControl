@@ -13,7 +13,10 @@
 
 from doctest import DocTestSuite
 import sys
-import thread
+try:
+    import _thread as thread
+except ImportError:
+    import thread
 import unittest
 
 from Acquisition import Implicit, Explicit
@@ -22,7 +25,12 @@ from zExceptions import Unauthorized
 
 from AccessControl.userfolder import UserFolder
 from AccessControl.SecurityManagement import SecurityContext
-
+try:
+    from AccessControl import ImplC
+except ImportError:
+    HAVE_IMPLC = False
+else:
+    HAVE_IMPLC = True
 
 user_roles = ('RoleOfUser',)
 eo_roles = ('RoleOfExecutableOwner',)
@@ -416,12 +424,16 @@ class Python_ZSPTests(ZopeSecurityPolicyTestBase,
         from AccessControl.ImplPython import ZopeSecurityPolicy
         return ZopeSecurityPolicy
 
-class C_ZSPTests(ZopeSecurityPolicyTestBase,
-                 ISecurityPolicyConformance,
-                ):
-    def _getTargetClass(self):
-        from AccessControl.ImplC import ZopeSecurityPolicy
-        return ZopeSecurityPolicy
+if HAVE_IMPLC:
+    class C_ZSPTests(ZopeSecurityPolicyTestBase,
+                     ISecurityPolicyConformance,
+                    ):
+        def _getTargetClass(self):
+            return ImplC.ZopeSecurityPolicy
+else:
+    class C_ZSPTests(unittest.TestCase):
+        pass
+
 
 class SecurityManagerTestsBase(unittest.TestCase):
 
@@ -486,13 +498,17 @@ class Python_SMTests(SecurityManagerTestsBase):
         from AccessControl import ImplPython
         return ImplPython
 
-class C_SMTests(SecurityManagerTestsBase):
+if HAVE_IMPLC:
+    class C_SMTests(SecurityManagerTestsBase):
 
-    _implementation_name = "C"
+        _implementation_name = "C"
 
-    def _getModule(self):
-        from AccessControl import ImplC
-        return ImplC
+        def _getModule(self):
+            return ImplC
+else:
+    class C_SMTests(unittest.TestCase):
+        pass
+
 
 def test_getRoles():
     """
@@ -689,10 +705,10 @@ class GetRolesWithMultiThreadTest(unittest.TestCase):
 
 def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(Python_ZSPTests, 'test'))
-    suite.addTest(unittest.makeSuite(C_ZSPTests, 'test'))
-    suite.addTest(unittest.makeSuite(Python_SMTests, 'test'))
-    suite.addTest(unittest.makeSuite(C_SMTests, 'test'))
+    suite.addTest(unittest.makeSuite(Python_ZSPTests))
+    suite.addTest(unittest.makeSuite(C_ZSPTests))
+    suite.addTest(unittest.makeSuite(Python_SMTests))
+    suite.addTest(unittest.makeSuite(C_SMTests))
     suite.addTest(DocTestSuite())
     suite.addTest(unittest.makeSuite(GetRolesWithMultiThreadTest))
     return suite

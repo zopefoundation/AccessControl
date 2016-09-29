@@ -69,7 +69,7 @@ def assertPRoles(ob, permission, expect):
         for r in expect: expected[r] = 1
         if got == expected:  # Dict compare does the Right Thing.
             same = 1
-    assert same, 'Expected roles: %s, got: %s' % (`expect`, `roles`)
+    assert same, 'Expected roles: %r, got: %r' % (expect, roles)
 
 
 class PermissionRoleTests (unittest.TestCase):

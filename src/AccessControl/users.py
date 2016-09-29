@@ -102,7 +102,7 @@ class BasicUser(Implicit):
                 object=getattr(object, 'aq_inner', object)
                 continue
             break
-        roles=list(roles) + local.keys()
+        roles=list(roles) + list(local.keys())
         return roles
 
     def getDomains(self):

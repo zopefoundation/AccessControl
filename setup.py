@@ -14,6 +14,27 @@
 
 from os.path import join
 from setuptools import setup, find_packages, Extension
+import os
+import platform
+import sys
+
+# PyPy won't build the extension
+py_impl = getattr(platform, 'python_implementation', lambda: None)
+is_pypy = py_impl() == 'PyPy'
+is_pure = 'PURE_PYTHON' in os.environ
+py3k = sys.version_info >= (3, )
+if is_pypy or is_pure or py3k:
+    ext_modules = []
+else:
+    ext_modules = [
+        Extension(
+            name='AccessControl.cAccessControl',
+            include_dirs=['include', 'src'],
+            sources=[join('src', 'AccessControl', 'cAccessControl.c')],
+            depends=[join('include', 'ExtensionClass', 'ExtensionClass.h'),
+                     join('include', 'Acquisition', 'Acquisition.h')]),
+    ]
+
 
 setup(name='AccessControl',
       version='4.0a4.dev0',
@@ -37,14 +58,7 @@ setup(name='AccessControl',
           "Programming Language :: Python :: 2.7",
           "Programming Language :: Python :: Implementation :: CPython",
       ],
-      ext_modules=[
-          Extension(
-              name='AccessControl.cAccessControl',
-              include_dirs=['include', 'src'],
-              sources=[join('src', 'AccessControl', 'cAccessControl.c')],
-              depends=[join('include', 'ExtensionClass', 'ExtensionClass.h'),
-                       join('include', 'Acquisition', 'Acquisition.h')]),
-      ],
+      ext_modules=ext_modules,
       install_requires=[
           'Acquisition',
           'AuthEncoding',

@@ -12,7 +12,7 @@
 ##############################################################################
 """Define Zope's default security policy
 """
-
+from __future__ import absolute_import
 from types import MethodType
 
 # AccessControl.Implementation inserts:
@@ -29,7 +29,7 @@ def getRoles(container, name, value, default):
     global rolesForPermissionOn  # XXX:  avoid import loop
 
     if rolesForPermissionOn is None:
-        from PermissionRole import rolesForPermissionOn
+        from .PermissionRole import rolesForPermissionOn
 
     roles = getattr(value, '__roles__', _noroles)
     if roles is _noroles:

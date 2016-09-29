@@ -53,7 +53,7 @@ class ISecurityManagerConformance:
         from zope.interface.verify import verifyClass
         verifyClass(ISecurityManager, self._getTargetClass())
 
-class SecurityManagerTestBase(unittest.TestCase):
+class SecurityManagerTestBase:
 
     def _makeOne(self, thread_id, context):
         return self._getTargetClass()(thread_id, context)
@@ -240,28 +240,25 @@ class SecurityManagerTestBase(unittest.TestCase):
         self.failUnless(new_policy.VALIDATE_ARGS[3] is VALUE)
         self.failUnless(new_policy.VALIDATE_ARGS[4] is context)
 
+
 class PythonSecurityManagerTests(SecurityManagerTestBase,
                                  ISecurityManagerConformance,
-                                ):
+                                 unittest.TestCase):
 
     def _getTargetClass(self):
         from AccessControl.ImplPython import SecurityManager
         return SecurityManager
 
 
-# N.B.:  The C version mixes in the Python version, which is why we
-#        can test for conformance to ISecurityManager.
-class C_SecurityManagerTests(SecurityManagerTestBase,
-                             ISecurityManagerConformance,
-                            ):
+try:
+    from AccessControl.ImplC import SecurityManager
+    # N.B.:  The C version mixes in the Python version, which is why we
+    #        can test for conformance to ISecurityManager.
+    class C_SecurityManagerTests(SecurityManagerTestBase,
+                                 ISecurityManagerConformance,
+                                 unittest.TestCase):
 
-    def _getTargetClass(self):
-        from AccessControl.ImplC import SecurityManager
-        return SecurityManager
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(PythonSecurityManagerTests))
-    suite.addTest(unittest.makeSuite(C_SecurityManagerTests))
-    return suite
+        def _getTargetClass(self):
+            return SecurityManager
+except ImportError:
+    pass
