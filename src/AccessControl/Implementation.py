@@ -24,6 +24,8 @@ AccessControl package that defined the various components before this
 module was introduced.
 
 """
+from __future__ import absolute_import
+
 
 def getImplementationName():
     """Return the name of the implementation currently being used."""
@@ -93,7 +95,12 @@ _policy_names = {
 
 
 # start with the default, mostly because we need something for the tests
-setImplementation("C")
+try:
+    from . import ImplC
+    setImplementation("C")
+    del ImplC
+except ImportError:
+    setImplementation("PYTHON")
 
 # allow the implementation to change from the default
 _implementation_set = 0
