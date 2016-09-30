@@ -674,7 +674,7 @@ def guarded_getattr(inst, name, default=_marker):
         raise
 
     try:
-        container = v.im_self
+        container = v.__self__
     except AttributeError:
         container = aq_parent(aq_inner(v)) or inst
 
@@ -826,7 +826,7 @@ def verifyAcquisitionContext(user, object, object_roles=None):
             return 1
         if hasattr(object, 'im_self'):
             # This is a method.  Grab its self.
-            object=object.im_self
+            object=object.__self__
         if not aq_inContextOf(object, ucontext, 1):
             if 'Shared' in object_roles:
                 # Old role setting. Waaa

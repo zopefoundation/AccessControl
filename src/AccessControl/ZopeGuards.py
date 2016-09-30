@@ -26,6 +26,7 @@ from .SecurityManagement import getSecurityManager
 from .SecurityInfo import secureModule
 from .SimpleObjectPolicies import Containers, ContainerAssertions
 from zExceptions import Unauthorized
+from functools import reduce
 
 _marker = []  # Create a new marker object.
 

@@ -114,7 +114,7 @@ def getPermissionMapping(name, obj, st=type('')):
 def setPermissionMapping(name, obj, v):
     name=getPermissionIdentifier(name)
     if v: setattr(obj, name, getPermissionIdentifier(v))
-    elif obj.__dict__.has_key(name): delattr(obj, name)
+    elif name in obj.__dict__: delattr(obj, name)
 
 class PM(Base):
     _owner=UnownableOwner
@@ -154,4 +154,4 @@ class Rewrapper(Base):
         self=m.__of__(
             ImplicitAcquisitionWrapper(
                 w, parent))
-        return apply(self, args, kw)
+        return self(*args, **kw)

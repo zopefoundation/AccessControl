@@ -98,7 +98,7 @@ class BasicUser(Implicit):
                 object = parent
                 continue
             if hasattr(object, 'im_self'):
-                object=object.im_self
+                object=object.__self__
                 object=getattr(object, 'aq_inner', object)
                 continue
             break
@@ -140,7 +140,7 @@ class BasicUser(Implicit):
                 return 1
             if hasattr(object, 'im_self'):
                 # This is a method.  Grab its self.
-                object = object.im_self
+                object = object.__self__
             return aq_inContextOf(object, context, 1)
 
         # This is lame, but required to keep existing behavior.
@@ -201,7 +201,7 @@ class BasicUser(Implicit):
                 inner_obj = parent
                 continue
             if hasattr(inner_obj, 'im_self'):
-                inner_obj = inner_obj.im_self
+                inner_obj = inner_obj.__self__
                 inner_obj = getattr(inner_obj, 'aq_inner', inner_obj)
                 continue
             break

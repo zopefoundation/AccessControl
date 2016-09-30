@@ -37,7 +37,7 @@ def getRoles(container, name, value, default):
             return default
 
         if type(value) is MethodType:
-            container = value.im_self
+            container = value.__self__
 
         cls = getattr(container, '__class__', None)
         if cls is None:

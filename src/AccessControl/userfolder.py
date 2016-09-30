@@ -294,7 +294,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
             c = innerparent
         elif hasattr(v, 'im_self'):
             # this is a method, we need to treat it specially
-            c = v.im_self
+            c = v.__self__
             c = getattr(v, 'aq_inner', v)
         request_container = getattr(request['PARENTS'][-1], '__parent__', [])
         # if pub's __parent__ or container is the request container, it

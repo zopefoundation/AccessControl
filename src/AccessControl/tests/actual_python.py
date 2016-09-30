@@ -89,7 +89,7 @@ def f6():
 f6()
 
 def f7():
-    d = apply(dict, [((1, 2), (3, 4))]) # {1: 2, 3: 4}
+    d = dict(*[((1, 2), (3, 4))]) # {1: 2, 3: 4}
     expected = {'k': [1, 3],
                 'v': [2, 4],
                 'i': [(1, 2), (3, 4)]}
@@ -138,7 +138,7 @@ f8()
 # So do something to touch them.
 def f9():
     d = DateTime()
-    print d # this one provoked _print_
+    print(d) # this one provoked _print_
 
     # Funky.  This probably isn't an intended use of reorder, but I'm
     # not sure why it exists.
@@ -155,7 +155,7 @@ def f9():
 f9()
 
 def f10():
-    assert iter(enumerate(iter(iter(range(9))))).next() == (0, 0)
+    assert next(iter(enumerate(iter(iter(range(9)))))) == (0, 0)
 f10()
 
 def f11():

@@ -201,7 +201,7 @@ class TestDictGuards(GuardTestCase):
             old = self.setSecurityManager(sm)
             iterkeys = get_iter({GuardTestCase: 1}, 'iterkeys')
             try:
-                iterkeys().next()
+                next(iterkeys())
             finally:
                 self.setSecurityManager(old)
             self.assert_(sm.calls)
@@ -227,7 +227,7 @@ class TestDictGuards(GuardTestCase):
             old = self.setSecurityManager(sm)
             itervalues = get_iter({GuardTestCase: 1}, 'itervalues')
             try:
-                itervalues().next()
+                next(itervalues())
             finally:
                 self.setSecurityManager(old)
             self.assert_(sm.calls)
@@ -404,9 +404,9 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         sm = SecurityManager() # accepts
         old = self.setSecurityManager(sm)
         enum = guarded_enumerate([1,2,3])
-        self.assertEqual(enum.next(), (0,1))
-        self.assertEqual(enum.next(), (1,2))
-        self.assertEqual(enum.next(), (2,3))
+        self.assertEqual(next(enum), (0,1))
+        self.assertEqual(next(enum), (1,2))
+        self.assertEqual(next(enum), (2,3))
         self.assertRaises(StopIteration, enum.next)
         self.setSecurityManager(old)
 

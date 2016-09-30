@@ -43,7 +43,7 @@ CheckerPrivateId = 'zope2.Private'
 def getSecurityInfo(klass):
     sec = {}
     info = vars(klass)
-    if info.has_key('__ac_permissions__'):
+    if '__ac_permissions__' in info:
         sec['__ac_permissions__'] = info['__ac_permissions__']
     for k, v in info.items():
         if k.endswith('__roles__'):
@@ -53,7 +53,7 @@ def getSecurityInfo(klass):
 
 def clearSecurityInfo(klass):
     info = vars(klass)
-    if info.has_key('__ac_permissions__'):
+    if '__ac_permissions__' in info:
         delattr(klass, '__ac_permissions__')
     for k, v in info.items():
         if k.endswith('__roles__'):
