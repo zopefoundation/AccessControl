@@ -36,6 +36,7 @@ def f5():
     x = range(5)
     def add(a, b):
         return a+b
+    # FIXME reduce is no longer a builtin on python3 - does restricted python really need to support it?
     assert sum(x) == reduce(add, x, 0)
 f5()
 
