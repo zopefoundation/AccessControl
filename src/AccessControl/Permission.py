@@ -14,9 +14,17 @@
 """
 
 from Acquisition import aq_base
+import string
 import re
 
 _NOT_ALLOWED_CHARS = re.compile(r'[^a-zA-Z0-9_]')
+
+
+name_trans = filter(
+    lambda c,
+    an=string.letters + string.digits + '_': c not in an,
+    map(chr, range(256)))
+name_trans = string.maketrans(''.join(name_trans), '_' * len(name_trans))
 
 
 def getPermissionIdentifier(name):
