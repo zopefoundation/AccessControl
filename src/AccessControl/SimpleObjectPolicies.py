@@ -45,6 +45,7 @@ or in ZopeSecurityPolicy. :(
 
 _noroles = [] # this is imported in various places
 
+from contextlib import contextmanager
 import Record
 
 # Allow access to unprotected attributes
@@ -119,3 +120,13 @@ for tree_type, has_values in [(OOBTree, 1),
     if has_values:
         assert key_type is type(tree.values())
         assert key_type is type(tree.items())
+
+
+@contextmanager
+def override_containers(type_, assertions):
+    """Temporarily override the container assertions."""
+    orig_container = Containers(type_)
+    ContainerAssertions[type_] = assertions
+    yield
+    if orig_container is not None:
+        ContainerAssertions[type_] = orig_container

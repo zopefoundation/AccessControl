@@ -306,7 +306,7 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         self.a.subobject = ImplictAcqObject()
         subobject = self.a.subobject
         subobject.acl_users = UserFolder()
-        subobject.acl_users._doAddUser('theowner', 'password', 
+        subobject.acl_users._doAddUser('theowner', 'password',
                                        eo_roles + sysadmin_roles, ())
         subobject.r_item = RestrictedSimpleItem()
         r_subitem = subobject.r_item
@@ -341,12 +341,17 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
             'aq_self': 0, 'aq_base': 0,
             'aq_parent': 1, 'aq_explicit': 1, 'aq_inner': 1
             }
-        for name, allowed in names.items():
-            if not allowed:
-                self.assertRaises(Unauthorized, policy.validate,
-                                  '', '', name, '', None)
-            else:
-                policy.validate('', '', name, '', None)
+        from AccessControl.SimpleObjectPolicies import override_containers
+        # By default we allow all access to str, but this may have been
+        # overridden to disallow some access of str.format.  So we temporarily
+        # restore the default of allowing all access.
+        with override_containers(str, 1):
+            for name, allowed in names.items():
+                if not allowed:
+                    self.assertRaises(Unauthorized, policy.validate,
+                                      '', '', name, '', None)
+                else:
+                    policy.validate('', '', name, '', None)
 
     def testProxyRoleScope(self):
         self.a.subobject = ImplictAcqObject()
@@ -358,11 +363,11 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         subitem = subobject.item
         subitem.owned_setuid_m = OwnedSetuidMethod()
         subitem.getPhysicalRoot = lambda root=self.a: root
-        
+
         item = self.a.item
         item.getPhysicalRoot = lambda root=self.a: root
         self.context.stack.append(subitem.owned_setuid_m.__of__(subitem))
-        
+
         # Out of owner context
         self.assertPolicyAllows(item, 'public_m')
         self.assertPolicyDenies(item, 'protected_m')
@@ -379,7 +384,12 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
 
     def testUnicodeName(self):
         policy = self.policy
-        assert policy.validate('', '', u'foo', '', None)
+        from AccessControl.SimpleObjectPolicies import override_containers
+        # By default we allow all access to str, but this may have been
+        # overridden to disallow some access of str.format.  So we temporarily
+        # restore the default of allowing all access.
+        with override_containers(str, 1):
+            assert policy.validate('', '', u'foo', '', None)
 
     if 0:
         # This test purposely generates a log entry.
@@ -497,7 +507,7 @@ def test_getRoles():
     """
 
     >>> from AccessControl.ZopeSecurityPolicy import getRoles
-    
+
     >>> class C:
     ...     x = 'CRole'
 
@@ -612,10 +622,10 @@ def test_zsp_gets_right_roles_for_methods():
     ...         self.user = user
 
     >>> c = C()
-    
+
     >>> bool(zsp.validate(c, c, 'foo', c.foo, Context(User(['greeneggs']))))
     True
-    
+
     >>> zsp.validate(c, c, 'foo', c.foo, Context(User(['spam'])))
     Traceback (most recent call last):
     ...
@@ -635,7 +645,7 @@ def test_zsp_gets_right_roles_for_methods():
     >>> c.__allow_access_to_unprotected_subobjects__ = 1
     >>> bool(zsp.validate(c, c, 'bar', c.bar, Context(User(['spam']))))
     True
-    
+
     """
 
 from doctest import DocTestSuite
