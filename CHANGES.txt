@@ -4,6 +4,9 @@ Changelog
 2.13.15 (unreleased)
 --------------------
 
+- In ``str.format``, check the security for attributes that are accessed.
+  Part of PloneHotfix20170117.  [maurits]
+
 - Added ``override_container`` context manager.  Used this in tests to
   make them pass when the standard permissive security assertions for
   strings has been changed.  [maurits]
