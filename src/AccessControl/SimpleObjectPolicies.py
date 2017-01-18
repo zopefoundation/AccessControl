@@ -44,6 +44,7 @@ or in ZopeSecurityPolicy. :(
 '''
 
 _noroles = [] # this is imported in various places
+_marker = object()
 
 from contextlib import contextmanager
 import Record
@@ -125,8 +126,10 @@ for tree_type, has_values in [(OOBTree, 1),
 @contextmanager
 def override_containers(type_, assertions):
     """Temporarily override the container assertions."""
-    orig_container = Containers(type_)
+    orig_container = Containers(type_, _marker)
     ContainerAssertions[type_] = assertions
     yield
-    if orig_container is not None:
+    if orig_container is _marker:
+        del ContainerAssertions[type_]
+    else:
         ContainerAssertions[type_] = orig_container

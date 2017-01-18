@@ -335,6 +335,27 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         v = self.policy.checkPermission(u'View', r_item, o_context)
         self.assert_(v, '_View_Permission should grant access to theowner')
 
+    def testContainersContextManager(self):
+        from AccessControl.SimpleObjectPolicies import override_containers
+        from AccessControl.SimpleObjectPolicies import ContainerAssertions
+        from AccessControl.SimpleObjectPolicies import Containers
+        from types import EllipsisType
+        # Surely we have no assertions for this type.  There might be a good
+        # reason to have then, but I have not even heard of this type.
+        self.assertFalse(EllipsisType in ContainerAssertions)
+        with override_containers(EllipsisType, 1):
+            self.assertTrue(EllipsisType in ContainerAssertions)
+            self.assertEqual(Containers(EllipsisType), 1)
+            # Override it again.
+            with override_containers(EllipsisType, {}):
+                self.assertEqual(Containers(EllipsisType), {})
+            # We are outside the nested override, so the first override should
+            # have been restored.
+            self.assertEqual(Containers(EllipsisType), 1)
+        # We are outside all overrides, so the type should no longer be in the
+        # assertions.
+        self.assertFalse(EllipsisType in ContainerAssertions)
+
     def testAqNames(self):
         policy = self.policy
         names = {
