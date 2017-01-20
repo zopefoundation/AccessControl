@@ -50,9 +50,9 @@ def setImplementation(name):
     if name == _implementation_name:
         return
     if name == "C":
-        from AccessControl import ImplC as impl
+        from AccessControl import ImplC as impl  # NOQA
     elif name == "PYTHON":
-        from AccessControl import ImplPython as impl
+        from AccessControl import ImplPython as impl  # NOQA
     else:
         raise ValueError("unknown policy implementation: %r" % name)
 
@@ -71,6 +71,8 @@ def setImplementation(name):
 
     _implementation_set = 1
 
+
+_default_implementation = None
 _implementation_name = None
 _implementation_set = 0
 
@@ -83,7 +85,7 @@ _policy_names = {
                                      "imPermissionRole",
                                      ),
     "AccessControl.SecurityManagement": ("SecurityManager",
-                                      ),
+                                         ),
     "AccessControl.SecurityManager": ("SecurityManager",
                                       ),
     "AccessControl.ZopeGuards": ("aq_validate",
@@ -91,16 +93,17 @@ _policy_names = {
                                  ),
     "AccessControl.ZopeSecurityPolicy": ("ZopeSecurityPolicy",
                                          ),
-    }
-
+}
 
 # start with the default, mostly because we need something for the tests
 try:
     from . import ImplC
-    setImplementation("C")
+    _default_implementation = 'C'
     del ImplC
 except ImportError:
-    setImplementation("PYTHON")
+    _default_implementation = 'PYTHON'
+
+setImplementation(_default_implementation)
 
 # allow the implementation to change from the default
 _implementation_set = 0
