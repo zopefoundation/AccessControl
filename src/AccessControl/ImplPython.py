@@ -29,7 +29,7 @@ from zope.interface import implementer
 # try and get this from cAccessControl first to make sure that if both
 # security implementations exist, we can switch between them later.
 try:
-    from cAccessControl import _what_not_even_god_should_do
+    from AccessControl.cAccessControl import _what_not_even_god_should_do
 except ImportError:
     _what_not_even_god_should_do = []
 
