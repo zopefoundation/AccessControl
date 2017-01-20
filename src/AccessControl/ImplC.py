@@ -13,23 +13,17 @@
 
 """C implementation of the access control machinery."""
 
-try:
-    from AccessControl.cAccessControl import rolesForPermissionOn
-    from AccessControl.cAccessControl import PermissionRole
-    from AccessControl.cAccessControl import imPermissionRole
-    from AccessControl.cAccessControl import _what_not_even_god_should_do
-    from AccessControl.cAccessControl import aq_validate
-    from AccessControl.cAccessControl import guarded_getattr
-    from AccessControl.cAccessControl import setDefaultBehaviors
-    from AccessControl.cAccessControl import ZopeSecurityPolicy \
-        as cZopeSecurityPolicy
-    from AccessControl.cAccessControl import SecurityManager \
-        as cSecurityManager
-except ImportError:
-    import sys
-    # make sure a partial import doesn't pollute sys.modules
-    del sys.modules[__name__]
-    raise
+from AccessControl.cAccessControl import rolesForPermissionOn
+from AccessControl.cAccessControl import PermissionRole
+from AccessControl.cAccessControl import imPermissionRole
+from AccessControl.cAccessControl import _what_not_even_god_should_do
+from AccessControl.cAccessControl import aq_validate
+from AccessControl.cAccessControl import guarded_getattr
+from AccessControl.cAccessControl import setDefaultBehaviors
+from AccessControl.cAccessControl import ZopeSecurityPolicy \
+    as cZopeSecurityPolicy
+from AccessControl.cAccessControl import SecurityManager \
+    as cSecurityManager
 
 from AccessControl.ImplPython import SecurityManager
 from AccessControl.ImplPython import ZopeSecurityPolicy
@@ -39,6 +33,7 @@ class ZopeSecurityPolicy(cZopeSecurityPolicy, ZopeSecurityPolicy):
     """A security manager provides methods for checking access and managing
     executable context and policies
     """
+
 
 class SecurityManager(cSecurityManager, SecurityManager):
     """A security manager provides methods for checking access and managing

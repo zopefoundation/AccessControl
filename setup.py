@@ -12,11 +12,15 @@
 #
 ##############################################################################
 
-from os.path import join
-from setuptools import setup, find_packages, Extension
 import os
+from os.path import join
 import platform
 import sys
+
+from setuptools import setup, find_packages, Extension
+
+README = open('README.rst').read()
+CHANGES = open('CHANGES.rst').read()
 
 # PyPy won't build the extension
 py_impl = getattr(platform, 'python_implementation', lambda: None)
@@ -35,16 +39,16 @@ else:
                      join('include', 'Acquisition', 'Acquisition.h')]),
     ]
 
+__version__ = '4.0a4.dev0'
 
 setup(name='AccessControl',
-      version='4.0a4.dev0',
+      version=__version__,
       url='http://pypi.python.org/pypi/AccessControl',
       license='ZPL 2.1',
       description="Security framework for Zope2.",
       author='Zope Foundation and Contributors',
       author_email='zope-dev@zope.org',
-      long_description=(open('README.rst').read() + '\n' +
-                        open('CHANGES.rst').read()),
+      long_description=README + '\n\n' + CHANGES,
       packages=find_packages('src'),
       package_dir={'': 'src'},
       classifiers=[
