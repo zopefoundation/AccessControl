@@ -91,14 +91,22 @@ class TestGuardedGetattr(GuardTestCase):
     def test_unauthorized(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_getattr
+
+        try:
+            # PyPy
+            from sys import getrefcount
+        except ImportError:
+            def getrefcount(obj):
+                return 1
+
         obj, name = Method(), 'args'
         value = getattr(obj, name)
-        rc = sys.getrefcount(value)
+        rc = getrefcount(value)
         self.__sm.reject = True
         self.assertRaises(Unauthorized, guarded_getattr, obj, name)
         self.assert_(self.__sm.calls)
         del self.__sm.calls[:]
-        self.assertEqual(rc, sys.getrefcount(value))
+        self.assertEqual(rc, getrefcount(value))
 
     def test_calls_validate_for_unknown_type(self):
         from AccessControl.ZopeGuards import guarded_getattr
