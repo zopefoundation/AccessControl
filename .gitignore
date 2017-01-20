@@ -2,6 +2,7 @@
 bin
 build
 coverage
+develop
 dist
 lib
 parts
@@ -11,6 +12,7 @@ parts
 *.pyo
 *.so
 .installed.cfg
+.mr.developer.cfg
 develop-eggs
 eggs
 *.egg-info
