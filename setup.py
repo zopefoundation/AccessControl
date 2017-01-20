@@ -34,6 +34,7 @@ else:
             include_dirs=['include', 'src'],
             sources=[join('src', 'AccessControl', 'cAccessControl.c')],
             depends=[join('include', 'ExtensionClass', 'ExtensionClass.h'),
+                     join('include', 'ExtensionClass', '_compat.h'),
                      join('include', 'Acquisition', 'Acquisition.h')]),
     ]
 

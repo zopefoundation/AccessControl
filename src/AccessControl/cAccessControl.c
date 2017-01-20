@@ -47,22 +47,11 @@
 */
 
 #include "ExtensionClass/ExtensionClass.h"
+#include "ExtensionClass/_compat.h"
 #include "Acquisition/Acquisition.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#if PY_VERSION_HEX < 0x02050000 && !defined(PY_SSIZE_T_MIN)
-typedef int Py_ssize_t;
-typedef Py_ssize_t (*lenfunc)(PyObject *);
-typedef PyObject *(*ssizeargfunc)(PyObject *, Py_ssize_t);
-typedef PyObject *(*ssizessizeargfunc)(PyObject *, Py_ssize_t, Py_ssize_t);
-typedef int(*ssizeobjargproc)(PyObject *, Py_ssize_t, PyObject *);
-typedef int(*ssizessizeobjargproc)(PyObject *, Py_ssize_t, Py_ssize_t, PyObject *);
-#define PY_SSIZE_T_MAX INT_MAX
-#define PY_SSIZE_T_MIN INT_MIN
-#endif
-
 
 static void
 PyVar_Assign(PyObject **v,  PyObject *e)
@@ -374,16 +363,16 @@ static PyObject *c_rolesForPermissionOn(PyObject *self, PyObject *perm,
 
 static PyObject *permissionName(PyObject *name);
 
-static PyObject *SecurityManager_validate(SecurityManager *self, 
+static PyObject *SecurityManager_validate(SecurityManager *self,
                                           PyObject *args);
 static PyObject *SecurityManager_DTMLValidate(SecurityManager *self,
                                               PyObject *args);
-static PyObject *SecurityManager_checkPermission(SecurityManager *self, 
+static PyObject *SecurityManager_checkPermission(SecurityManager *self,
                                                  PyObject *args);
 static void SecurityManager_dealloc(SecurityManager *self);
-static PyObject *SecurityManager_getattro(SecurityManager *self, 
+static PyObject *SecurityManager_getattro(SecurityManager *self,
                                           PyObject *name);
-static int SecurityManager_setattro(SecurityManager *self, 
+static int SecurityManager_setattro(SecurityManager *self,
                                     PyObject *name, PyObject *value);
 
 static getattrofunc ExtensionClassGetattro;
@@ -705,40 +694,40 @@ static int authenticated = 1;
 
 static int 
 ZopeSecurityPolicy_setup(void) {
-        UNLESS (NoSequenceFormat = PyString_FromString(
+        UNLESS (NoSequenceFormat = NATIVE_FROM_STRING(
                     "'%s' passed as roles"
                     " during validation of '%s' is not a sequence."
                     )) return -1;
 
 	UNLESS (defaultPermission = Py_BuildValue("(s)", "Manager")) return -1;
 	UNLESS (_what_not_even_god_should_do = Py_BuildValue("[]")) return -1;
-	UNLESS (__roles__ = PyString_FromString("__roles__")) return -1;
-	UNLESS (__of__ = PyString_FromString("__of__")) return -1;
-	UNLESS (Anonymous = PyString_FromString("Anonymous")) return -1;
+	UNLESS (__roles__ = NATIVE_FROM_STRING("__roles__")) return -1;
+	UNLESS (__of__ = NATIVE_FROM_STRING("__of__")) return -1;
+	UNLESS (Anonymous = NATIVE_FROM_STRING("Anonymous")) return -1;
 	UNLESS (AnonymousTuple = Py_BuildValue("(O)", Anonymous)) return -1;
 	UNLESS (ManagerTuple = Py_BuildValue("(s)", "Manager")) return -1;
-	UNLESS (stack_str = PyString_FromString("stack")) return -1;
-	UNLESS (user_str = PyString_FromString("user")) return -1;
-	UNLESS (validate_str = PyString_FromString("validate")) return -1;
-	UNLESS (_proxy_roles_str = PyString_FromString("_proxy_roles"))
+	UNLESS (stack_str = NATIVE_FROM_STRING("stack")) return -1;
+	UNLESS (user_str = NATIVE_FROM_STRING("user")) return -1;
+	UNLESS (validate_str = NATIVE_FROM_STRING("validate")) return -1;
+	UNLESS (_proxy_roles_str = NATIVE_FROM_STRING("_proxy_roles"))
           return -1;
-	UNLESS (allowed_str = PyString_FromString("allowed")) return -1;
-	UNLESS (getOwner_str = PyString_FromString("getOwner")) return -1;
-	UNLESS (getWrappedOwner_str = PyString_FromString("getWrappedOwner")) 
+	UNLESS (allowed_str = NATIVE_FROM_STRING("allowed")) return -1;
+	UNLESS (getOwner_str = NATIVE_FROM_STRING("getOwner")) return -1;
+	UNLESS (getWrappedOwner_str = NATIVE_FROM_STRING("getWrappedOwner"))
 	  return -1;
-	UNLESS (getPhysicalRoot_str = PyString_FromString("getPhysicalRoot")) 
+	UNLESS (getPhysicalRoot_str = NATIVE_FROM_STRING("getPhysicalRoot"))
 	  return -1;
-	UNLESS (aq_parent_str = PyString_FromString("aq_parent")) return -1;
-	UNLESS (_check_context_str = PyString_FromString("_check_context")) 
+	UNLESS (aq_parent_str = NATIVE_FROM_STRING("aq_parent")) return -1;
+	UNLESS (_check_context_str = NATIVE_FROM_STRING("_check_context"))
 	  return -1;
-	UNLESS (unrestrictedTraverse_str = PyString_FromString(
-					   "unrestrictedTraverse")) 
+	UNLESS (unrestrictedTraverse_str = NATIVE_FROM_STRING(
+					   "unrestrictedTraverse"))
 	  return -1;
 
-	UNLESS (checkPermission_str = PyString_FromString("checkPermission")) 
+	UNLESS (checkPermission_str = NATIVE_FROM_STRING("checkPermission"))
           return -1;
-        UNLESS (__allow_access_to_unprotected_subobjects__ = 
-                PyString_FromString(
+        UNLESS (__allow_access_to_unprotected_subobjects__ =
+                NATIVE_FROM_STRING(
                 "__allow_access_to_unprotected_subobjects__"))
           return -1;
 
@@ -765,17 +754,17 @@ static void unauthErr(PyObject *name, PyObject *value) {
 static PyObject *
 ZopeSecurityPolicy_getattro(ZopeSecurityPolicy *self, PyObject *name)
 {
-  if (PyString_Check(name) || PyUnicode_Check(name))  {
-    char *name_s = PyString_AsString(name);
+  if (NATIVE_CHECK(name) || PyUnicode_Check(name))  {
+    char *name_s = PyBytes_AS_STRING(name);
     if (name_s == NULL)
         return NULL;
 
     if (name_s[0] == '_') {
       if (! strcmp(name_s, "_ownerous")) {
-          return PyInt_FromLong(ownerous);
+          return INT_FROM_LONG(ownerous);
       }
       else if (! strcmp(name_s, "_authenticated")) {
-          return PyInt_FromLong(authenticated);
+          return INT_FROM_LONG(authenticated);
       }
     }
   }
@@ -825,8 +814,8 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 	**|	   raise Unauthorized(name, value)
 	*/ 
 
-	if (PyString_Check(name) || PyUnicode_Check(name)) {
-	    char *sname = PyString_AsString(name);
+	if (NATIVE_CHECK(name) || PyUnicode_Check(name)) {
+	    char *sname = PyBytes_AS_STRING(name);
 	    /* Conversion to string may have failed, e.g. if name is Unicode
 	     * and can't be bashed into the default encoding.  Unclear what
 	     * to do then.  It's arguably conservative to raise Unauthorized
@@ -986,11 +975,11 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 
 		if (p) 
                   {
-                    if (! PyInt_Check(p)) 
+                    if (! INT_CHECK(p))
                       {
                         if (PyDict_Check(p)) 
                           {
-                            if (PyString_Check(name) || PyUnicode_Check(name))
+                            if (NATIVE_CHECK(name) || PyUnicode_Check(name))
                               {
                                 ASSIGN(p, PyObject_GetItem(p, name));
                                 if (p == NULL)
@@ -998,7 +987,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
                               }
                             else
                               {
-                                ASSIGN(p, PyInt_FromLong(1));
+                                ASSIGN(p, INT_FROM_LONG(1));
                                 if (p == NULL)
                                   goto err;
                               }
@@ -1028,7 +1017,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 		*/
 
 		if (roles == NULL) {
-			rval = PyInt_FromLong(1);
+			rval = INT_FROM_LONG(1);
 			goto err;
 		}
 
@@ -1053,7 +1042,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 	*/
 
 	if (roles == Py_None) {
-		rval = PyInt_FromLong(1);
+		rval = INT_FROM_LONG(1);
 		goto err;
 	}
         else
@@ -1062,7 +1051,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
           i = PySequence_Contains(roles, Anonymous);
           if (i > 0)
             {
-              rval = PyInt_FromLong(1);
+              rval = INT_FROM_LONG(1);
               goto err;
             }
           else if (i < 0)
@@ -1248,7 +1237,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
                     Py_DECREF(proxy_roles);
 
                     if (contains > 0)
-                      rval = PyInt_FromLong(contains);
+                      rval = INT_FROM_LONG(contains);
                     else if (contains == 0) {
 		      unauthErr(name, value);
                     }
@@ -1280,7 +1269,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
             if (user == NULL) goto err;
             if (PyObject_IsTrue(user))
               {
-                rval = PyInt_FromLong(1);
+                rval = INT_FROM_LONG(1);
                 Py_DECREF(user);
                 goto err;
               }
@@ -1400,8 +1389,8 @@ SecurityManager_dealloc(SecurityManager *self)
 static PyObject *
 SecurityManager_getattro(SecurityManager *self, PyObject *name)
 {
-  if (PyString_Check(name) || PyUnicode_Check(name))  {
-    char *name_s = PyString_AsString(name); 
+  if (NATIVE_CHECK(name) || PyUnicode_Check(name))  {
+    char *name_s = PyBytes_AS_STRING(name);
 
     if (name_s == NULL)
         return NULL;
@@ -1428,8 +1417,8 @@ SecurityManager_getattro(SecurityManager *self, PyObject *name)
 static int 
 SecurityManager_setattro(SecurityManager *self, PyObject *name, PyObject *v)
 {
-  if (PyString_Check(name) || PyUnicode_Check(name)) {
-    char *name_s = PyString_AsString(name);
+  if (NATIVE_CHECK(name) || PyUnicode_Check(name)) {
+    char *name_s = PyBytes_AS_STRING(name);
 
     if (name_s == NULL)
         return -1;
@@ -1603,8 +1592,8 @@ static void PermissionRole_dealloc(PermissionRole *self) {
 
 static PyObject *
 PermissionRole_getattro(PermissionRole *self, PyObject *name) {
-  	PyObject  *result = NULL;
-        char      *name_s = PyString_AsString(name);
+    PyObject  *result = NULL;
+    char      *name_s = PyBytes_AS_STRING(name);
 
 	/* see whether we know the attribute */
 	/* we support both the old "_d" (from the Python implementation)
@@ -1854,7 +1843,7 @@ c_rolesForPermissionOn(PyObject *perm, PyObject *object,
                 else:
                     return _what_not_even_god_should_do
            */
-          if (PyString_Check(roles))
+          if (NATIVE_CHECK(roles))
             {
               if (PyString_GET_SIZE(roles))
                 {
@@ -1978,7 +1967,7 @@ static PyObject *permissionName(PyObject *name) {
 	c++;
 	len--;
 
-	in = PyString_AsString(name);
+	in = PyBytes_AS_STRING(name);
         if (in == NULL)
           return NULL;
 	
@@ -1999,7 +1988,7 @@ static PyObject *permissionName(PyObject *name) {
 
 	*c = '\0';	/* Saved room in len */
 
-	return PyString_FromString(namebuff);
+	return NATIVE_FROM_STRING(namebuff);
 
 }
 
@@ -2012,8 +2001,8 @@ guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
   int i;
 
   /* if name[:1] != '_': */
-  if (PyString_Check(name) || PyUnicode_Check(name)) {
-    char *name_s = PyString_AsString(name);
+  if (NATIVE_CHECK(name) || PyUnicode_Check(name)) {
+    char *name_s = PyBytes_AS_STRING(name);
 
     if (name_s == NULL)
         return NULL;

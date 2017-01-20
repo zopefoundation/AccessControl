@@ -256,7 +256,7 @@ static PyExtensionClass NAME ## Type = { PyVarObject_HEAD_INIT(NULL, 0) # NAME, 
 #undef PyObject_DEL
 
 #define PyMem_DEL(O)                                   \
-  if ((Py_TYPE(O)->tp_flags & Py_TPFLAGS_HAVE_CLASS)   \
+  if ((Py_TYPE(O)->tp_flags)                           \
       && (Py_TYPE(O)->tp_free != NULL))                \
     Py_TYPE(O)->tp_free((PyObject*)(O));               \
   else                                                 \
