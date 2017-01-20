@@ -70,9 +70,7 @@ def f6():
     #    pass
     #else:
     #    assert 0, "expected indirect attribute creation to fail"
-    
-    # This fails if PURE_PYTHON=1 is specified, i.e. if the pure python
-    # version of AccessControl, Acquisition and Persistence/persistent are used
+
     assert getattr(C, "display", None) == getattr(C, "display")
     delattr(C, "display")
 
