@@ -6,7 +6,7 @@ python:
 install:
     - pip install . zope.testrunner
 script:
-    - bin/zope-testrunner --test-path=src -v1
+    - zope-testrunner --test-path=src -v1
 notifications:
     email: false
 cache:
