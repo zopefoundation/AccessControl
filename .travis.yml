@@ -4,7 +4,7 @@ sudo: false
 python:
     - 2.7
 install:
-    - bin/pip install .[test]
+    - pip install .[test]
 script:
     - bin/zope-testrunner --test-path=src -v1
 notifications:
