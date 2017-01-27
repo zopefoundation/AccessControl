@@ -1,0 +1,15 @@
+# custom
+language: python
+sudo: false
+python:
+    - 2.7
+install:
+    - pip install . zope.testrunner
+script:
+    - zope-testrunner --test-path=src -v1
+notifications:
+    email: false
+cache:
+  pip: true
+  directories:
+    - eggs/
