@@ -413,12 +413,13 @@ class ZopeSecurityPolicy:
                             eo=eo, eo_proxy_roles=proxy_roles,
                             required_roles=roles)
                 raise Unauthorized(name, value)
-
         try:
             if self._authenticated and context.user.allowed(value, roles):
                 return 1
         except AttributeError:
             pass
+        if context.user.getUserName() != 'Anonymous User':
+            import pdb; pdb.set_trace()
 
         if self._verbose:
             if len(roles) < 1:
