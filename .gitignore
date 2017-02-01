@@ -1,9 +1,13 @@
+*.egg-info
 *.pyc
 *.so
-*.egg-info
 .installed.cfg
+.Python
 bin
+build
 develop-eggs
 eggs
+include
+lib
 parts
-build
+pip-selfcheck.json
