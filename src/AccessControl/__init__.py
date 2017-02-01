@@ -29,6 +29,8 @@ from AccessControl.SimpleObjectPolicies import allow_type
 from AccessControl.unauthorized import Unauthorized
 from AccessControl.ZopeGuards import full_write_guard
 from AccessControl.ZopeGuards import safe_builtins
+from AccessControl.safe_formatter import safe_format
+
 
 ModuleSecurityInfo('AccessControl').declarePublic('getSecurityManager')
 
@@ -38,3 +40,15 @@ for name in ('string', 'math', 'random', 'sets'):
     ModuleSecurityInfo(name).setDefaultAccess('allow')
 
 ModuleSecurityInfo('DateTime').declarePublic('DateTime')
+
+# We want to allow all methods on string type except "format".
+# That one needs special handling to avoid access to attributes.
+# from Products.PageTemplates.safe_formatter import safe_format
+rules = dict([(m, True) for m in dir(str) if not m.startswith('_')])
+rules['format'] = safe_format
+allow_type(str, rules)
+
+# Same for unicode instead of str.
+rules = dict([(m, True) for m in dir(unicode) if not m.startswith('_')])
+rules['format'] = safe_format
+allow_type(unicode, rules)
