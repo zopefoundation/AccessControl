@@ -4,7 +4,9 @@ Changelog
 2.13.15 (unreleased)
 --------------------
 
-- TBD
+- Added ``override_container`` context manager.  Used this in tests to
+  make them pass when the standard permissive security assertions for
+  strings has been changed.  [maurits]
 
 2.13.14 (2015-12-21)
 --------------------
