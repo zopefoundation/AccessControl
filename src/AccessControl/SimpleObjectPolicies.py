@@ -128,8 +128,10 @@ def override_containers(type_, assertions):
     """Temporarily override the container assertions."""
     orig_container = Containers(type_, _marker)
     ContainerAssertions[type_] = assertions
-    yield
-    if orig_container is _marker:
-        del ContainerAssertions[type_]
-    else:
-        ContainerAssertions[type_] = orig_container
+    try:
+        yield
+    finally:
+        if orig_container is _marker:
+            del ContainerAssertions[type_]
+        else:
+            ContainerAssertions[type_] = orig_container
