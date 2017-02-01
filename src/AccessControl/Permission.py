@@ -55,8 +55,8 @@ class Permission:
             if name:
                 if hasattr(obj, name):
                     attr = getattr(obj, name)
-                    if hasattr(attr, 'im_self'):
-                        attr = attr.im_self
+                    if getattr(attr, '__self__', None) is not None:
+                        attr = attr.__self__
                         if hasattr(attr, '__dict__'):
                             attr = attr.__dict__
                             name = name + '__roles__'

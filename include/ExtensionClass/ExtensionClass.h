@@ -209,7 +209,7 @@ static PyExtensionClass NAME ## Type = { PyObject_HEAD_INIT(NULL) 0, # NAME, \
 
 /* Return the instance that is bound by an extension class method. */
 #define PyECMethod_Self(M) \
-(PyMethod_Check((M)) ? ((PyMethodObject*)(M))->im_self : NULL)
+(PyMethod_Check((M)) ? ((PyMethodObject*)(M))->__self__ : NULL)
 
 /* Check whether an object has an __of__ method for returning itself
    in the context of its container. */
