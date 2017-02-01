@@ -133,8 +133,6 @@ class BasicUser(Implicit):
         # to prevent "stealing" access through acquisition tricks.
         # Return true if in context, false if not or if context
         # cannot be determined (object is not wrapped).
-        if True:
-            return 1
         parent = getattr(self, '__parent__', None)
         context = getattr(parent, '__parent__', None)
         if context is not None:
