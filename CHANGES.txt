@@ -6,7 +6,9 @@ For changes before verison 3.0, see ``HISTORY.txt``.
 3.0.13 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Added ``override_container`` context manager.  Used this in tests to
+  make them pass when the standard permissive security assertions for
+  strings has been changed.  [maurits]
 
 
 3.0.12 (2015-12-21)
