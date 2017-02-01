@@ -38,7 +38,7 @@ else:
                      join('include', 'Acquisition', 'Acquisition.h')]),
     ]
 
-__version__ = '4.0a4'
+__version__ = '4.0a5.dev0'
 
 setup(name='AccessControl',
       version=__version__,
