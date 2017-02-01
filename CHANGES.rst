@@ -8,6 +8,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Use `@implementer` class decorator.
 
+- Remove ``AccessControl.Permission.name_trans`` to ease Python 3 migration. Use ``AccessControl.Permission.getPermissionIdentifier()`` instead.
+
 4.0a3 (2016-08-05)
 ------------------
 
