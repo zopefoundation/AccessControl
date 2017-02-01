@@ -3,6 +3,7 @@ include *.rst
 
 recursive-include include *
 recursive-include src/AccessControl *
+recursive-include docs *.rst
 
 global-exclude *.dll
 global-exclude *.pyc
