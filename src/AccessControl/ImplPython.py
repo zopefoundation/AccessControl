@@ -824,7 +824,7 @@ def verifyAcquisitionContext(user, object, object_roles=None):
             # This is a strange rule, though
             # it doesn't cause any security holes. SDH
             return 1
-        if hasattr(object, 'im_self') and object.im_self is not None:
+        if getattr(object, 'im_self', None) is not None:
             # This is a method.  Grab its self.
             object=object.__self__
         if not aq_inContextOf(object, ucontext, 1):

@@ -97,7 +97,7 @@ class BasicUser(Implicit):
             if parent is not None:
                 object = parent
                 continue
-            if hasattr(object, 'im_self') and object.im_self is not None:
+            if getattr(object, 'im_self', None) is not None:
                 object=object.__self__
                 object=getattr(object, 'aq_inner', object)
                 continue
@@ -140,7 +140,7 @@ class BasicUser(Implicit):
         if context is not None:
             if object is None:
                 return 1
-            if hasattr(object, 'im_self') and object.im_self is not None:
+            if getattr(object, 'im_self', None) is not None:
                 # This is a method.  Grab its self.
                 object = object.__self__
             return aq_inContextOf(object, context, 1)
@@ -202,7 +202,7 @@ class BasicUser(Implicit):
                 parents.add(parent)
                 inner_obj = parent
                 continue
-            if hasattr(inner_obj, 'im_self') and object.im_self is not None:
+            if getattr(inner_obj, 'im_self', None) is not None:
                 inner_obj = inner_obj.__self__
                 inner_obj = getattr(inner_obj, 'aq_inner', inner_obj)
                 continue
