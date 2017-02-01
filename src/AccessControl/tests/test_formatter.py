@@ -1,3 +1,4 @@
+from zExceptions import Unauthorized
 import unittest
 
 
@@ -17,7 +18,7 @@ class FormatterTest(unittest.TestCase):
         """
         from AccessControl.safe_formatter import SafeFormatter
         try:
-            self.assertEquals(
+            self.assertEqual(
                 SafeFormatter('{} {}').safe_format('foo', 'bar'),
                 'foo bar'
             )
@@ -26,11 +27,23 @@ class FormatterTest(unittest.TestCase):
             # ValueError: zero length field name in format
             pass
 
-        self.assertEquals(
+        self.assertEqual(
             SafeFormatter('{0} {1}').safe_format('foo', 'bar'),
             'foo bar'
         )
-        self.assertEquals(
+        self.assertEqual(
             SafeFormatter('{1} {0}').safe_format('foo', 'bar'),
             'bar foo'
         )
+
+    def test_prevents_bad_string_formatting(self):
+        from AccessControl.safe_formatter import SafeFormatter
+        self.assertRaises(Unauthorized,
+                          SafeFormatter('{0.__class__}').safe_format,
+                          'foo')
+
+    def test_prevents_bad_unicode_formatting(self):
+        from AccessControl.safe_formatter import SafeFormatter
+        self.assertRaises(Unauthorized,
+                          SafeFormatter(u'{0.__class__}').safe_format,
+                          u'foo')
