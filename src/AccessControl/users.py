@@ -97,9 +97,9 @@ class BasicUser(Implicit):
             if parent is not None:
                 object = parent
                 continue
-            if hasattr(object, 'im_self'):
-                object=object.im_self
-                object=getattr(object, 'aq_inner', object)
+            if getattr(object, '__self__', None) is not None:
+                object = object.__self__
+                object = getattr(object, 'aq_inner', object)
                 continue
             break
         roles=list(roles) + local.keys()
@@ -138,9 +138,9 @@ class BasicUser(Implicit):
         if context is not None:
             if object is None:
                 return 1
-            if hasattr(object, 'im_self'):
+            if getattr(object, '__self__', None) is not None:
                 # This is a method.  Grab its self.
-                object = object.im_self
+                object = object.__self__
             return aq_inContextOf(object, context, 1)
 
         # This is lame, but required to keep existing behavior.
@@ -200,8 +200,8 @@ class BasicUser(Implicit):
                 parents.add(parent)
                 inner_obj = parent
                 continue
-            if hasattr(inner_obj, 'im_self'):
-                inner_obj = inner_obj.im_self
+            if getattr(inner_obj, '__self__', None) is not None:
+                inner_obj = inner_obj.__self__
                 inner_obj = getattr(inner_obj, 'aq_inner', inner_obj)
                 continue
             break
