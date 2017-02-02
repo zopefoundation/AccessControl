@@ -46,13 +46,12 @@ static ACQUISITIONCAPI *AcquisitionCAPI = NULL;
 #define aq_init() { \
     PyObject *module; \
     PyObject *api; \
-    if (! (module = PyImport_ImportModule("Acquisition"))) return; \
-    if (! (api = PyObject_GetAttrString(module,"AcquisitionCAPI"))) return; \
+    if (! (module = PyImport_ImportModule("Acquisition"))) return NULL; \
+    if (! (api = PyObject_GetAttrString(module,"AcquisitionCAPI"))) return NULL; \
     Py_DECREF(module); \
     AcquisitionCAPI = PyCObject_AsVoidPtr(api); \
     Py_DECREF(api); \
 }
-
 
 
 #endif

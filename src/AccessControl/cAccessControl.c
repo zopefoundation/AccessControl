@@ -2235,10 +2235,26 @@ static struct PyMethodDef dtml_methods[] = {
 ** Module initialization
 ** ----------------------------------------------------------------
 */
-#define IMPORT(module, name) if ((module = PyImport_ImportModule(name)) == NULL) return;
-#define GETATTR(module, name) if ((name = PyObject_GetAttrString(module, #name)) == NULL) return;
+#define IMPORT(module, name) if ((module = PyImport_ImportModule(name)) == NULL) return NULL;
+#define GETATTR(module, name) if ((name = PyObject_GetAttrString(module, #name)) == NULL) return NULL;
 
-void initcAccessControl(void) {
+#ifdef PY3K
+static struct PyModuleDef moduledef =
+{
+    PyModuleDef_HEAD_INIT,
+    "cAccessControl",                       /* m_name */
+    "cAccessControl.c\n",                   /* m_doc */
+    -1,                                     /* m_size */
+    cAccessControl_methods,                 /* m_methods */
+    NULL,                                   /* m_reload */
+    NULL,                                   /* m_traverse */
+    NULL,                                   /* m_clear */
+    NULL,                                   /* m_free */
+};
+#endif
+
+static PyObject*
+module_init(void) {
 	PyObject *module;
 	PyObject *dict;
         PURE_MIXIN_CLASS(RestrictedDTMLMixin,
@@ -2246,15 +2262,20 @@ void initcAccessControl(void) {
                          "that adds Zope security."
                          , dtml_methods);
 
-	if (!ExtensionClassImported) return;
+	if (!ExtensionClassImported) return NULL;
 
-	if (ZopeSecurityPolicy_setup() < 0) return;
+	if (ZopeSecurityPolicy_setup() < 0) return NULL;
 
 	ExtensionClassGetattro= Py_FindAttr;
 
-	module = Py_InitModule3("cAccessControl",
-		cAccessControl_methods,
-		"cAccessControl.c\n");
+  #ifdef PY3K
+    module = PyModule_Create(&moduledef);
+  #else
+    module = Py_InitModule3(
+      "cAccessControl",
+      cAccessControl_methods,
+      "cAccessControl.c\n");
+  #endif
 
 	aq_init(); /* For Python <= 2.1.1, aq_init() should be after
                       Py_InitModule(). */
@@ -2326,5 +2347,18 @@ void initcAccessControl(void) {
 	GETATTR(module, warn);
 	Py_DECREF(module);
 	module = NULL;
+
+  return module;
 }
 
+#ifdef PY3K
+PyMODINIT_FUNC PyInit_cAccessControl(void)
+{
+    return module_init();
+}
+#else
+PyMODINIT_FUNC initcAccessControl(void)
+{
+    module_init();
+}
+#endif

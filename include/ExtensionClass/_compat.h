@@ -33,6 +33,8 @@
 #define INT_CHECK(x) PyLong_Check(x)
 #define INT_AS_LONG(x) PyLong_AS_LONG(x)
 
+#define HAS_TP_DESCR_GET(ob) 1
+
 #else
 #define INTERN PyString_InternFromString
 #define INTERN_INPLACE PyString_InternInPlace
@@ -44,6 +46,8 @@
 #define INT_FROM_LONG(x) PyInt_FromLong(x)
 #define INT_CHECK(x) PyInt_Check(x)
 #define INT_AS_LONG(x) PyInt_AS_LONG(x)
+
+#define HAS_TP_DESCR_GET(ob) PyType_HasFeature(Py_TYPE(ob), Py_TPFLAGS_HAVE_CLASS)
 #endif
 
 #endif
