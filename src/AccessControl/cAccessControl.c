@@ -49,6 +49,7 @@
 #include "ExtensionClass/ExtensionClass.h"
 #include "ExtensionClass/_compat.h"
 #include "Acquisition/Acquisition.h"
+#include "_compat.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1064,7 +1065,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
               
               m=PyObject_Repr(roles);
               if (m) ASSIGN(m, Py_BuildValue("OO", m, name));
-              if (m) ASSIGN(m, PyString_Format(NoSequenceFormat, m));
+              if (m) ASSIGN(m, NATIVE_FORMAT(NoSequenceFormat, m));
               if (m) ASSIGN(m, PyObject_CallFunction(warn, "O", m));
               Py_XDECREF(m);
               PyErr_Restore(t, v, tb);
@@ -1845,7 +1846,7 @@ c_rolesForPermissionOn(PyObject *perm, PyObject *object,
            */
           if (NATIVE_CHECK(roles))
             {
-              if (PyString_GET_SIZE(roles))
+              if (NATIVE_GET_SIZE(roles))
                 {
                   Py_DECREF(n);
                   n = roles;

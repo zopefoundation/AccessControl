@@ -16,17 +16,17 @@
 #define __ACQUISITION_H_
 
 typedef struct {
-  PyObject *(*AQ_Acquire) (PyObject *obj, PyObject *name, PyObject *filter,
-    PyObject *extra, int explicit, PyObject *deflt,
-    int containment);
-  PyObject *(*AQ_Get) (PyObject *obj, PyObject *name, PyObject *deflt,
-    int containment);
-  int (*AQ_IsWrapper) (PyObject *obj);
-  PyObject *(*AQ_Base) (PyObject *obj);
-  PyObject *(*AQ_Parent) (PyObject *obj);
-  PyObject *(*AQ_Self) (PyObject *obj);
-  PyObject *(*AQ_Inner) (PyObject *obj);
-  PyObject *(*AQ_Chain) (PyObject *obj, int containment);
+    PyObject *(*AQ_Acquire) (PyObject *obj, PyObject *name, PyObject *filter,
+        PyObject *extra, int explicit, PyObject *deflt,
+        int containment);
+    PyObject *(*AQ_Get) (PyObject *obj, PyObject *name, PyObject *deflt,
+        int containment);
+    int (*AQ_IsWrapper) (PyObject *obj);
+    PyObject *(*AQ_Base) (PyObject *obj);
+    PyObject *(*AQ_Parent) (PyObject *obj);
+    PyObject *(*AQ_Self) (PyObject *obj);
+    PyObject *(*AQ_Inner) (PyObject *obj);
+    PyObject *(*AQ_Chain) (PyObject *obj, int containment);
 } ACQUISITIONCAPI;
 
 #ifndef _IN_ACQUISITION_C
