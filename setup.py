@@ -15,7 +15,7 @@
 from os.path import join
 from setuptools import setup, find_packages, Extension
 
-__version__ = '3.0.13'
+__version__ = '3.0.14.dev0'
 
 setup(name='AccessControl',
       version=__version__,
