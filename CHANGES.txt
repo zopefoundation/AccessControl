@@ -3,7 +3,7 @@ Changelog
 
 For changes before verison 3.0, see ``HISTORY.txt``.
 
-3.0.13 (unreleased)
+3.0.13 (2017-02-15)
 -------------------
 
 - In ``str.format``, check the security for attributes that are accessed.
