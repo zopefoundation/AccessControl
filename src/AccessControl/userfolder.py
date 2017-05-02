@@ -46,7 +46,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
 
     meta_type = 'User Folder'
     id = 'acl_users'
-    title ='User Folder'
+    title = 'User Folder'
 
     isPrincipiaFolderish = 1
     isAUserFolder = 1
@@ -121,7 +121,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
         emergency = self._emergency_user
         if name is None:
             return None
-        if emergency and name==emergency.getUserName():
+        if emergency and name == emergency.getUserName():
             user = emergency
         else:
             user = self.getUser(name)
@@ -167,7 +167,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
         folders or to raise an unauthorized by returning None from this
         method.
         """
-        v = request['PUBLISHED'] # the published object
+        v = request['PUBLISHED']  # the published object
         a, c, n, v = self._getobcontext(v, request)
 
         # we need to continue to support this silly mode
@@ -199,7 +199,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
             # either we didn't find the username, or the user's password
             # was incorrect.  try to authorize and return the anonymous user.
             if (self._isTop() and
-                self.authorize(self._nobody, a, c, n, v, roles)):
+                    self.authorize(self._nobody, a, c, n, v, roles)):
                 return self._nobody.__of__(self)
             else:
                 # anonymous can't authorize or we're not top-level user folder
@@ -238,10 +238,10 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
             # user will be None if we can't find his username in this user
             # database.
             emergency = self._emergency_user
-            if emergency and name==emergency.getUserName():
+            if emergency and name == emergency.getUserName():
                 if self._isTop():
                     # we do not need to authorize the emergency user against
-                    #the published object.
+                    # the published object.
                     return emergency.__of__(self)
                 else:
                     # we're not the top-level user folder
@@ -263,7 +263,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
                     return user.__of__(self)
                 # That didn't work.  Try to authorize the anonymous user.
                 elif self._isTop() and self.authorize(
-                    self._nobody, a, c, n, v, roles):
+                        self._nobody, a, c, n, v, roles):
                     return self._nobody.__of__(self)
                 else:
                     # we can't authorize the user, and we either can't
@@ -278,7 +278,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
         a is the object the object was accessed through
         c is the physical container of the object
         """
-        if len(request.steps) == 0: # someone deleted root index_html
+        if len(request.steps) == 0:  # someone deleted root index_html
             request.RESPONSE.notFoundError('no default view (root default view'
                                            ' was probably deleted)')
         n = request.steps[-1]
@@ -353,6 +353,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
         """ returns true if domain auth mode is set to true"""
         return getattr(self, '_domain_auth_mode', None)
 
+
 InitializeClass(BasicUserFolder)
 
 
@@ -370,17 +371,17 @@ class UserFolder(BasicUserFolder):
     title = 'User Folder'
 
     def __init__(self):
-        self.data=PersistentMapping()
+        self.data = PersistentMapping()
 
     def getUserNames(self):
         """Return a list of usernames"""
-        names=self.data.keys()
+        names = self.data.keys()
         return sorted(names)
 
     def getUsers(self):
         """Return a list of user objects"""
-        data=self.data
-        names=data.keys()
+        data = self.data
+        names = data.keys()
         return [data[n] for n in sorted(names)]
 
     def getUser(self, name):
@@ -399,17 +400,17 @@ class UserFolder(BasicUserFolder):
         """Create a new user
 
         Note that an existing user of this name is simply overwritten."""
-        if password is not None and self.encrypt_passwords \
-                                and not self._isPasswordEncrypted(password):
+        if password is not None and self.encrypt_passwords and \
+                not self._isPasswordEncrypted(password):
             password = self._encryptPassword(password)
         self.data[name] = User(name, password, roles, domains)
         return self.data[name]
 
     def _doChangeUser(self, name, password, roles, domains, **kw):
-        user=self.data[name]
+        user = self.data[name]
         if password is not None:
-            if (self.encrypt_passwords
-                and not self._isPasswordEncrypted(password)):
+            if (self.encrypt_passwords and
+                    not self._isPasswordEncrypted(password)):
                 password = self._encryptPassword(password)
             user.__ = password
         user.roles = roles
@@ -418,5 +419,6 @@ class UserFolder(BasicUserFolder):
     def _doDelUsers(self, names):
         for name in names:
             del self.data[name]
+
 
 InitializeClass(UserFolder)

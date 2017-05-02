@@ -29,7 +29,7 @@ import re
 import socket
 
 
-_marker=[]
+_marker = []
 
 
 @implementer(IUser)
@@ -52,8 +52,14 @@ class BasicUser(Implicit):
     # probably break a lot of other User implementations with extended
     # functionality that we cant anticipate from the base scaffolding.
     def __allow_access_to_unprotected_subobjects__(self, name, value=None):
-        deny_names=('name', '__', 'roles', 'domains', '_getPassword',
-                    'authenticate')
+        deny_names = (
+            'name',
+            '__',
+            'roles',
+            'domains',
+            '_getPassword',
+            'authenticate'
+        )
         if name in deny_names:
             return 0
         return 1
@@ -79,29 +85,29 @@ class BasicUser(Implicit):
     def getRolesInContext(self, object):
         """Get a sequence of the roles assigned to the user in a context.
         """
-        userid=self.getId()
-        roles=self.getRoles()
-        local={}
-        object=getattr(object, 'aq_inner', object)
+        userid = self.getId()
+        roles = self.getRoles()
+        local = {}
+        object = getattr(object, 'aq_inner', object)
         while 1:
             local_roles = getattr(object, '__ac_local_roles__', None)
             if local_roles:
                 if callable(local_roles):
-                    local_roles=local_roles()
-                dict=local_roles or {}
+                    local_roles = local_roles()
+                dict = local_roles or {}
                 for r in dict.get(userid, []):
-                    local[r]=1
+                    local[r] = 1
             inner = getattr(object, 'aq_inner', object)
             parent = getattr(inner, '__parent__', None)
             if parent is not None:
                 object = parent
                 continue
             if hasattr(object, 'im_self'):
-                object=object.__self__
-                object=getattr(object, 'aq_inner', object)
+                object = object.__self__
+                object = getattr(object, 'aq_inner', object)
                 continue
             break
-        roles=list(roles) + list(local.keys())
+        roles = list(roles) + list(local.keys())
         return roles
 
     def getDomains(self):
@@ -119,9 +125,9 @@ class BasicUser(Implicit):
         raise NotImplementedError
 
     def authenticate(self, password, request):
-        passwrd=self._getPassword()
+        passwrd = self._getPassword()
         result = AuthEncoding.pw_validate(passwrd, password)
-        domains=self.getDomains()
+        domains = self.getDomains()
         if domains:
             return result and domainSpecMatch(domains, request)
         return result
@@ -158,8 +164,8 @@ class BasicUser(Implicit):
 
         # Provide short-cut access if object is protected by 'Authenticated'
         # role and user is not nobody
-        if 'Authenticated' in object_roles and (
-            self.getUserName() != 'Anonymous User'):
+        if 'Authenticated' in object_roles and \
+                self.getUserName() != 'Anonymous User':
             if self._check_context(object):
                 return 1
 
@@ -214,12 +220,12 @@ class BasicUser(Implicit):
         If object is specified, check in the context of the passed in object.
         """
         if isinstance(roles, str):
-            roles=[roles]
+            roles = [roles]
         if object is not None:
             user_roles = self.getRolesInContext(object)
         else:
             # Global roles only...
-            user_roles=self.getRoles()
+            user_roles = self.getRoles()
         for role in roles:
             if role in user_roles:
                 return 1
@@ -231,9 +237,9 @@ class BasicUser(Implicit):
         This method is just for inspecting permission settings. For access
         control use getSecurityManager().checkPermission() instead.
         """
-        roles=rolesForPermissionOn(permission, object)
+        roles = rolesForPermissionOn(permission, object)
         if isinstance(roles, str):
-            roles=[roles]
+            roles = [roles]
         return self.allowed(object, roles)
 
     def __len__(self):
@@ -317,7 +323,7 @@ class NullUnrestrictedUser(SpecialUser):
        exists in its place is more of an anti-superuser since you cannot
        login as this user and it has no priveleges at all."""
 
-    __null_user__=1
+    __null_user__ = 1
 
     def __init__(self):
         pass
@@ -325,11 +331,11 @@ class NullUnrestrictedUser(SpecialUser):
     def getUserName(self):
         # return an unspellable username
         return (None, None)
-    _getPassword=getUserName
+    _getPassword = getUserName
 
     def getRoles(self):
         return ()
-    getDomains=getRoles
+    getDomains = getRoles
 
     def getRolesInContext(self, object):
         return ()
@@ -413,8 +419,9 @@ def rolejoin(roles, other):
     roles.sort()
     return roles
 
-addr_match=re.compile(r'((\d{1,3}\.){1,3}\*)|((\d{1,3}\.){3}\d{1,3})').match
-host_match=re.compile(r'(([\_0-9a-zA-Z\-]*\.)*[0-9a-zA-Z\-]*)').match
+
+addr_match = re.compile(r'((\d{1,3}\.){1,3}\*)|((\d{1,3}\.){3}\d{1,3})').match
+host_match = re.compile(r'(([\_0-9a-zA-Z\-]*\.)*[0-9a-zA-Z\-]*)').match
 
 
 def domainSpecMatch(spec, request):
@@ -454,8 +461,8 @@ def domainSpecMatch(spec, request):
 
         mo = addr_match(ob)
         if mo is not None:
-            if mo.end(0)==sz:
-                fail=0
+            if mo.end(0) == sz:
+                fail = 0
                 for i in range(_sz):
                     a = _addr[i]
                     o = _ob[i]
@@ -468,7 +475,7 @@ def domainSpecMatch(spec, request):
 
         mo = host_match(ob)
         if mo is not None:
-            if mo.end(0)==sz:
+            if mo.end(0) == sz:
                 if _hlen < _sz:
                     continue
                 elif _hlen > _sz:

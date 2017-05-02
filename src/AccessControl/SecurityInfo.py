@@ -38,6 +38,7 @@
 
 """
 
+from __future__ import absolute_import
 from AccessControl.class_init import InitializeClass
 from AccessControl.ImplPython import _what_not_even_god_should_do
 from Acquisition import Implicit
@@ -149,7 +150,7 @@ class SecurityInfo(Implicit):
             rdict[role] = 1
         if self.roles.get(permission_name, rdict) != rdict:
             LOG.warn('Conflicting default role'
-                'declarations for permission "%s"' % permission_name)
+                     'declarations for permission "%s"' % permission_name)
             self._warnings = 1
         self.roles[permission_name] = rdict
 
@@ -184,7 +185,7 @@ class ClassSecurityInfo(SecurityInfo):
         if self._unused_protected_decorators:
             msg = "Class '%r' has %d non-decorator security.protected calls!"
             raise AssertionError(msg % (classobj,
-                len(self._unused_protected_decorators)))
+                                 len(self._unused_protected_decorators)))
 
         cdict = classobj.__dict__
 
@@ -237,12 +238,13 @@ class ClassSecurityInfo(SecurityInfo):
 
         if getattr(self, '_warnings', None):
             LOG.warn('Class "%s" had conflicting '
-                'security declarations' % classobj.__name__)
+                     'security declarations' % classobj.__name__)
 
 
 class ClassSecurityInformation(ClassSecurityInfo):
     # Default policy is disallow
     access = 0
+
 
 _moduleSecurity = {}
 _appliedModuleSecurity = {}
@@ -253,7 +255,7 @@ def secureModule(mname, *imp):
     if modsec is None:
         if mname in _appliedModuleSecurity:
             return sys.modules[mname]
-        return # no MSI, no module
+        return  # no MSI, no module
 
     if imp:
         __import__(mname, *imp)
@@ -324,7 +326,7 @@ class _ModuleSecurityInfo(SecurityInfo):
 
         if getattr(self, '_warnings', None):
             LOG.warn('Module "%s" had conflicting '
-                'security declarations' % dict['__name__'])
+                     'security declarations' % dict['__name__'])
 
     declareProtected__roles__ = ACCESS_PRIVATE
     def declareProtected(self, permission_name, *names):

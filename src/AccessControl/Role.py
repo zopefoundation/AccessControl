@@ -14,21 +14,22 @@
 """
 
 # BBB
-from .rolemanager import _isBeingUsedAsAMethod
-from .rolemanager import _isNotBeingUsedAsAMethod
-from .rolemanager import class_attrs
-from .rolemanager import class_dict
-from .rolemanager import classattr
-from .rolemanager import DEFAULTMAXLISTUSERS
-from .rolemanager import gather_permissions
-from .rolemanager import instance_attrs
-from .rolemanager import instance_dict
-from .rolemanager import reqattr
+from AccessControl.rolemanager import _isBeingUsedAsAMethod
+from AccessControl.rolemanager import _isNotBeingUsedAsAMethod
+from AccessControl.rolemanager import class_attrs
+from AccessControl.rolemanager import class_dict
+from AccessControl.rolemanager import classattr
+from AccessControl.rolemanager import DEFAULTMAXLISTUSERS
+from AccessControl.rolemanager import gather_permissions
+from AccessControl.rolemanager import instance_attrs
+from AccessControl.rolemanager import instance_dict
+from AccessControl.rolemanager import reqattr
 from zope.deferredimport import deprecated
 
 
-deprecated("RoleManager is no longer part of AccessControl, please "
-           "depend on Zope2 and import from OFS.role or use the new minimal "
-           "RoleManager class from AccessControl.rolemanager.",
-    RoleManager = 'OFS.role:RoleManager',
+deprecated(
+    "RoleManager is no longer part of AccessControl, please "
+    "depend on Zope2 and import from OFS.role or use the new minimal "
+    "RoleManager class from AccessControl.rolemanager.",
+    RoleManager='OFS.role:RoleManager',
 )

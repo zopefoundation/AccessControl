@@ -82,9 +82,11 @@ class TaintedString:
     def __getstate__(self):
         # If an object tries to store a TaintedString, it obviously wasn't
         # aware that it was playing with untrusted data. Complain acordingly.
-        raise SystemError("A TaintedString cannot be pickled. Code that "
+        raise SystemError(
+            "A TaintedString cannot be pickled. Code that "
             "caused this TaintedString to be stored should be more careful "
-            "with untrusted data from the REQUEST.")
+            "with untrusted data from the REQUEST."
+        )
 
     def __getattr__(self, a):
         # for string methods support other than those defined below

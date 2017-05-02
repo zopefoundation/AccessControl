@@ -73,7 +73,7 @@ def checkPermission(permission, object, interaction=None):
     CheckerPublic or None.
     """
     if (permission in ('zope.Public', 'zope2.Public') or
-        permission is None or permission is CheckerPublic):
+            permission is None or permission is CheckerPublic):
         return True
 
     if isinstance(permission, basestring):
@@ -134,7 +134,8 @@ def protectName(klass, name, permission_id, override_existing_protection=True):
     security = _getSecurity(klass)
     # Zope 2 uses string, not unicode yet
     name = str(name)
-    if not override_existing_protection and ('%s__roles__' % name) in dir(klass):
+    if not override_existing_protection and \
+            ('%s__roles__' % name) in dir(klass):
         # There is already a declaration for this name from a base class.
         return
     if permission_id == CheckerPublicId or permission_id is CheckerPublic:

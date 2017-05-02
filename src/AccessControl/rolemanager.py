@@ -47,7 +47,7 @@ def _string_hash(s):
 @implementer(IRoleManager)
 class RoleManager(Base, RoleManager):
     """An object that has configurable permissions"""
-    permissionMappingPossibleValues=Acquired
+    permissionMappingPossibleValues = Acquired
     security = ClassSecurityInfo()
 
     __ac_roles__ = ('Manager', 'Owner', 'Anonymous', 'Authenticated')
@@ -67,8 +67,8 @@ class RoleManager(Base, RoleManager):
         if all:
             if hasattr(self, '_subobject_permissions'):
                 for p in self._subobject_permissions():
-                    pname=p[0]
-                    if not pname in d:
+                    pname = p[0]
+                    if pname not in d:
                         d[pname] = 1
                         r.append(p)
 
@@ -84,10 +84,10 @@ class RoleManager(Base, RoleManager):
         If 'permission' is passed to the method then only the settings for
         'permission' is returned.
         """
-        result=[]
-        valid=self.valid_roles()
-        indexes=range(len(valid))
-        ip=0
+        result = []
+        valid = self.valid_roles()
+        indexes = range(len(valid))
+        ip = 0
 
         permissions = self.ac_inherited_permissions(1)
         # Filter permissions
@@ -97,19 +97,21 @@ class RoleManager(Base, RoleManager):
         for p in permissions:
             permission_name = p[0]
             name, value = p[:2]
-            p=Permission(name, value, self)
+            p = Permission(name, value, self)
             roles = p.getRoles(default=[])
-            d={'name': name,
-               'hashed_name': _string_hash(name),
-               'acquire': isinstance(roles, list) and 'CHECKED' or '',
-               'roles': map(
-                   lambda ir, roles=roles, valid=valid, ip=ip:
-                   {
+            d = {
+                'name': name,
+                'hashed_name': _string_hash(name),
+                'acquire': isinstance(roles, list) and 'CHECKED' or '',
+                'roles': map(
+                    lambda ir, roles=roles, valid=valid, ip=ip:
+                    {
                        'name': "permission_%srole_%s" % (_string_hash(permission_name), _string_hash(valid[ir])),
                        'checked': (valid[ir] in roles) and 'CHECKED' or '',
-                       },
-                   indexes)
-               }
+                    },
+                    indexes
+                )
+            }
             ip = ip + 1
             result.append(d)
         return result
@@ -120,7 +122,7 @@ class RoleManager(Base, RoleManager):
         """
         for p in self.ac_inherited_permissions(1):
             name, value = p[:2]
-            p=Permission(name, value, self)
+            p = Permission(name, value, self)
             p.setRole(role_to_manage, name in permissions)
 
     security.declareProtected(change_permissions, 'manage_acquiredPermissions')
@@ -206,15 +208,15 @@ class RoleManager(Base, RoleManager):
             if name == permission_to_manage:
                 p = Permission(name, value, self)
                 if acquire:
-                    roles=list(roles)
+                    roles = list(roles)
                 else:
-                    roles=tuple(roles)
+                    roles = tuple(roles)
                 p.setRoles(roles)
                 return
 
         raise ValueError(
             "The permission <em>%s</em> is invalid." %
-                escape(permission_to_manage))
+            escape(permission_to_manage))
 
     security.declareProtected(change_permissions, 'permissionsOfRole')
     def permissionsOfRole(self, role):
@@ -237,7 +239,7 @@ class RoleManager(Base, RoleManager):
         valid_roles = self.valid_roles()
         for p in self.ac_inherited_permissions(1):
             name, value = p[:2]
-            if name==permission:
+            if name == permission:
                 p = Permission(name, value, self)
                 roles = p.getRoles()
                 return map(
@@ -256,8 +258,8 @@ class RoleManager(Base, RoleManager):
         """
         for p in self.ac_inherited_permissions(1):
             name, value = p[:2]
-            if name==permission:
-                p=Permission(name, value, self)
+            if name == permission:
+                p = Permission(name, value, self)
                 roles = p.getRoles()
                 return isinstance(roles, list) and 'CHECKED' or ''
 
@@ -273,16 +275,16 @@ class RoleManager(Base, RoleManager):
     # in the __ac_local_roles__ dict containing the extra roles.
 
     def has_local_roles(self):
-        dict=self.__ac_local_roles__ or {}
+        dict = self.__ac_local_roles__ or {}
         return len(dict)
 
     def get_local_roles(self):
-        dict=self.__ac_local_roles__ or {}
-        keys=dict.keys()
+        dict = self.__ac_local_roles__ or {}
+        keys = dict.keys()
         keys.sort()
-        info=[]
+        info = []
         for key in keys:
-            value=tuple(dict[key])
+            value = tuple(dict[key])
             info.append((key, value))
         return tuple(info)
 
@@ -294,8 +296,8 @@ class RoleManager(Base, RoleManager):
         return got.keys()
 
     def get_valid_userids(self):
-        item=self
-        dict={}
+        item = self
+        dict = {}
         _notfound = []
         while 1:
             aclu = getattr(aq_base(item), '__allow_groups__', _notfound)
@@ -307,20 +309,20 @@ class RoleManager(Base, RoleManager):
                     raise OverflowError
                 un = getattr(aclu, 'user_names', _notfound)
                 if un is not _notfound:
-                    un = aclu.__of__(item).user_names # rewrap
+                    un = aclu.__of__(item).user_names  # rewrap
                     unl = un()
                     # maxlistusers of 0 is list all
                     if len(unl) > mlu and mlu != 0:
                         raise OverflowError
                     for name in unl:
-                        dict[name]=1
+                        dict[name] = 1
             item = getattr(item, '__parent__', _notfound)
             if item is _notfound:
                 break
         return tuple(sorted(dict.keys()))
 
     def get_local_roles_for_userid(self, userid):
-        dict=self.__ac_local_roles__ or {}
+        dict = self.__ac_local_roles__ or {}
         return tuple(dict.get(userid, []))
 
     security.declareProtected(change_permissions, 'manage_addLocalRoles')
@@ -336,7 +338,7 @@ class RoleManager(Base, RoleManager):
             if r not in local_roles:
                 local_roles.append(r)
         dict[userid] = local_roles
-        self._p_changed=True
+        self._p_changed = True
 
     security.declareProtected(change_permissions, 'manage_setLocalRoles')
     def manage_setLocalRoles(self, userid, roles):
@@ -346,7 +348,7 @@ class RoleManager(Base, RoleManager):
         dict = self.__ac_local_roles__
         if dict is None:
             self.__ac_local_roles__ = dict = {}
-        dict[userid]=roles
+        dict[userid] = roles
         self._p_changed = True
 
     security.declareProtected(change_permissions, 'manage_delLocalRoles')
@@ -358,18 +360,16 @@ class RoleManager(Base, RoleManager):
         for userid in userids:
             if userid in dict:
                 del dict[userid]
-        self._p_changed=True
-
-    #------------------------------------------------------------
+        self._p_changed = True
 
     security.declarePrivate('access_debug_info')
     def access_debug_info(self):
         """Return debug info.
         """
-        clas=class_attrs(self)
-        inst=instance_attrs(self)
-        data=[]
-        _add=data.append
+        clas = class_attrs(self)
+        inst = instance_attrs(self)
+        data = []
+        _add = data.append
         for key, value in inst.items():
             if key.find('__roles__') >= 0:
                 _add({'name': key, 'value': value, 'class': 0})
@@ -387,28 +387,28 @@ class RoleManager(Base, RoleManager):
     def valid_roles(self):
         """Return list of valid roles.
         """
-        obj=self
-        dict={}
-        dup =dict.has_key
-        x=0
+        obj = self
+        dict = {}
+        dup = dict.has_key
+        x = 0
         while x < 100:
             if hasattr(obj, '__ac_roles__'):
-                roles=obj.__ac_roles__
+                roles = obj.__ac_roles__
                 for role in roles:
                     if not dup(role):
-                        dict[role]=1
+                        dict[role] = 1
             if getattr(obj, '__parent__', None) is None:
                 break
-            obj=obj.__parent__
-            x=x+1
-        roles=dict.keys()
+            obj = obj.__parent__
+            x = x + 1
+        roles = dict.keys()
         roles.sort()
         return tuple(roles)
 
     def validate_roles(self, roles):
         """Return true if all given roles are valid.
         """
-        valid=self.valid_roles()
+        valid = self.valid_roles()
         for role in roles:
             if role not in valid:
                 return 0
@@ -437,6 +437,7 @@ class RoleManager(Base, RoleManager):
         d = d.keys()
         d.sort()
         return d
+
 
 InitializeClass(RoleManager)
 
@@ -481,17 +482,17 @@ def instance_attrs(inst):
 
 def class_attrs(inst, _class=None, data=None):
     if _class is None:
-        _class=inst.__class__
-        data={}
+        _class = inst.__class__
+        data = {}
 
-    clas_dict=class_dict(_class)
-    inst_dict=instance_dict(inst)
-    inst_attr=inst_dict.has_key
+    clas_dict = class_dict(_class)
+    inst_dict = instance_dict(inst)
+    inst_attr = inst_dict.has_key
     for key, value in clas_dict.items():
         if not inst_attr(key):
-            data[key]=value
+            data[key] = value
     for base in _class.__bases__:
-        data=class_attrs(inst, base, data)
+        data = class_attrs(inst, base, data)
     return data
 
 
@@ -499,7 +500,7 @@ def gather_permissions(klass, result, seen):
     for base in klass.__bases__:
         if '__ac_permissions__' in base.__dict__:
             for p in base.__ac_permissions__:
-                name=p[0]
+                name = p[0]
                 if name in seen:
                     continue
                 result.append((name, ()))

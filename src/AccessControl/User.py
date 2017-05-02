@@ -13,31 +13,32 @@
 """Access control package.
 """
 
-from .users import emergency_user as super
-from .users import UnrestrictedUser as Super
+from AccessControl.users import emergency_user as super
+from AccessControl.users import UnrestrictedUser as Super
 # BBB
-from .users import _remote_user_mode
-from .users import absattr
-from .users import addr_match
-from .users import BasicUser
-from .users import domainSpecMatch
-from .users import host_match
-from .users import nobody
-from .users import NullUnrestrictedUser
-from .users import readUserAccessFile
-from .users import reqattr
-from .users import rolejoin
-from .users import SimpleUser
-from .users import SpecialUser
-from .users import system
-from .users import User
+from AccessControl.users import _remote_user_mode
+from AccessControl.users import absattr
+from AccessControl.users import addr_match
+from AccessControl.users import BasicUser
+from AccessControl.users import domainSpecMatch
+from AccessControl.users import host_match
+from AccessControl.users import nobody
+from AccessControl.users import NullUnrestrictedUser
+from AccessControl.users import readUserAccessFile
+from AccessControl.users import reqattr
+from AccessControl.users import rolejoin
+from AccessControl.users import SimpleUser
+from AccessControl.users import SpecialUser
+from AccessControl.users import system
+from AccessControl.users import User
 from zope.deferredimport import deprecated
 
 
-deprecated("User folders are no longer part of AccessControl, please depend "
-           "on Zope2 and import from OFS.userfolder or use the new minimal "
-           "user folder classes from AccessControl.userfolder.",
-    BasicUserFolder = 'OFS.userfolder:BasicUserFolder',
-    manage_addUserFolder = 'OFS.userfolder:manage_addUserFolder',
-    UserFolder = 'OFS.userfolder:UserFolder',
+deprecated(
+    "User folders are no longer part of AccessControl, please depend "
+    "on Zope2 and import from OFS.userfolder or use the new minimal "
+    "user folder classes from AccessControl.userfolder.",
+    BasicUserFolder='OFS.userfolder:BasicUserFolder',
+    manage_addUserFolder='OFS.userfolder:manage_addUserFolder',
+    UserFolder='OFS.userfolder:UserFolder',
 )

@@ -43,7 +43,6 @@ XXX This descrition doesn't actually match what's done in ZopeGuards
 or in ZopeSecurityPolicy. :(
 '''
 
-_noroles = [] # this is imported in various places
 
 from BTrees.IIBTree import IIBTree
 from BTrees.IIBTree import IIBucket
@@ -64,8 +63,10 @@ from BTrees.OOBTree import OOSet
 import Record
 
 
+_noroles = []  # this is imported in various places
+
 # Allow access to unprotected attributes
-Record.Record.__allow_access_to_unprotected_subobjects__=1
+Record.Record.__allow_access_to_unprotected_subobjects__ = 1
 
 # ContainerAssertions are used by cAccessControl to check access to
 # attributes of container types, like dict, list, or string.
@@ -86,14 +87,14 @@ Record.Record.__allow_access_to_unprotected_subobjects__=1
 #        The boolean values behave as above, but the functions do not.
 #        The value returned for attribute access is the result of
 #        calling the function with the object and the attribute name.
-
-ContainerAssertions={
+ContainerAssertions = {
     type(()): 1,
     type(''): 1,
     type(u''): 1,
-    }
+}
 
 Containers = ContainerAssertions.get
+
 
 def allow_type(Type, allowed=1):
     """Allow a type and all of its methods and attributes to be used from
@@ -107,23 +108,24 @@ def allow_type(Type, allowed=1):
     ContainerAssertions[Type] = allowed
 
 
-for tree_type, has_values in [(OOBTree, 1),
-                              (OOBucket, 1),
-                              (OOSet, 0),
-                              (OIBTree, 1),
-                              (OIBucket, 1),
-                              (OISet, 0),
-                              (IOBTree, 1),
-                              (IOBucket, 1),
-                              (IOSet, 0),
-                              (IIBTree, 1),
-                              (IIBucket, 1),
-                              (IISet, 0),
-                             ]:
+for tree_type, has_values in [
+    (OOBTree, 1),
+    (OOBucket, 1),
+    (OOSet, 0),
+    (OIBTree, 1),
+    (OIBucket, 1),
+    (OISet, 0),
+    (IOBTree, 1),
+    (IOBucket, 1),
+    (IOSet, 0),
+    (IIBTree, 1),
+    (IIBucket, 1),
+    (IISet, 0),
+]:
     tree = tree_type()
     key_type = type(tree.keys())
 
-    if key_type is not list: # lists have their own declarations
+    if key_type is not list:  # lists have their own declarations
         allow_type(key_type)
 
     if has_values:
