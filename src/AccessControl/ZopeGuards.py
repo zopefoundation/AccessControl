@@ -59,7 +59,7 @@ def initialize(impl):
 def guarded_hasattr(object, name):
     try:
         guarded_getattr(object, name)
-    except (AttributeError, Unauthorized):
+    except (AttributeError, Unauthorized, TypeError):
         return 0
     return 1
 safe_builtins['hasattr'] = guarded_hasattr

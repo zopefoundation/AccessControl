@@ -88,6 +88,18 @@ class TestGuardedGetattr(GuardTestCase):
     def tearDown(self):
         self.setSecurityManager(self.__old)
 
+    def test_miss(self):
+        from AccessControl.ZopeGuards import guarded_getattr
+        obj, name = object(), 'nonesuch'
+        self.assertRaises(AttributeError, guarded_getattr, obj, name)
+        self.assertEqual(len(self.__sm.calls), 0)
+
+    def test_unhashable_key(self):
+        from AccessControl.ZopeGuards import guarded_getattr
+        obj, name = object(), {}
+        self.assertRaises(TypeError, guarded_getattr, obj, name)
+        self.assertEqual(len(self.__sm.calls), 0)
+
     def test_unauthorized(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_getattr
@@ -96,14 +108,14 @@ class TestGuardedGetattr(GuardTestCase):
         rc = sys.getrefcount(value)
         self.__sm.reject = True
         self.assertRaises(Unauthorized, guarded_getattr, obj, name)
-        self.assert_(self.__sm.calls)
+        self.assertEqual(len(self.__sm.calls), 1)
         del self.__sm.calls[:]
         self.assertEqual(rc, sys.getrefcount(value))
 
     def test_calls_validate_for_unknown_type(self):
         from AccessControl.ZopeGuards import guarded_getattr
         guarded_getattr(self, 'test_calls_validate_for_unknown_type')
-        self.assert_(self.__sm.calls)
+        self.assertEqual(len(self.__sm.calls), 1)
 
     def test_attr_handler_table(self):
         from AccessControl import Unauthorized
@@ -126,6 +138,50 @@ class TestGuardedGetattr(GuardTestCase):
             self.assertRaises(Unauthorized, guarded_getattr, d, 'items')
         finally:
             ContainerAssertions[_dict] = old
+
+
+class TestGuardedHasattr(GuardTestCase):
+
+    def setUp(self):
+        self.__sm = SecurityManager()
+        self.__old = self.setSecurityManager(self.__sm)
+
+    def tearDown(self):
+        self.setSecurityManager(self.__old)
+
+    def test_miss(self):
+        from AccessControl.ZopeGuards import guarded_hasattr
+        obj, name = object(), 'nonesuch'
+        self.assertFalse(guarded_hasattr(obj, name))
+        self.assertEqual(len(self.__sm.calls), 0)
+        del self.__sm.calls[:]
+
+    def test_unhashable_key(self):
+        from AccessControl.ZopeGuards import guarded_hasattr
+        obj, name = object(), {}
+        self.assertFalse(guarded_hasattr(obj, name))
+        self.assertEqual(len(self.__sm.calls), 0)
+
+    def test_unauthorized(self):
+        from AccessControl.ZopeGuards import guarded_hasattr
+        obj, name = Method(), 'args'
+        value = getattr(obj, name)
+        rc = sys.getrefcount(value)
+        self.__sm.reject = True
+        self.assertFalse(guarded_hasattr(obj, name))
+        self.assertEqual(len(self.__sm.calls), 1)
+        del self.__sm.calls[:]
+        self.assertEqual(rc, sys.getrefcount(value))
+
+    def test_hit(self):
+        from AccessControl.ZopeGuards import guarded_hasattr
+        obj, name = Method(), 'args'
+        value = getattr(obj, name)
+        rc = sys.getrefcount(value)
+        self.assertTrue(guarded_hasattr(obj, name))
+        self.assertEqual(len(self.__sm.calls), 1)
+        del self.__sm.calls[:]
+        self.assertEqual(rc, sys.getrefcount(value))
 
 
 class TestDictGuards(GuardTestCase):
@@ -865,6 +921,7 @@ def test_suite():
         doctest.DocTestSuite(),
         ])
     for cls in (TestGuardedGetattr,
+                TestGuardedHasattr,
                 TestDictGuards,
                 TestBuiltinFunctionGuards,
                 TestListGuards,
