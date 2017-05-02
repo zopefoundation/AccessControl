@@ -19,8 +19,12 @@ conversion.
 """
 
 from cgi import escape
+from functools import total_ordering
+
+import six
 
 
+@total_ordering
 class TaintedString:
 
     def __init__(self, value):
@@ -32,8 +36,15 @@ class TaintedString:
     def __repr__(self):
         return repr(self.quoted())
 
-    def __cmp__(self, o):
-        return cmp(self._value, o)
+    if six.PY2:
+        def __cmp__(self, o):
+            return cmp(self._value, o)  # NOQA
+
+    def __eq__(self, o):
+        return self._value == o
+
+    def __lt__(self, o):
+        return self._value < o
 
     def __hash__(self):
         return hash(self._value)
@@ -76,8 +87,9 @@ class TaintedString:
     def __float__(self):
         return float(self._value)
 
-    def __long__(self):
-        return long(self._value)
+    if six.PY2:
+        def __long__(self):
+            return long(self._value)  # NOQA
 
     def __getstate__(self):
         # If an object tries to store a TaintedString, it obviously wasn't
@@ -108,11 +120,11 @@ class TaintedString:
 
     def split(self, *args):
         r = self._value.split(*args)
-        return map(lambda v, c=self.__class__: '<' in v and c(v) or v, r)
+        return list(map(lambda v, c=self.__class__: '<' in v and c(v) or v, r))
 
     def splitlines(self, *args):
         r = self._value.splitlines(*args)
-        return map(lambda v, c=self.__class__: '<' in v and c(v) or v, r)
+        return list(map(lambda v, c=self.__class__: '<' in v and c(v) or v, r))
 
     def translate(self, *args):
         v = self._value.translate(*args)

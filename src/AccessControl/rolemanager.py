@@ -105,13 +105,13 @@ class RoleManager(Base, RoleManager):
             d={'name': name,
                'hashed_name': _string_hash(name),
                'acquire': isinstance(roles, list) and 'CHECKED' or '',
-               'roles': map(
+               'roles': tuple(map(
                    lambda ir, roles=roles, valid=valid, ip=ip:
                    {
                        'name': "permission_%srole_%s" % (_string_hash(permission_name), _string_hash(valid[ir])),
                        'checked': (valid[ir] in roles) and 'CHECKED' or '',
                        },
-                   indexes)
+                   indexes))
                }
             ip = ip + 1
             result.append(d)
@@ -243,12 +243,12 @@ class RoleManager(Base, RoleManager):
             if name==permission:
                 p = Permission(name, value, self)
                 roles = p.getRoles()
-                return map(
+                return tuple(map(
                     lambda role, roles=roles:
                     {'name': role,
                      'selected': role in roles and 'SELECTED' or '',
                      },
-                    valid_roles)
+                    valid_roles))
 
         raise ValueError(
             "The permission <em>%s</em> is invalid." % escape(permission))
