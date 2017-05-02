@@ -23,8 +23,9 @@ from AccessControl.owner import UnownableOwner
 from zope.deferredimport import deprecated
 
 
-deprecated("Owned is no longer part of AccessControl, please "
-           "depend on Zope2 and import from OFS.owner or use the "
-           "new minimal Owned class from AccessControl.owner.",
-           Owned = 'OFS.owner:Owned',
+deprecated(
+    "Owned is no longer part of AccessControl, please "
+    "depend on Zope2 and import from OFS.owner or use the "
+    "new minimal Owned class from AccessControl.owner.",
+    Owned='OFS.owner:Owned',
 )

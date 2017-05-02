@@ -165,8 +165,6 @@ class IRoleManager(IPermissionMappingSupport):
     def manage_delLocalRoles(userids):
         """Remove all local roles for a user."""
 
-    #------------------------------------------------------------
-
     def access_debug_info():
         """Return debug info.
         """
@@ -195,7 +193,7 @@ class IRoleManager(IPermissionMappingSupport):
             'roles' -> global roles,
             'roles_in_context' -> roles in context of the current object,
             'allowed_permissions' -> permissions allowed for the user,
-            'disallowed_permissions' -> all other permissions 
+            'disallowed_permissions' -> all other permissions
         """
 
 
@@ -299,7 +297,7 @@ class ISecurityManager(Interface):
                  name=None,
                  value=None,
                  roles=_noroles,
-                ):
+                 ):
         """Validate access.
 
         Arguments:
@@ -325,7 +323,7 @@ class ISecurityManager(Interface):
                      name=None,
                      value=None,
                      md=None,
-                    ):
+                     ):
         """Validate access.
         * THIS EXISTS FOR DTML COMPATIBILITY *
 
@@ -361,7 +359,7 @@ class ISecurityManager(Interface):
 
     def addContext(anExecutableObject):
         """Add an ExecutableObject to the current security context.
-        
+
         o If it declares a custom security policy,  make that policy
           "current";  otherwise, make the "default" security policy
           current.
@@ -369,7 +367,7 @@ class ISecurityManager(Interface):
 
     def removeContext(anExecutableObject):
         """Remove an ExecutableObject from the current security context.
-        
+
         o Remove all objects from the top of the stack "down" to the
           supplied object.
 

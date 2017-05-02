@@ -55,11 +55,13 @@ class Owned(Base):
         if owner is None or owner is UnownableOwner:
             return owner
 
-        d={'path': '/'.join(owner[0]), 'id': owner[1],
-           'explicit': hasattr(self, '_owner'),
-           'userCanChangeOwnershipType':
-           getSecurityManager().checkPermission('Take ownership', self)
-           }
+        d = {
+            'path': '/'.join(owner[0]),
+            'id': owner[1],
+            'explicit': hasattr(self, '_owner'),
+            'userCanChangeOwnershipType':
+            getSecurityManager().checkPermission('Take ownership', self)
+        }
         return d
 
     security.declarePrivate('getOwner')
@@ -79,8 +81,7 @@ class Owned(Base):
                           'please use getOwnerTuple() instead.',
                           DeprecationWarning, stacklevel=2)
 
-
-        owner=aq_get(self, '_owner', None, 1)
+        owner = aq_get(self, '_owner', None, 1)
         if info or (owner is None):
             return owner
 
@@ -148,7 +149,7 @@ class Owned(Base):
         """
         new = ownerInfo(user)
         if new is None:
-            return # Special user!
+            return  # Special user!
         old = self.getOwnerTuple()
 
         if not recursive:
@@ -156,7 +157,7 @@ class Owned(Base):
                 return
 
         if recursive:
-            children = getattr( aq_base(self), 'objectValues', lambda :() )()
+            children = getattr(aq_base(self), 'objectValues', lambda: ())()
             for child in children:
                 child.changeOwnership(user, 1)
 
@@ -200,10 +201,8 @@ class Owned(Base):
             _owner = None
 
         if (_owner is None and
-            ((getattr(self, '__parent__', None) is None) or
-             (not hasattr(self, 'getPhysicalRoot'))
-             )
-            ):
+                (getattr(self, '__parent__', None) is None or
+                 not hasattr(self, 'getPhysicalRoot'))):
             # This is a special case. An object is
             # being added to an object that hasn't
             # been added to the object hierarchy yet.
@@ -219,9 +218,9 @@ class Owned(Base):
             user = getSecurityManager().getUser()
             if (SU.emergency_user and aq_base(user) is SU.emergency_user):
                 __creatable_by_emergency_user__ = getattr(
-                    self,'__creatable_by_emergency_user__', None)
-                if (__creatable_by_emergency_user__ is None or
-                    (not __creatable_by_emergency_user__())):
+                    self, '__creatable_by_emergency_user__', None)
+                if __creatable_by_emergency_user__ is None or \
+                        not __creatable_by_emergency_user__():
                     raise EmergencyUserCannotOwn(
                         "Objects cannot be owned by the emergency user")
             self.changeOwnership(user)
@@ -236,7 +235,9 @@ class Owned(Base):
                 object._deleteOwnershipAfterAdd()
             except:
                 pass
-            if s is None: object._p_deactivate()
+            if s is None:
+                object._p_deactivate()
+
 
 InitializeClass(Owned)
 
@@ -265,7 +266,7 @@ def ownerInfo(user, getattr=getattr):
     path = [absattr(db.id)]
     root = db.getPhysicalRoot()
     while 1:
-        db = getattr(db,'aq_inner', None)
+        db = getattr(db, 'aq_inner', None)
         if db is None:
             break
         db = aq_parent(db)
