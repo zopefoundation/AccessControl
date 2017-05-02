@@ -205,7 +205,7 @@ Example:
 
     __ac_types__=(
 
-    ('Full Access', map(lambda x: x[0], __ac_permissions__)),
+    ('Full Access', tuple(map(lambda x: x[0], __ac_permissions__))),
     ('Change', ['Add Objects', 'Add Properties', 'Change Properties']),
 
     )

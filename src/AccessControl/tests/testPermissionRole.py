@@ -13,12 +13,13 @@
 """Tests of PermissionRole
 """
 
-from AccessControl.PermissionRole import PermissionRole
+import unittest
+
 from Acquisition import aq_base
 from Acquisition import Explicit
 from Acquisition import Implicit
 
-import unittest
+from AccessControl.PermissionRole import PermissionRole
 
 
 ViewPermission = 'View'

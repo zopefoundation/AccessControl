@@ -13,35 +13,20 @@
 
 """Python implementation of the access control machinery."""
 
-from AccessControl.interfaces import ISecurityManager
-from AccessControl.interfaces import ISecurityPolicy
-from AccessControl.Permission import getPermissionIdentifier
-from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.SimpleObjectPolicies import _noroles
-from AccessControl.SimpleObjectPolicies import Containers
-from AccessControl.unauthorized import Unauthorized
-from AccessControl.ZopeGuards import guarded_getitem
-# AccessControl.ZopeSecurityPolicy
-# --------------------------------
-#
-#   TODO:  implement this in cAccessControl, and have Implementation
-#          do the indirection.
-#
-from AccessControl.ZopeSecurityPolicy import getRoles  # XXX
+from logging import getLogger
 from Acquisition import aq_acquire
 from Acquisition import aq_base
 from Acquisition import aq_inContextOf
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from ExtensionClass import Base
-from logging import getLogger
+from six import string_types
 from zope.interface import implementer
 
 import os
 import string
 
 
-_what_not_even_god_should_do = []
 # This is used when a permission maps explicitly to no permission.  We
 # try and get this from cAccessControl first to make sure that if both
 # security implementations exist, we can switch between them later.
@@ -49,6 +34,22 @@ try:
     from AccessControl.cAccessControl import _what_not_even_god_should_do
 except ImportError:
     _what_not_even_god_should_do = []
+
+from AccessControl.interfaces import ISecurityManager
+from AccessControl.interfaces import ISecurityPolicy
+from AccessControl.Permission import getPermissionIdentifier
+from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.SimpleObjectPolicies import _noroles
+from AccessControl.SimpleObjectPolicies import Containers
+from AccessControl.unauthorized import Unauthorized
+from AccessControl.ZopeGuards import guarded_getitem  # NOQA
+# AccessControl.ZopeSecurityPolicy
+# --------------------------------
+#
+#   TODO:  implement this in cAccessControl, and have Implementation
+#          do the indirection.
+#
+from AccessControl.ZopeSecurityPolicy import getRoles  # XXX
 
 
 LOG = getLogger('ImplPython')
@@ -311,9 +312,10 @@ class ZopeSecurityPolicy:
                             None)
 
             if p is not None:
-                if not isinstance(p, int):  # catches bool too
+                if not isinstance(p, (bool, int)):
                     if isinstance(p, dict):
-                        if isinstance(name, basestring):
+
+                        if isinstance(name, string_types):
                             p = p.get(name)
                         else:
                             p = 1
@@ -485,7 +487,7 @@ class ZopeSecurityPolicy:
 
     def checkPermission(self, permission, object, context):
         roles = rolesForPermissionOn(permission, object)
-        if isinstance(roles, basestring):
+        if isinstance(roles, string_types):
             roles = [roles]
 
         # check executable owner and proxy roles

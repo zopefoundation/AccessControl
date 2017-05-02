@@ -11,10 +11,10 @@
 #
 ##############################################################################
 
+import inspect
+
 from zExceptions import Forbidden
 from zope.publisher.interfaces.browser import IBrowserRequest
-
-import inspect
 
 
 _default = []

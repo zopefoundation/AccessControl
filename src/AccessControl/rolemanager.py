@@ -12,6 +12,16 @@
 ##############################################################################
 """Access control support
 """
+
+from base64 import urlsafe_b64encode
+from cgi import escape
+
+from Acquisition import Acquired
+from Acquisition import aq_base
+from Acquisition import aq_get
+from ExtensionClass import Base
+from zope.interface import implementer
+
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
 from AccessControl.interfaces import IRoleManager
@@ -20,13 +30,6 @@ from AccessControl.Permission import Permission
 from AccessControl.PermissionMapping import RoleManager
 from AccessControl.Permissions import change_permissions
 from AccessControl.SecurityManagement import newSecurityManager
-from Acquisition import Acquired
-from Acquisition import aq_base
-from Acquisition import aq_get
-from base64 import urlsafe_b64encode
-from cgi import escape
-from ExtensionClass import Base
-from zope.interface import implementer
 
 
 DEFAULTMAXLISTUSERS = 250
@@ -103,15 +106,16 @@ class RoleManager(Base, RoleManager):
                 'name': name,
                 'hashed_name': _string_hash(name),
                 'acquire': isinstance(roles, list) and 'CHECKED' or '',
-                'roles': map(
+                'roles': tuple(map(
                     lambda ir, roles=roles, valid=valid, ip=ip:
                     {
                        'name': "permission_%srole_%s" % (_string_hash(permission_name), _string_hash(valid[ir])),
                        'checked': (valid[ir] in roles) and 'CHECKED' or '',
                     },
                     indexes
-                )
+                ))
             }
+
             ip = ip + 1
             result.append(d)
         return result
@@ -242,12 +246,12 @@ class RoleManager(Base, RoleManager):
             if name == permission:
                 p = Permission(name, value, self)
                 roles = p.getRoles()
-                return map(
+                return tuple(map(
                     lambda role, roles=roles:
                     {'name': role,
                      'selected': role in roles and 'SELECTED' or '',
                      },
-                    valid_roles)
+                    valid_roles))
 
         raise ValueError(
             "The permission <em>%s</em> is invalid." % escape(permission))

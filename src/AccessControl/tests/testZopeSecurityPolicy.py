@@ -11,20 +11,20 @@
 #
 ##############################################################################
 
-from AccessControl.SecurityManagement import SecurityContext
-from AccessControl.userfolder import UserFolder
-from Acquisition import Explicit
-from Acquisition import Implicit
 from doctest import DocTestSuite
-from MethodObject import Method
-from zExceptions import Unauthorized
-
 import sys
 import unittest
 
+from Acquisition import Explicit
+from Acquisition import Implicit
+from MethodObject import Method
+from zExceptions import Unauthorized
+
+from AccessControl.SecurityManagement import SecurityContext
+from AccessControl.userfolder import UserFolder
 
 try:
-    import _thread as thread
+    import _thread as thread  # Py3
 except ImportError:
     import thread
 
@@ -632,6 +632,7 @@ def test_getRoles():
 
 def test_zsp_gets_right_roles_for_methods():
     """
+    >>> from AccessControl.unauthorized import Unauthorized
     >>> from AccessControl.ZopeSecurityPolicy import ZopeSecurityPolicy
     >>> zsp = ZopeSecurityPolicy()
     >>> from ExtensionClass import Base
@@ -661,21 +662,28 @@ def test_zsp_gets_right_roles_for_methods():
     >>> bool(zsp.validate(c, c, 'foo', c.foo, Context(User(['greeneggs']))))
     True
 
-    >>> zsp.validate(c, c, 'foo', c.foo, Context(User(['spam'])))
-    Traceback (most recent call last):
-    ...
-    Unauthorized: You are not allowed to access 'foo' in this context
+    >>> try:
+    ...     zsp.validate(c, c, 'foo', c.foo, Context(User(['spam'])))
+    ... except Unauthorized:
+    ...     pass
+    ... else:
+    ...     assert 'failure, Unauthorized not raised'
 
     >>> c.__roles__ = ['spam']
-    >>> zsp.validate(c, c, 'foo', c.foo, Context(User(['spam'])))
-    Traceback (most recent call last):
-    ...
-    Unauthorized: You are not allowed to access 'foo' in this context
 
-    >>> zsp.validate(c, c, 'bar', c.bar, Context(User(['spam'])))
-    Traceback (most recent call last):
-    ...
-    Unauthorized: You are not allowed to access 'bar' in this context
+    >>> try:
+    ...     zsp.validate(c, c, 'foo', c.foo, Context(User(['spam'])))
+    ... except Unauthorized:
+    ...     pass
+    ... else:
+    ...     assert 'failure, Unauthorized not raised'
+
+    >>> try:
+    ...     zsp.validate(c, c, 'bar', c.bar, Context(User(['spam'])))
+    ... except Unauthorized:
+    ...     pass
+    ... else:
+    ...     assert 'failure, Unauthorized not raised'
 
     >>> c.__allow_access_to_unprotected_subobjects__ = 1
     >>> bool(zsp.validate(c, c, 'bar', c.bar, Context(User(['spam']))))

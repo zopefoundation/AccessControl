@@ -2133,6 +2133,10 @@ guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
       Py_DECREF(v);
       return NULL;
     }
+  } else {
+    /* raise TypeError, name */
+    PyErr_SetObject(PyExc_TypeError, name);
+    return NULL;
   }
 
  unauth:

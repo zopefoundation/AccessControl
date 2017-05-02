@@ -13,15 +13,19 @@
 """Define Zope's default security policy
 """
 from __future__ import absolute_import
+
+from types import MethodType
+
+from six import string_types
+
 # AccessControl.Implementation inserts:
 #   ZopeSecurityPolicy, getRoles, rolesForPermissionOn
 from AccessControl.SimpleObjectPolicies import _noroles
-from types import MethodType
 
 
 rolesForPermissionOn = None  # XXX:  avoid import loop
 
-tuple_or_list = tuple, list
+tuple_or_list = (tuple, list)
 
 
 def getRoles(container, name, value, default):
@@ -33,7 +37,7 @@ def getRoles(container, name, value, default):
 
     roles = getattr(value, '__roles__', _noroles)
     if roles is _noroles:
-        if not name or not isinstance(name, basestring):
+        if not name or not isinstance(name, string_types):
             return default
 
         if type(value) is MethodType:

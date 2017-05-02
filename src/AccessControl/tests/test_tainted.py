@@ -15,6 +15,8 @@
 
 import unittest
 
+import six
+
 
 class TestTaintedString(unittest.TestCase):
 
@@ -34,9 +36,9 @@ class TestTaintedString(unittest.TestCase):
         self.assertEquals(repr(self.tainted), repr(self.quoted))
 
     def testCmp(self):
-        self.assertEquals(cmp(self.tainted, self.unquoted), 0)
-        self.assertEquals(cmp(self.tainted, 'a'), -1)
-        self.assertEquals(cmp(self.tainted, '.'), 1)
+        self.assertTrue(self.tainted == self.unquoted)
+        self.assertTrue(self.tainted < 'a')
+        self.assertTrue(self.tainted > '.')
 
     def testHash(self):
         hash = {}
@@ -147,9 +149,11 @@ class TestTaintedString(unittest.TestCase):
                           unquoted.translate(transtable))
         self.assert_(isinstance(self._getClass()('<').translate(transtable),
                                 self._getClass()))
-        self.failIf(isinstance(self._getClass()('<').translate(transtable,
-                                                               '<'),
-                               self._getClass()))
+        if six.PY2:
+            # Translate no longer supports a second argument
+            self.failIf(isinstance(self._getClass()('<').translate(transtable,
+                                                                   '<'),
+                                   self._getClass()))
 
     def testQuoted(self):
         self.assertEquals(self.tainted.quoted(), self.quoted)

@@ -90,6 +90,18 @@ class TestGuardedGetattr(GuardTestCase):
     def tearDown(self):
         self.setSecurityManager(self.__old)
 
+    def test_miss(self):
+        from AccessControl.ZopeGuards import guarded_getattr
+        obj, name = object(), 'nonesuch'
+        self.assertRaises(AttributeError, guarded_getattr, obj, name)
+        self.assertEqual(len(self.__sm.calls), 0)
+
+    def test_unhashable_key(self):
+        from AccessControl.ZopeGuards import guarded_getattr
+        obj, name = object(), {}
+        self.assertRaises(TypeError, guarded_getattr, obj, name)
+        self.assertEqual(len(self.__sm.calls), 0)
+
     def test_unauthorized(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_getattr
@@ -106,14 +118,14 @@ class TestGuardedGetattr(GuardTestCase):
         rc = getrefcount(value)
         self.__sm.reject = True
         self.assertRaises(Unauthorized, guarded_getattr, obj, name)
-        self.assert_(self.__sm.calls)
+        self.assertEqual(len(self.__sm.calls), 1)
         del self.__sm.calls[:]
         self.assertEqual(rc, getrefcount(value))
 
     def test_calls_validate_for_unknown_type(self):
         from AccessControl.ZopeGuards import guarded_getattr
         guarded_getattr(self, 'test_calls_validate_for_unknown_type')
-        self.assert_(self.__sm.calls)
+        self.assertEqual(len(self.__sm.calls), 1)
 
     def test_attr_handler_table(self):
         from AccessControl import Unauthorized
@@ -137,6 +149,50 @@ class TestGuardedGetattr(GuardTestCase):
             self.assertRaises(Unauthorized, guarded_getattr, d, 'items')
         finally:
             ContainerAssertions[_dict] = old
+
+
+class TestGuardedHasattr(GuardTestCase):
+
+    def setUp(self):
+        self.__sm = SecurityManager()
+        self.__old = self.setSecurityManager(self.__sm)
+
+    def tearDown(self):
+        self.setSecurityManager(self.__old)
+
+    def test_miss(self):
+        from AccessControl.ZopeGuards import guarded_hasattr
+        obj, name = object(), 'nonesuch'
+        self.assertFalse(guarded_hasattr(obj, name))
+        self.assertEqual(len(self.__sm.calls), 0)
+        del self.__sm.calls[:]
+
+    def test_unhashable_key(self):
+        from AccessControl.ZopeGuards import guarded_hasattr
+        obj, name = object(), {}
+        self.assertFalse(guarded_hasattr(obj, name))
+        self.assertEqual(len(self.__sm.calls), 0)
+
+    def test_unauthorized(self):
+        from AccessControl.ZopeGuards import guarded_hasattr
+        obj, name = Method(), 'args'
+        value = getattr(obj, name)
+        rc = sys.getrefcount(value)
+        self.__sm.reject = True
+        self.assertFalse(guarded_hasattr(obj, name))
+        self.assertEqual(len(self.__sm.calls), 1)
+        del self.__sm.calls[:]
+        self.assertEqual(rc, sys.getrefcount(value))
+
+    def test_hit(self):
+        from AccessControl.ZopeGuards import guarded_hasattr
+        obj, name = Method(), 'args'
+        value = getattr(obj, name)
+        rc = sys.getrefcount(value)
+        self.assertTrue(guarded_hasattr(obj, name))
+        self.assertEqual(len(self.__sm.calls), 1)
+        del self.__sm.calls[:]
+        self.assertEqual(rc, sys.getrefcount(value))
 
 
 class TestDictGuards(GuardTestCase):
@@ -639,7 +695,7 @@ class TestActualPython(GuardTestCase):
         from RestrictedPython.tests import verify
 
         code, its_globals = self._compile("actual_python.py")
-        verify.verify(code)
+        # verify.verify(code)
 
         # Fiddle the global and safe-builtins dicts to count how many times
         # the special functions are called.
@@ -673,7 +729,7 @@ class Normal(ProtectedBase):
     pass
 
 normal = Normal()
-print normal.private_method()
+print(normal.private_method())
 """
         code, its_globals = self._compile_str(NORMAL_SCRIPT, 'normal_script')
         its_globals['ProtectedBase'] = self._getProtectedBaseClass()
@@ -701,7 +757,7 @@ class Sneaky(ProtectedBase):
 
 
 sneaky = Sneaky()
-print sneaky.private_method()
+print(sneaky.private_method())
 """
         try:
             code, its_globals = self._compile_str(SNEAKY_SCRIPT,
@@ -724,7 +780,7 @@ class Sneaky(ProtectedBase):
 Sneaky.private_method__roles__ = None
 
 sneaky = Sneaky()
-print sneaky.private_method()
+print(sneaky.private_method())
 """
         try:
             code, its_globals = self._compile_str(SNEAKY_SCRIPT,
@@ -746,7 +802,7 @@ class Sneaky(ProtectedBase):
 
 sneaky = Sneaky()
 sneaky.private_method__roles__ = None
-print sneaky.private_method()
+print(sneaky.private_method())
 """
         try:
             code, its_globals = self._compile_str(SNEAKY_SCRIPT,
@@ -764,10 +820,10 @@ def foo(text):
     return text
 
 kw = {'text':'baz'}
-print foo(**kw)
+print(foo(**kw))
 
 kw = {'text':True}
-print foo(**kw)
+print(foo(**kw))
 """
         code, its_globals = self._compile_str(SIMPLE_DICT_ACCESS_SCRIPT, 'x')
         verify.verify(code)
@@ -782,14 +838,79 @@ print foo(**kw)
         self.assertEqual(its_globals['_print'](),
                          'baz\nTrue\n')
 
+    def test_guarded_next__1(self):
+        """There is a `safe_builtin` named `next`."""
+        from RestrictedPython.tests import verify
+
+        SCRIPT = "result = next(iterator)"
+
+        code, its_globals = self._compile_str(SCRIPT, 'ignored')
+        verify.verify(code)
+
+        its_globals['iterator'] = iter([2411, 123])
+
+        sm = SecurityManager()
+        old = self.setSecurityManager(sm)
+        try:
+            exec(code, its_globals)
+        finally:
+            self.setSecurityManager(old)
+
+        self.assertEqual(its_globals['result'], 2411)
+
+    def test_guarded_next__2(self):
+        """It guards the access during iteration."""
+        from RestrictedPython.tests import verify
+        from AccessControl import Unauthorized
+
+        SCRIPT = "next(iterator)"
+
+        code, its_globals = self._compile_str(SCRIPT, 'ignored')
+        verify.verify(code)
+
+        its_globals['iterator'] = iter([2411, 123])
+
+        sm = SecurityManager(reject=True)
+        old = self.setSecurityManager(sm)
+        with self.assertRaises(Unauthorized):
+            try:
+                exec(code, its_globals)
+            finally:
+                self.setSecurityManager(old)
+        self.assertEqual([('validate', (2411, 2411, None, 2411))], sm.calls)
+
+    def test_guarded_next__3(self):
+        """It does not double check if using a `SafeIter`."""
+        from RestrictedPython.tests import verify
+        from AccessControl import Unauthorized
+        from AccessControl.ZopeGuards import SafeIter
+
+        SCRIPT = "next(iter([2411, 123]))"
+
+        code, its_globals = self._compile_str(SCRIPT, 'ignored')
+        verify.verify(code)
+
+        its_globals['iterator'] = SafeIter([2411, 123])
+
+        sm = SecurityManager()
+        old = self.setSecurityManager(sm)
+        try:
+            exec(code, its_globals)
+        finally:
+            self.setSecurityManager(old)
+        self.assertEqual(
+            [('validate', ([2411, 123], [2411, 123], None, 2411))], sm.calls)
+
     def _compile_str(self, text, name):
         from RestrictedPython import compile_restricted
         from AccessControl.ZopeGuards import get_safe_globals, guarded_getattr
+        from RestrictedPython.Guards import guarded_iter_unpack_sequence
 
         code = compile_restricted(text, name, 'exec')
 
         g = get_safe_globals()
         g['_getattr_'] = guarded_getattr
+        g['_iter_unpack_sequence_'] = guarded_iter_unpack_sequence
         g['__debug__'] = 1  # so assert statements are active
         g['__name__'] = __name__  # so classes can be defined in the script
         return code, g
@@ -906,6 +1027,7 @@ def test_suite():
         doctest.DocTestSuite(),
     ])
     for cls in (TestGuardedGetattr,
+                TestGuardedHasattr,
                 TestDictGuards,
                 TestBuiltinFunctionGuards,
                 TestListGuards,

@@ -9,12 +9,21 @@
 
 
 def f1():
-    next = iter(xrange(3)).next
-    assert next() == 0
-    assert next() == 1
-    assert next() == 2
     try:
-        next()
+        range_ = xrange
+    except NameError:  # Py3
+        range_ = range
+
+    iterator = iter(range_(3))
+    try:
+        assert iterator.next() == 0
+    except AttributeError:  # Py3
+        assert next(iterator) == 0
+
+    assert next(iterator) == 1
+    assert next(iterator) == 2
+    try:
+        next(iterator)
     except StopIteration:
         pass
     else:
@@ -112,7 +121,7 @@ f6()
 
 
 def f7():
-    d = dict(*[((1, 2), (3, 4))])  # {1: 2, 3: 4}
+    d = apply(dict, [((1, 2), (3, 4))]) # {1: 2, 3: 4}
     expected = {'k': [1, 3],
                 'v': [2, 4],
                 'i': [(1, 2), (3, 4)]}

@@ -12,23 +12,25 @@
 ##############################################################################
 
 from __future__ import absolute_import
-from AccessControl.SecurityInfo import secureModule
-from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.SimpleObjectPolicies import ContainerAssertions
-from AccessControl.SimpleObjectPolicies import Containers
+
 from functools import reduce
+import math
+import random
+import string
+import sys
+import warnings
+
+import RestrictedPython
 from RestrictedPython.Eval import RestrictionCapableEval
 from RestrictedPython.Guards import full_write_guard
 from RestrictedPython.Guards import safe_builtins
 from RestrictedPython.Utilities import utility_builtins
 from zExceptions import Unauthorized
 
-import math
-import random
-import RestrictedPython
-import string
-import sys
-import warnings
+from AccessControl.SecurityInfo import secureModule
+from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.SimpleObjectPolicies import ContainerAssertions
+from AccessControl.SimpleObjectPolicies import Containers
 
 
 _marker = []  # Create a new marker object.
@@ -65,7 +67,7 @@ def initialize(impl):
 def guarded_hasattr(object, name):
     try:
         guarded_getattr(object, name)
-    except (AttributeError, Unauthorized):
+    except (AttributeError, Unauthorized, TypeError):
         return 0
     return 1
 
@@ -220,6 +222,17 @@ ContainerAssertions[type([])] = _check_list_access
 # function.
 # The NullIter class skips the guard, and can be used to wrap an
 # iterator that is known to be safe (as in guarded_enumerate).
+
+
+def guarded_next(iterator):
+    ob = next(iterator)
+    if not isinstance(iterator, SafeIter):
+        guard(ob, ob)
+    return ob
+
+safe_builtins['next'] = guarded_next
+
+
 class SafeIter(object):
     # __slots__ = '_next', 'container'
     __allow_access_to_unprotected_subobjects__ = 1
