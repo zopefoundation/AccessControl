@@ -11,20 +11,20 @@
 #
 ##############################################################################
 
-from AccessControl.SecurityManagement import SecurityContext
-from AccessControl.userfolder import UserFolder
-from Acquisition import Explicit
-from Acquisition import Implicit
 from doctest import DocTestSuite
-from MethodObject import Method
-from zExceptions import Unauthorized
-
 import sys
 import unittest
 
+from Acquisition import Explicit
+from Acquisition import Implicit
+from MethodObject import Method
+from zExceptions import Unauthorized
+
+from AccessControl.SecurityManagement import SecurityContext
+from AccessControl.userfolder import UserFolder
 
 try:
-    import _thread as thread
+    import _thread as thread  # Py3
 except ImportError:
     import thread
 

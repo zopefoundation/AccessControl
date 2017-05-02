@@ -13,9 +13,9 @@
 """Class initialization.
 """
 
-from AccessControl.Permission import ApplicationDefaultPermissions
-
 import logging
+
+from AccessControl.Permission import ApplicationDefaultPermissions
 
 
 def InitializeClass(self):

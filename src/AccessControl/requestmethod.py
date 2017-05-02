@@ -11,13 +11,14 @@
 #
 ##############################################################################
 
+import inspect
+
 from zExceptions import Forbidden
 from zope.publisher.interfaces.browser import IBrowserRequest
 
-import inspect
-
 
 _default = []
+
 
 def _buildFacade(name, spec, docstring):
     """Build a facade function, matching the decorated method in signature.

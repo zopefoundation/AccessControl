@@ -1,6 +1,6 @@
 [run]
 branch = True
-source = RestrictedPython
+source = AccessControl
 omit =
     src/AccessControl/tests
     src/AccessControl/tests/*.py

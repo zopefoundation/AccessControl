@@ -14,9 +14,6 @@
 """Security handling
 """
 
-from AccessControl.Permission import addPermission
-from AccessControl.SecurityInfo import ClassSecurityInfo
-from AccessControl.SecurityManagement import getSecurityManager
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.component.zcml import utility
@@ -34,6 +31,10 @@ from zope.security.management import thread_local
 from zope.security.permission import Permission
 from zope.security.simplepolicies import ParanoidSecurityPolicy
 from zope.security.zcml import IPermissionDirective
+
+from AccessControl.Permission import addPermission
+from AccessControl.SecurityInfo import ClassSecurityInfo
+from AccessControl.SecurityManagement import getSecurityManager
 
 
 CheckerPublicId = 'zope.Public'

@@ -13,9 +13,11 @@
 """Access control package.
 """
 
+from zope.deferredimport import deprecated
+
+# BBB
 from .users import emergency_user as super
 from .users import UnrestrictedUser as Super
-# BBB
 from .users import _remote_user_mode
 from .users import absattr
 from .users import addr_match
@@ -31,7 +33,6 @@ from .users import SimpleUser
 from .users import SpecialUser
 from .users import system
 from .users import User
-from zope.deferredimport import deprecated
 
 
 deprecated("User folders are no longer part of AccessControl, please depend "

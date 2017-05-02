@@ -12,8 +12,8 @@
 ##############################################################################
 """Security management
 """
-from . import SpecialUsers
 from __future__ import absolute_import
+from . import SpecialUsers
 
 
 def getSecurityManager():

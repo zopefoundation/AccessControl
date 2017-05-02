@@ -61,15 +61,15 @@ class ClassSecurityInfoTests(unittest.TestCase):
                 ('Manager', 'Role A', 'Role B', 'Role C')
             )
 
-            @security.declarePublic('public')
+            security.declarePublic('public')
             def public(self, REQUEST=None):
                 """ """
 
-            @security.declarePrivate('private')
+            security.declarePrivate('private')
             def private(self, REQUEST=None):
                 """ """
 
-            @security.declareProtected('Test permission', 'protected')
+            security.declareProtected('Test permission', 'protected')
             def protected(self, REQUEST=None):
                 """ """
 
@@ -136,11 +136,13 @@ class ClassSecurityInfoTests(unittest.TestCase):
 
             security = ClassSecurityInfo()
 
-            @security.protected('Test permission 1')
+            # security not used as a decorator, so does not protect
+            security.protected('Test permission 1')
             def unprotected1(self, REQUEST=None):
                 """ """
 
-            @security.protected('Test permission 2')
+            # see above
+            security.protected('Test permission 2')
             def unprotected2(self, REQUEST=None):
                 """ """
 
