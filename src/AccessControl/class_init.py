@@ -21,10 +21,11 @@ import logging
 def InitializeClass(self):
     from AccessControl.Permission import registerPermissions
     from AccessControl.PermissionRole import PermissionRole
-    dict=self.__dict__
-    have=dict.__contains__
-    ft=type(InitializeClass)
-    dict_items=list(dict.items())
+
+    dict = self.__dict__
+    have = dict.__contains__
+    ft = type(InitializeClass)
+    dict_items = list(dict.items())
 
     for name, v in dict_items:
         if getattr(v, '_need__name__', 0):
@@ -46,12 +47,12 @@ def InitializeClass(self):
                 # find the security assertions on its container.
                 v._implicit__name__ = 1
                 v.__name__ = name
-            if name=='manage' or name[:7]=='manage_':
-                name=name+'__roles__'
+            if name == 'manage' or name[:7] == 'manage_':
+                name = name + '__roles__'
                 if not have(name):
                     setattr(self, name, ('Manager',))
-        elif name=='manage' or name[:7]=='manage_' and type(v) is ft:
-            name=name+'__roles__'
+        elif name == 'manage' or name[:7] == 'manage_' and type(v) is ft:
+            name = name + '__roles__'
             if not have(name):
                 setattr(self, name, ('Manager',))
 
@@ -61,7 +62,7 @@ def InitializeClass(self):
     # applied out of paranoia.
     for key, value in dict_items:
         if hasattr(value, '__security_info__'):
-            security_info=value
+            security_info = value
             security_info.apply(self)
             delattr(self, key)
             break
@@ -76,9 +77,9 @@ def InitializeClass(self):
             else:
                 pr = PermissionRole(pname)
             for mname in mnames:
-                setattr(self, mname+'__roles__', pr)
+                setattr(self, mname + '__roles__', pr)
                 if (mname and mname not in ('context', 'request') and
-                    not hasattr(self, mname)):
+                        not hasattr(self, mname)):
                     # don't complain about context or request, as they are
                     # frequently not available as class attributes
                     logging.getLogger("Init").warning(
@@ -86,4 +87,5 @@ def InitializeClass(self):
                         "nonexistent method %r", self.__module__,
                         self.__name__, mname)
 
-default__class_init__ = InitializeClass # BBB: old name
+
+default__class_init__ = InitializeClass  # BBB: old name

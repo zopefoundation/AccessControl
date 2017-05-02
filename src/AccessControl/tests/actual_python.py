@@ -7,6 +7,7 @@
 # that Python code continues to work as intended after all the transformations,
 # and with all the special wrappers we supply.
 
+
 def f1():
     next = iter(xrange(3)).next
     assert next() == 0
@@ -18,32 +19,50 @@ def f1():
         pass
     else:
         assert 0, "expected StopIteration"
+
+
 f1()
 
+
 def f2():
-    assert map(lambda x: x+1, range(3)) == range(1, 4)
+    assert map(lambda x: x + 1, range(3)) == range(1, 4)
+
+
 f2()
+
 
 def f3():
     assert filter(None, range(10)) == range(1, 10)
+
+
 f3()
 
+
 def f4():
-    assert [i+1 for i in range(3)] == range(*(1, 4))
+    assert [i + 1 for i in range(3)] == range(*(1, 4))
+
+
 f4()
 
+
 def f5():
-    x = range(5)
     def add(a, b):
-        return a+b
-    # FIXME reduce is no longer a builtin on python3 - does restricted python really need to support it?
+        return a + b
+
+    # FIXME reduce() is no longer a builtin on python3
+    # does RestrictedPython really need to support it?
+    x = range(5)
     assert sum(x) == reduce(add, x, 0)
+
+
 f5()
+
 
 def f6():
     class C:
-       def display(self):
+        def display(self):
             return str(self.value)
+
     c1 = C()
     c2 = C()
     c1.value = 12
@@ -57,40 +76,43 @@ def f6():
     assert not hasattr(c2, 'value')
 
     # OK, if we can't set new attributes, at least verify that we can't.
-    #try:
-    #    c1.value = 12
-    #except TypeError:
-    #    pass
-    #else:
-    #    assert 0, "expected direct attribute creation to fail"
+    # try:
+    #     c1.value = 12
+    # except TypeError:
+    #     pass
+    # else:
+    #     assert 0, "expected direct attribute creation to fail"
 
-    #try:
-    #    setattr(c1, 'value', 12)
-    #except TypeError:
-    #    pass
-    #else:
-    #    assert 0, "expected indirect attribute creation to fail"
+    # try:
+    #     setattr(c1, 'value', 12)
+    # except TypeError:
+    #     pass
+    # else:
+    #     assert 0, "expected indirect attribute creation to fail"
 
     assert getattr(C, "display", None) == getattr(C, "display")
     delattr(C, "display")
 
-    #try:
-    #    setattr(C, "display", lambda self: "replaced")
-    #except TypeError:
-    #    pass
-    #else:
-    #    assert 0, "expected setattr() attribute replacement to fail"
+    # try:
+    #     setattr(C, "display", lambda self: "replaced")
+    # except TypeError:
+    #     pass
+    # else:
+    #     assert 0, "expected setattr() attribute replacement to fail"
 
-    #try:
-    #    delattr(C, "display")
-    #except TypeError:
-    #    pass
-    #else:
-    #    assert 0, "expected delattr() attribute deletion to fail"
+    # try:
+    #     delattr(C, "display")
+    # except TypeError:
+    #     pass
+    # else:
+    #     assert 0, "expected delattr() attribute deletion to fail"
+
+
 f6()
 
+
 def f7():
-    d = dict(*[((1, 2), (3, 4))]) # {1: 2, 3: 4}
+    d = dict(*[((1, 2), (3, 4))])  # {1: 2, 3: 4}
     expected = {'k': [1, 3],
                 'v': [2, 4],
                 'i': [(1, 2), (3, 4)]}
@@ -104,7 +126,10 @@ def f7():
         result = list(access())
         result.sort()
         assert result == expected[kind], (meth, kind, result, expected[kind])
+
+
 f7()
+
 
 def f8():
     import math
@@ -132,14 +157,17 @@ def f8():
 
     assert min([ceil(x) for x in all]) == smallest
     assert max(map(ceil, all)) == largest
+
+
 f8()
+
 
 # After all the above, these wrappers were still untouched:
 #     ['DateTime', '_print_', 'reorder', 'same_type', 'test']
 # So do something to touch them.
 def f9():
     d = DateTime()
-    print(d) # this one provoked _print_
+    print(d)  # this one provoked _print_
 
     # Funky.  This probably isn't an intended use of reorder, but I'm
     # not sure why it exists.
@@ -149,38 +177,52 @@ def f9():
     assert test(0, 'a', 0, 'b', 0, 'c', 0, 'd', 'e') == 'e'
     # Unclear that the next one is *intended* to return None (it falls off
     # the end of test's implementation without explicitly returning anything).
-    assert test(0, 'a', 0, 'b', 0, 'c', 0, 'd') == None
+    assert test(0, 'a', 0, 'b', 0, 'c', 0, 'd') is None
 
     assert same_type(3, 2, 1), 'expected same type'
     assert not same_type(3, 2, 'a'), 'expected not same type'
+
+
 f9()
+
 
 def f10():
     assert next(iter(enumerate(iter(iter(range(9)))))) == (0, 0)
+
+
 f10()
+
 
 def f11():
     x = 1
     x += 1
+
+
 f11()
+
 
 def f12():
     try:
         all
     except NameError:
-        pass # Python < 2.5
+        pass  # Python < 2.5
     else:
-        assert all([True, True, True]) == True
-        assert all([True, False, True]) == False
+        assert all([True, True, True]) is True
+        assert all([True, False, True]) is False
+
+
 f12()
+
 
 def f13():
     try:
         any
     except NameError:
-        pass # Python < 2.5
+        pass  # Python < 2.5
     else:
-        assert any([True, True, True]) == True
-        assert any([True, False, True]) == True
-        assert any([False, False, False]) == False
+        assert any([True, True, True]) is True
+        assert any([True, False, True]) is True
+        assert any([False, False, False]) is False
+
+
 f13()

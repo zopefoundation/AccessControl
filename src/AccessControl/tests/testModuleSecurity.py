@@ -29,7 +29,7 @@ class ModuleSecurityTests(unittest.TestCase):
                        'AccessControl.tests.mixed_module.submodule',
                        'AccessControl.tests.private_module',
                        'AccessControl.tests.private_module.submodule',
-                      ):
+                       ):
             if module in sys.modules:
                 del sys.modules[module]
 
@@ -77,7 +77,9 @@ class ModuleSecurityTests(unittest.TestCase):
         MSI('AccessControl.tests.nonesuch').declarePublic('pub')
         self.failUnless('AccessControl.tests.nonesuch' in MS)
         self.assertRaises(ImportError,
-                      guarded_import, 'AccessControl.tests.nonesuch', ())
+                          guarded_import,
+                          'AccessControl.tests.nonesuch',
+                          ())
         self.failUnless('AccessControl.tests.nonesuch' in MS)
 
     def test_level_default(self):

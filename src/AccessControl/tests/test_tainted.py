@@ -98,7 +98,7 @@ class TestTaintedString(unittest.TestCase):
         for f in optArg:
             v = getattr(tainted, f)(" ")
             self.assertEquals(v, getattr(unquoted, f)(" "))
-            self.assert_(isinstance(v, self._getClass()))        
+            self.assert_(isinstance(v, self._getClass()))
 
         justify = "center ljust rjust".split()
         for f in justify:
@@ -115,20 +115,20 @@ class TestTaintedString(unittest.TestCase):
                 self.assertRaises(ValueError, getattr(tainted, f), 'nada')
 
         self.assertEquals(tainted.count('test', 1, -1),
-            unquoted.count('test', 1, -1))
+                          unquoted.count('test', 1, -1))
 
         self.assertEquals(tainted.encode(), unquoted.encode())
         self.assert_(isinstance(tainted.encode(), self._getClass()))
 
-        self.assertEquals(tainted.expandtabs(10),
-            unquoted.expandtabs(10))
+        self.assertEquals(tainted.expandtabs(10), unquoted.expandtabs(10))
         self.assert_(isinstance(tainted.expandtabs(), self._getClass()))
 
         self.assertEquals(tainted.replace('test', 'spam'),
-            unquoted.replace('test', 'spam'))
-        self.assert_(isinstance(tainted.replace('test', '<'), self._getClass()))
+                          unquoted.replace('test', 'spam'))
+        self.assert_(isinstance(tainted.replace('test', '<'),
+                                self._getClass()))
         self.failIf(isinstance(tainted.replace('test', 'spam'),
-            self._getClass()))
+                               self._getClass()))
 
         self.assertEquals(tainted.split(), unquoted.split())
         for part in self._getClass()('< < <').split():
@@ -144,11 +144,12 @@ class TestTaintedString(unittest.TestCase):
 
         transtable = ''.join(map(chr, range(256)))
         self.assertEquals(tainted.translate(transtable),
-            unquoted.translate(transtable))
+                          unquoted.translate(transtable))
         self.assert_(isinstance(self._getClass()('<').translate(transtable),
-            self._getClass()))
-        self.failIf(isinstance(self._getClass()('<').translate(transtable, '<'),
-            self._getClass()))
+                                self._getClass()))
+        self.failIf(isinstance(self._getClass()('<').translate(transtable,
+                                                               '<'),
+                               self._getClass()))
 
     def testQuoted(self):
         self.assertEquals(self.tainted.quoted(), self.quoted)

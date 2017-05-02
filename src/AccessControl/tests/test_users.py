@@ -63,6 +63,7 @@ class BasicUserTests(unittest.TestCase):
     def test_getRolesInContext_no_aq_w_local_roles_as_dict(self):
         class Target(object):
             __ac_local_roles__ = {'user': ['Other']}
+
         derived = self._makeDerived()
         derived.getId = lambda *x: 'user'
         derived.getRoles = lambda *x: ['Manager']
@@ -73,6 +74,7 @@ class BasicUserTests(unittest.TestCase):
         class Context(object):
             def __ac_local_roles__(self):
                 return {'user': ['Other']}
+
         derived = self._makeDerived()
         derived.getId = lambda *x: 'user'
         derived.getRoles = lambda *x: ['Manager']
@@ -82,6 +84,7 @@ class BasicUserTests(unittest.TestCase):
     def test_getRolesInContext_w_aq(self):
         class Context(object):
             pass
+
         derived = self._makeDerived()
         derived.getId = lambda *x: 'user'
         derived.getRoles = lambda *x: ['Manager']
@@ -96,8 +99,10 @@ class BasicUserTests(unittest.TestCase):
     def test_getRolesInContext_w_method(self):
         class Context(object):
             __ac_local_roles__ = {'user': ['Other']}
+
             def method(self):
                 pass
+
         derived = self._makeDerived()
         derived.getId = lambda *x: 'user'
         derived.getRoles = lambda *x: ['Manager']
@@ -121,6 +126,7 @@ class BasicUserTests(unittest.TestCase):
         class Request(dict):
             def getClientAddr(self):
                 return '192.168.1.1'
+
         derived = self._makeDerived()
         derived._getPassword = lambda *x: 'password'
         derived.getDomains = lambda *x: ('*',)
@@ -131,6 +137,7 @@ class BasicUserTests(unittest.TestCase):
         class Request(dict):
             def getClientAddr(self):
                 return '192.168.1.1'
+
         derived = self._makeDerived()
         derived._getPassword = lambda *x: 'password'
         derived.getDomains = lambda *x: ('127.0.0.1',)
@@ -141,6 +148,7 @@ class BasicUserTests(unittest.TestCase):
         class Request(dict):
             def getClientAddr(self):
                 return ''
+
         derived = self._makeDerived()
         derived._getPassword = lambda *x: 'password'
         derived.getDomains = lambda *x: ('127.0.0.1',)
@@ -151,6 +159,7 @@ class BasicUserTests(unittest.TestCase):
         class Request(dict):
             def getClientAddr(self):
                 return '127.0.0.1'
+
         derived = self._makeDerived()
         derived._getPassword = lambda *x: 'password'
         derived.getDomains = lambda *x: ('127.0.0.1',)
@@ -161,6 +170,7 @@ class BasicUserTests(unittest.TestCase):
         class Request(dict):
             def getClientAddr(self):
                 return '127.0.0.1'
+
         derived = self._makeDerived()
         derived._getPassword = lambda *x: 'password'
         derived.getDomains = lambda *x: ('127.0.0.1',)
@@ -171,6 +181,7 @@ class BasicUserTests(unittest.TestCase):
         class Request(dict):
             def getClientAddr(self):
                 return ''
+
         derived = self._makeDerived()
         derived._getPassword = lambda *x: 'password'
         derived.getDomains = lambda *x: ('127.0.0.1',)
@@ -181,6 +192,7 @@ class BasicUserTests(unittest.TestCase):
         class Request(dict):
             def getClientAddr(self):
                 return '192.168.1.1'
+
         derived = self._makeDerived()
         derived._getPassword = lambda *x: 'password'
         derived.getDomains = lambda *x: ('example.com',)
@@ -191,6 +203,7 @@ class BasicUserTests(unittest.TestCase):
         class Request(dict):
             def getClientAddr(self):
                 return ''
+
         derived = self._makeDerived()
         derived._getPassword = lambda *x: 'password'
         derived.getDomains = lambda *x: ('example.com',)
@@ -201,6 +214,7 @@ class BasicUserTests(unittest.TestCase):
         class Request(dict):
             def getClientAddr(self):
                 return '127.0.0.1'
+
         derived = self._makeDerived()
         derived._getPassword = lambda *x: 'password'
         derived.getDomains = lambda *x: ('localhost',)
@@ -209,6 +223,7 @@ class BasicUserTests(unittest.TestCase):
 
     def test_allowed__what_not_even_god_should_do(self):
         from AccessControl.PermissionRole import _what_not_even_god_should_do
+
         derived = self._makeDerived()
         self.assertFalse(derived.allowed(self, _what_not_even_god_should_do))
 
@@ -233,10 +248,13 @@ class BasicUserTests(unittest.TestCase):
 
     def test_allowed_w_Authenticated_in_roles_not_Anonymous_context_miss(self):
         from Acquisition import Implicit
+
         class Root(Implicit):
             pass
+
         class UserFolder(Implicit):
             pass
+
         root = Root()
         folder = UserFolder().__of__(root)
         derived = self._makeDerived().__of__(folder)
@@ -246,10 +264,13 @@ class BasicUserTests(unittest.TestCase):
 
     def test_allowed_w_Authenticated_in_roles_not_Anonymous_context_hit(self):
         from Acquisition import Implicit
+
         class Root(Implicit):
             pass
+
         class UserFolder(Implicit):
             pass
+
         root = Root()
         folder = UserFolder().__of__(root)
         derived = self._makeDerived().__of__(folder)
@@ -261,10 +282,13 @@ class BasicUserTests(unittest.TestCase):
 
     def test_allowed_w_global_roles_hit_context_miss(self):
         from Acquisition import Implicit
+
         class Root(Implicit):
             pass
+
         class UserFolder(Implicit):
             pass
+
         root = Root()
         folder = UserFolder().__of__(root)
         derived = self._makeDerived().__of__(folder)
@@ -274,10 +298,13 @@ class BasicUserTests(unittest.TestCase):
 
     def test_allowed_w_global_roles_hit_context_hit(self):
         from Acquisition import Implicit
+
         class Root(Implicit):
             pass
+
         class UserFolder(Implicit):
             pass
+
         root = Root()
         folder = UserFolder().__of__(root)
         derived = self._makeDerived().__of__(folder)
@@ -287,10 +314,13 @@ class BasicUserTests(unittest.TestCase):
 
     def test_allowed_w_global_roles_miss_wo_local_roles_wo_aq(self):
         from Acquisition import Implicit
+
         class Root(Implicit):
             pass
+
         class UserFolder(Implicit):
             pass
+
         root = Root()
         folder = UserFolder().__of__(root)
         derived = self._makeDerived().__of__(folder)
@@ -300,15 +330,19 @@ class BasicUserTests(unittest.TestCase):
 
     def test_allowed_w_global_roles_miss_w_local_roles_miss_wo_aq(self):
         from Acquisition import Implicit
+
         class Root(Implicit):
             pass
+
         class UserFolder(Implicit):
             pass
+
         class Folder(Implicit):
             pass
+
         root = Root()
         folder = UserFolder().__of__(root)
-        other = Folder() # no aq
+        other = Folder()  # no aq
         other.__ac_local_roles__ = {'user': ['Editor']}
         derived = self._makeDerived().__of__(folder)
         derived.getUserName = lambda *x: 'user'
@@ -317,15 +351,19 @@ class BasicUserTests(unittest.TestCase):
 
     def test_allowed_w_global_roles_miss_w_local_roles_hit_wo_aq(self):
         from Acquisition import Implicit
+
         class Root(Implicit):
             pass
+
         class UserFolder(Implicit):
             pass
+
         class Folder(Implicit):
             pass
+
         root = Root()
         folder = UserFolder().__of__(root)
-        other = Folder() # no aq
+        other = Folder()  # no aq
         other.__ac_local_roles__ = {'user': ['Editor']}
         derived = self._makeDerived().__of__(folder)
         derived.getUserName = lambda *x: 'user'
@@ -334,12 +372,16 @@ class BasicUserTests(unittest.TestCase):
 
     def test_allowed_w_global_roles_miss_w_local_roles_hit_w_aq(self):
         from Acquisition import Implicit
+
         class Root(Implicit):
             pass
+
         class UserFolder(Implicit):
             pass
+
         class Folder(Implicit):
             pass
+
         root = Root()
         folder = UserFolder().__of__(root)
         other = Folder().__of__(root)
@@ -361,10 +403,13 @@ class BasicUserTests(unittest.TestCase):
 
     def test_has_role_w_list_w_context_miss(self):
         from Acquisition import Implicit
+
         class Root(Implicit):
             pass
+
         class Folder(Implicit):
             pass
+
         root = Root()
         root.__ac_local_roles__ = {'user': ['Editor']}
         folder = Folder().__of__(root)
@@ -375,10 +420,13 @@ class BasicUserTests(unittest.TestCase):
 
     def test_has_role_w_list_w_context_hit(self):
         from Acquisition import Implicit
+
         class Root(Implicit):
             pass
+
         class Folder(Implicit):
             pass
+
         root = Root()
         root.__ac_local_roles__ = {'user': ['Editor']}
         folder = Folder().__of__(root)
@@ -389,10 +437,13 @@ class BasicUserTests(unittest.TestCase):
 
     def test_has_permission_miss(self):
         from Acquisition import Implicit
+
         class Root(Implicit):
             pass
+
         class UserFolder(Implicit):
             pass
+
         root = Root()
         folder = UserFolder().__of__(root)
         derived = self._makeDerived().__of__(folder)
@@ -402,10 +453,13 @@ class BasicUserTests(unittest.TestCase):
 
     def test_has_permission_hit(self):
         from Acquisition import Implicit
+
         class Root(Implicit):
             pass
+
         class UserFolder(Implicit):
             pass
+
         root = Root()
         folder = UserFolder().__of__(root)
         derived = self._makeDerived().__of__(folder)

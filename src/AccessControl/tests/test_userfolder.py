@@ -116,7 +116,6 @@ class UserFolderTests(unittest.TestCase):
             def user_names(self):
                 return self.getUsers()
 
-
         tinyFolderOver = Folderish(15, 20)
         tinyFolderUnder = Folderish(15, 10)
 

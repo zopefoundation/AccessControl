@@ -35,7 +35,7 @@ class ClassSecurityInfoTests(unittest.TestCase):
         except excClass as e:
             return e
         else:
-            if getattr(excClass,'__name__', None) is not None:
+            if getattr(excClass, '__name__', None) is not None:
                 excName = excClass.__name__
             else:
                 excName = str(excClass)
@@ -55,21 +55,21 @@ class ClassSecurityInfoTests(unittest.TestCase):
             __ac_roles__ = ('Role A', 'Role B', 'Role C')
             meta_type = "Test"
             security = ClassSecurityInfo()
-            security.setPermissionDefault('Make food', ('Chef',))
+            security.setPermissionDefault('Make food', ('Chef', ))
             security.setPermissionDefault(
                 'Test permission',
                 ('Manager', 'Role A', 'Role B', 'Role C')
-                )
+            )
 
-            security.declarePublic('public')
+            @security.declarePublic('public')
             def public(self, REQUEST=None):
                 """ """
 
-            security.declarePrivate('private')
+            @security.declarePrivate('private')
             def private(self, REQUEST=None):
                 """ """
 
-            security.declareProtected('Test permission', 'protected')
+            @security.declareProtected('Test permission', 'protected')
             def protected(self, REQUEST=None):
                 """ """
 
@@ -136,11 +136,11 @@ class ClassSecurityInfoTests(unittest.TestCase):
 
             security = ClassSecurityInfo()
 
-            security.protected('Test permission 1')
+            @security.protected('Test permission 1')
             def unprotected1(self, REQUEST=None):
                 """ """
 
-            security.protected('Test permission 2')
+            @security.protected('Test permission 2')
             def unprotected2(self, REQUEST=None):
                 """ """
 

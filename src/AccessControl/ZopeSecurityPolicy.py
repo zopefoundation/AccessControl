@@ -42,8 +42,8 @@ def getRoles(container, name, value, default):
         cls = getattr(container, '__class__', None)
         if cls is None:
             return default
-        
-        roles = getattr(cls, name+'__roles__', _noroles)
+
+        roles = getattr(cls, name + '__roles__', _noroles)
         if roles is _noroles:
             return default
 
