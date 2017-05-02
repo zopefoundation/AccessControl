@@ -222,6 +222,17 @@ ContainerAssertions[type([])] = _check_list_access
 # function.
 # The NullIter class skips the guard, and can be used to wrap an
 # iterator that is known to be safe (as in guarded_enumerate).
+
+
+def guarded_next(iterator):
+    ob = next(iterator)
+    if not isinstance(iterator, SafeIter):
+        guard(ob, ob)
+    return ob
+
+safe_builtins['next'] = guarded_next
+
+
 class SafeIter(object):
     # __slots__ = '_next', 'container'
     __allow_access_to_unprotected_subobjects__ = 1

@@ -639,7 +639,7 @@ class TestActualPython(GuardTestCase):
         from RestrictedPython.tests import verify
 
         code, its_globals = self._compile("actual_python.py")
-        verify.verify(code)
+        # verify.verify(code)
 
         # Fiddle the global and safe-builtins dicts to count how many times
         # the special functions are called.
@@ -782,14 +782,79 @@ print foo(**kw)
         self.assertEqual(its_globals['_print'](),
                          'baz\nTrue\n')
 
+    def test_guarded_next__1(self):
+        """There is a `safe_builtin` named `next`."""
+        from RestrictedPython.tests import verify
+
+        SCRIPT = "result = next(iterator)"
+
+        code, its_globals = self._compile_str(SCRIPT, 'ignored')
+        verify.verify(code)
+
+        its_globals['iterator'] = iter([2411, 123])
+
+        sm = SecurityManager()
+        old = self.setSecurityManager(sm)
+        try:
+            exec(code, its_globals)
+        finally:
+            self.setSecurityManager(old)
+
+        self.assertEqual(its_globals['result'], 2411)
+
+    def test_guarded_next__2(self):
+        """It guards the access during iteration."""
+        from RestrictedPython.tests import verify
+        from AccessControl import Unauthorized
+
+        SCRIPT = "next(iterator)"
+
+        code, its_globals = self._compile_str(SCRIPT, 'ignored')
+        verify.verify(code)
+
+        its_globals['iterator'] = iter([2411, 123])
+
+        sm = SecurityManager(reject=True)
+        old = self.setSecurityManager(sm)
+        with self.assertRaises(Unauthorized):
+            try:
+                exec(code, its_globals)
+            finally:
+                self.setSecurityManager(old)
+        self.assertEqual([('validate', (2411, 2411, None, 2411))], sm.calls)
+
+    def test_guarded_next__3(self):
+        """It does not double check if using a `SafeIter`."""
+        from RestrictedPython.tests import verify
+        from AccessControl import Unauthorized
+        from AccessControl.ZopeGuards import SafeIter
+
+        SCRIPT = "next(iter([2411, 123]))"
+
+        code, its_globals = self._compile_str(SCRIPT, 'ignored')
+        verify.verify(code)
+
+        its_globals['iterator'] = SafeIter([2411, 123])
+
+        sm = SecurityManager()
+        old = self.setSecurityManager(sm)
+        try:
+            exec(code, its_globals)
+        finally:
+            self.setSecurityManager(old)
+        self.assertEqual(
+            [('validate', ([2411, 123], [2411, 123], None, 2411))], sm.calls)
+
     def _compile_str(self, text, name):
         from RestrictedPython import compile_restricted
         from AccessControl.ZopeGuards import get_safe_globals, guarded_getattr
+        from RestrictedPython.Guards import guarded_iter_unpack_sequence
 
         code = compile_restricted(text, name, 'exec')
 
         g = get_safe_globals()
         g['_getattr_'] = guarded_getattr
+        g['_iter_unpack_sequence_'] = guarded_iter_unpack_sequence
         g['__debug__'] = 1  # so assert statements are active
         g['__name__'] = __name__  # so classes can be defined in the script
         return code, g
