@@ -1,0 +1,11 @@
+[run]
+branch = True
+source = RestrictedPython
+omit =
+    src/AccessControl/tests
+    src/AccessControl/tests/*.py
+    tests/*.py
+    bootstrap.py
+
+[report]
+precision = 3
