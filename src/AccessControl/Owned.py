@@ -20,8 +20,9 @@ from .owner import EmergencyUserCannotOwn
 from .owner import ownableFilter
 from .owner import ownerInfo
 from .owner import UnownableOwner
-
 from zope.deferredimport import deprecated
+
+
 deprecated("Owned is no longer part of AccessControl, please "
            "depend on Zope2 and import from OFS.owner or use the "
            "new minimal Owned class from AccessControl.owner.",

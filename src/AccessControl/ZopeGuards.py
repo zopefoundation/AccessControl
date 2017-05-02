@@ -11,22 +11,25 @@
 #
 ##############################################################################
 
+from .SecurityInfo import secureModule
+from .SecurityManagement import getSecurityManager
+from .SimpleObjectPolicies import ContainerAssertions
+from .SimpleObjectPolicies import Containers
 from __future__ import absolute_import
+from functools import reduce
+from RestrictedPython.Eval import RestrictionCapableEval
+from RestrictedPython.Guards import full_write_guard
+from RestrictedPython.Guards import safe_builtins
+from RestrictedPython.Utilities import utility_builtins
+from zExceptions import Unauthorized
+
 import math
 import random
-import sys
+import RestrictedPython
 import string
+import sys
 import warnings
 
-import RestrictedPython
-from RestrictedPython.Guards import safe_builtins, full_write_guard
-from RestrictedPython.Utilities import utility_builtins
-from RestrictedPython.Eval import RestrictionCapableEval
-from .SecurityManagement import getSecurityManager
-from .SecurityInfo import secureModule
-from .SimpleObjectPolicies import Containers, ContainerAssertions
-from zExceptions import Unauthorized
-from functools import reduce
 
 _marker = []  # Create a new marker object.
 

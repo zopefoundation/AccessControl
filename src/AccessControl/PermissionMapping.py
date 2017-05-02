@@ -17,17 +17,16 @@ when the object is used in special ways.  This is rather hard, since we
 need the object's ordinary permissions intact so we can manage it.
 """
 
-from cgi import escape
-
-from Acquisition import ImplicitAcquisitionWrapper
-from ExtensionClass import Base
-from zope.interface import implementer
-
 from AccessControl.class_init import InitializeClass
 from AccessControl.interfaces import IPermissionMappingSupport
 from AccessControl.owner import UnownableOwner
 from AccessControl.Permission import getPermissionIdentifier
 from AccessControl.requestmethod import requestmethod
+from Acquisition import ImplicitAcquisitionWrapper
+from cgi import escape
+from ExtensionClass import Base
+from zope.interface import implementer
+
 
 @implementer(IPermissionMappingSupport)
 class RoleManager:

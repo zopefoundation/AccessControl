@@ -13,9 +13,10 @@
 """Class initialization.
 """
 
+from AccessControl.Permission import ApplicationDefaultPermissions
+
 import logging
 
-from AccessControl.Permission import ApplicationDefaultPermissions # BBB
 
 def InitializeClass(self):
     from AccessControl.Permission import registerPermissions

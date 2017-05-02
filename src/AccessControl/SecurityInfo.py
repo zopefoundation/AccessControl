@@ -38,13 +38,14 @@
 
 """
 
-import sys
-from logging import getLogger
-
 from AccessControl.class_init import InitializeClass
 from AccessControl.ImplPython import _what_not_even_god_should_do
 from Acquisition import Implicit
+from logging import getLogger
 from Persistence import Persistent
+
+import sys
+
 
 # always patch Persistent before ClassSecurityInfo is used
 Persistent.__class_init__ = InitializeClass

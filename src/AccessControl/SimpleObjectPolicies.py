@@ -45,7 +45,24 @@ or in ZopeSecurityPolicy. :(
 
 _noroles = [] # this is imported in various places
 
+from BTrees.IIBTree import IIBTree
+from BTrees.IIBTree import IIBucket
+from BTrees.IIBTree import IISet
+from BTrees.IOBTree import IOBTree
+from BTrees.IOBTree import IOBucket
+from BTrees.IOBTree import IOSet
+from BTrees.OIBTree import OIBTree
+from BTrees.OIBTree import OIBucket
+from BTrees.OIBTree import OISet
+#
+#   WAAAA!
+#
+from BTrees.OOBTree import OOBTree
+from BTrees.OOBTree import OOBucket
+from BTrees.OOBTree import OOSet
+
 import Record
+
 
 # Allow access to unprotected attributes
 Record.Record.__allow_access_to_unprotected_subobjects__=1
@@ -89,13 +106,6 @@ def allow_type(Type, allowed=1):
         raise ValueError("The 'allowed' argument must be an int or dict.")
     ContainerAssertions[Type] = allowed
 
-#
-#   WAAAA!
-#
-from BTrees.OOBTree import OOBTree, OOBucket, OOSet
-from BTrees.OIBTree import OIBTree, OIBucket, OISet
-from BTrees.IOBTree import IOBTree, IOBucket, IOSet
-from BTrees.IIBTree import IIBTree, IIBucket, IISet
 
 for tree_type, has_values in [(OOBTree, 1),
                               (OOBucket, 1),

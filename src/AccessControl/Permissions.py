@@ -68,6 +68,7 @@ webdav_unlock_items='WebDAV Unlock items'
 
 from zope.deferredimport import deprecated
 
+
 new_loc = 'DocumentTemplate.permissions'
 
 deprecated("Please import from %s" % new_loc,

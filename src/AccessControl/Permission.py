@@ -14,7 +14,9 @@
 """
 
 from Acquisition import aq_base
+
 import re
+
 
 _NOT_ALLOWED_CHARS = re.compile(r'[^a-zA-Z0-9_]')
 

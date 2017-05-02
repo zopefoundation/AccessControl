@@ -13,21 +13,20 @@
 """Access control package.
 """
 
-import os
-import re
-import socket
-
+from .interfaces import IUser
+from .PermissionRole import _what_not_even_god_should_do
+from .PermissionRole import rolesForPermissionOn
+from AccessControl import AuthEncoding
+from AccessControl import SpecialUsers
 from Acquisition import aq_inContextOf
 from Acquisition import aq_parent
 from Acquisition import Implicit
 from Persistence import Persistent
 from zope.interface import implementer
 
-from AccessControl import AuthEncoding
-from AccessControl import SpecialUsers
-from .interfaces import IUser
-from .PermissionRole import _what_not_even_god_should_do
-from .PermissionRole import rolesForPermissionOn
+import os
+import re
+import socket
 
 
 _marker=[]

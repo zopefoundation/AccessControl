@@ -15,6 +15,7 @@
 
 from zope.deferredimport import deprecated
 
+
 deprecated("Please import from DocumentTemplate.security",
     DTMLSecurityAPI = 'DocumentTemplate.security:DTMLSecurityAPI',
     RestrictedDTML = 'DocumentTemplate.security:RestrictedDTML',

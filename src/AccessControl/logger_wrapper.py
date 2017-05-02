@@ -2,5 +2,7 @@
 # having the need to change the C code significantly.
 
 from logging import getLogger
+
+
 LOG = getLogger('AccessControl')
 warn = LOG.warn

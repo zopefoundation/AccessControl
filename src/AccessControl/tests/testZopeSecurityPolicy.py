@@ -11,20 +11,24 @@
 #
 ##############################################################################
 
+from AccessControl.SecurityManagement import SecurityContext
+from AccessControl.userfolder import UserFolder
+from Acquisition import Explicit
+from Acquisition import Implicit
 from doctest import DocTestSuite
+from MethodObject import Method
+from zExceptions import Unauthorized
+
 import sys
+import unittest
+
+
 try:
     import _thread as thread
 except ImportError:
     import thread
-import unittest
 
-from Acquisition import Implicit, Explicit
-from MethodObject import Method
-from zExceptions import Unauthorized
 
-from AccessControl.userfolder import UserFolder
-from AccessControl.SecurityManagement import SecurityContext
 try:
     from AccessControl import ImplC
 except ImportError:
@@ -43,6 +47,7 @@ class App(Explicit):
         for el in path:
             ob = getattr(ob, el)
         return ob
+
 
 class PublicMethod (Method):
     def getOwner(self):
@@ -97,6 +102,7 @@ class DangerousMethod (PublicMethod):
     # Only accessible to sysadmin or people who use proxy roles
     __roles__ = sysadmin_roles
 
+
 class SimpleItemish (Implicit):
     public_m = PublicMethod()
     protected_m = ProtectedMethod()
@@ -105,6 +111,7 @@ class SimpleItemish (Implicit):
     dangerous_m = DangerousMethod()
     public_prop = 'Public Value'
     private_prop = 'Private Value'
+
 
 class ImplictAcqObject(Implicit):
     pass
@@ -139,7 +146,9 @@ class RestrictedSimpleItem (SimpleItemish):
 
 class PartlyProtectedSimpleItem1 (SimpleItemish):
 
-    __allow_access_to_unprotected_subobjects__ = {'public_prop': 1,}
+    __allow_access_to_unprotected_subobjects__ = {
+        'public_prop': 1,
+    }
 
 
 class PartlyProtectedSimpleItem2 (SimpleItemish):
@@ -257,14 +266,14 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         item1 = self.a.item1
         item2 = self.a.item2
         item3 = self.a.item3
-        self.assertPolicyAllows(item,  'public_prop')
+        self.assertPolicyAllows(item, 'public_prop')
         self.assertPolicyAllows(itemb, 'public_prop')
-        self.assertPolicyDenies(r_item,'public_prop')
+        self.assertPolicyDenies(r_item, 'public_prop')
         self.assertPolicyAllows(item1, 'public_prop')
         self.assertPolicyAllows(item2, 'public_prop')
-        self.assertPolicyDenies(item3,'public_prop')
-        self.assertPolicyAllows(item,  'private_prop')
-        self.assertPolicyDenies(r_item,'private_prop')
+        self.assertPolicyDenies(item3, 'public_prop')
+        self.assertPolicyAllows(item, 'private_prop')
+        self.assertPolicyDenies(r_item, 'private_prop')
         self.assertPolicyDenies(item1, 'private_prop')
         self.assertPolicyDenies(item2, 'private_prop')
         self.assertPolicyDenies(item3, 'private_prop')
@@ -322,7 +331,7 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         self.a.subobject = ImplictAcqObject()
         subobject = self.a.subobject
         subobject.acl_users = UserFolder()
-        subobject.acl_users._doAddUser('theowner', 'password', 
+        subobject.acl_users._doAddUser('theowner', 'password',
                                        eo_roles + sysadmin_roles, ())
         subobject.r_item = RestrictedSimpleItem()
         r_subitem = subobject.r_item
@@ -340,7 +349,9 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
 
         # Inside owner context
         self.failIf(self.policy.checkPermission('View', r_subitem, context))
-        self.failUnless(self.policy.checkPermission('Kill', r_subitem, context))
+        self.failUnless(self.policy.checkPermission('Kill',
+                                                    r_subitem,
+                                                    context))
 
     def testUnicodeRolesForPermission(self):
         r_item = self.a.r_item
@@ -354,9 +365,12 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
     def testAqNames(self):
         policy = self.policy
         names = {
-            'aq_self': 0, 'aq_base': 0,
-            'aq_parent': 1, 'aq_explicit': 1, 'aq_inner': 1
-            }
+            'aq_self': 0,
+            'aq_base': 0,
+            'aq_parent': 1,
+            'aq_explicit': 1,
+            'aq_inner': 1,
+        }
         for name, allowed in names.items():
             if not allowed:
                 self.assertRaises(Unauthorized, policy.validate,
@@ -374,11 +388,11 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         subitem = subobject.item
         subitem.owned_setuid_m = OwnedSetuidMethod()
         subitem.getPhysicalRoot = lambda root=self.a: root
-        
+
         item = self.a.item
         item.getPhysicalRoot = lambda root=self.a: root
         self.context.stack.append(subitem.owned_setuid_m.__of__(subitem))
-        
+
         # Out of owner context
         self.assertPolicyAllows(item, 'public_m')
         self.assertPolicyDenies(item, 'protected_m')
@@ -424,17 +438,19 @@ class ISecurityPolicyConformance:
         from zope.interface.verify import verifyClass
         verifyClass(ISecurityPolicy, self._getTargetClass())
 
+
 class Python_ZSPTests(ZopeSecurityPolicyTestBase,
                       ISecurityPolicyConformance,
-                     ):
+                      ):
     def _getTargetClass(self):
         from AccessControl.ImplPython import ZopeSecurityPolicy
         return ZopeSecurityPolicy
 
+
 if HAVE_IMPLC:
     class C_ZSPTests(ZopeSecurityPolicyTestBase,
                      ISecurityPolicyConformance,
-                    ):
+                     ):
         def _getTargetClass(self):
             return ImplC.ZopeSecurityPolicy
 else:
@@ -449,7 +465,8 @@ class SecurityManagerTestsBase(unittest.TestCase):
         Implementation._implementation_name = None
         Implementation._implementation_set = 0
         Implementation.setImplementation(implementation_name)
-        self.assertEqual(Implementation.getImplementationName(), implementation_name)
+        self.assertEqual(Implementation.getImplementationName(),
+                         implementation_name)
 
     def setUp(self):
         from AccessControl.Implementation import getImplementationName
@@ -468,7 +485,7 @@ class SecurityManagerTestsBase(unittest.TestCase):
 
     def _makeContext(self):
         from AccessControl.SecurityManagement import SecurityContext
-        from AccessControl.users import system #allows anything
+        from AccessControl.users import system  # allows anything
         return SecurityContext(system)
 
     def _makeEO(self):
@@ -476,9 +493,11 @@ class SecurityManagerTestsBase(unittest.TestCase):
         class Owner(object):
             def allowed(self, obj, roles):
                 return False
+
         class EO(object):
             def getOwner(self):
                 return Owner()
+
         return EO()
 
     def test__ownerous_and__authenticated_defaults(self):
@@ -497,6 +516,7 @@ class SecurityManagerTestsBase(unittest.TestCase):
         mgr = self._getModule().SecurityManager(42, ctx)
         self.assertTrue(mgr.checkPermission('testing', object()))
 
+
 class Python_SMTests(SecurityManagerTestsBase):
 
     _implementation_name = "PYTHON"
@@ -504,6 +524,7 @@ class Python_SMTests(SecurityManagerTestsBase):
     def _getModule(self):
         from AccessControl import ImplPython
         return ImplPython
+
 
 if HAVE_IMPLC:
     class C_SMTests(SecurityManagerTestsBase):
@@ -521,7 +542,7 @@ def test_getRoles():
     """
 
     >>> from AccessControl.ZopeSecurityPolicy import getRoles
-    
+
     >>> class C:
     ...     x = 'CRole'
 
@@ -636,10 +657,10 @@ def test_zsp_gets_right_roles_for_methods():
     ...         self.user = user
 
     >>> c = C()
-    
+
     >>> bool(zsp.validate(c, c, 'foo', c.foo, Context(User(['greeneggs']))))
     True
-    
+
     >>> zsp.validate(c, c, 'foo', c.foo, Context(User(['spam'])))
     Traceback (most recent call last):
     ...

@@ -13,18 +13,15 @@
 
 """C implementation of the access control machinery."""
 
-from AccessControl.cAccessControl import rolesForPermissionOn
-from AccessControl.cAccessControl import PermissionRole
-from AccessControl.cAccessControl import imPermissionRole
+from AccessControl.cAccessControl import SecurityManager as cSecurityManager
+from AccessControl.cAccessControl import ZopeSecurityPolicy as cZopeSecurityPolicy
 from AccessControl.cAccessControl import _what_not_even_god_should_do
 from AccessControl.cAccessControl import aq_validate
 from AccessControl.cAccessControl import guarded_getattr
+from AccessControl.cAccessControl import imPermissionRole
+from AccessControl.cAccessControl import PermissionRole
+from AccessControl.cAccessControl import rolesForPermissionOn
 from AccessControl.cAccessControl import setDefaultBehaviors
-from AccessControl.cAccessControl import ZopeSecurityPolicy \
-    as cZopeSecurityPolicy
-from AccessControl.cAccessControl import SecurityManager \
-    as cSecurityManager
-
 from AccessControl.ImplPython import SecurityManager
 from AccessControl.ImplPython import ZopeSecurityPolicy
 

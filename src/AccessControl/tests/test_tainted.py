@@ -15,6 +15,7 @@
 
 import unittest
 
+
 class TestTaintedString(unittest.TestCase):
 
     def setUp(self):

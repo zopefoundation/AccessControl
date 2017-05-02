@@ -12,14 +12,6 @@
 ##############################################################################
 """Access control support
 """
-from cgi import escape
-
-from Acquisition import Acquired
-from Acquisition import aq_base
-from Acquisition import aq_get
-from ExtensionClass import Base
-from zope.interface import implementer
-
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
 from AccessControl.interfaces import IRoleManager
@@ -28,7 +20,14 @@ from AccessControl.Permission import Permission
 from AccessControl.PermissionMapping import RoleManager
 from AccessControl.Permissions import change_permissions
 from AccessControl.SecurityManagement import newSecurityManager
+from Acquisition import Acquired
+from Acquisition import aq_base
+from Acquisition import aq_get
 from base64 import urlsafe_b64encode
+from cgi import escape
+from ExtensionClass import Base
+from zope.interface import implementer
+
 
 DEFAULTMAXLISTUSERS = 250
 

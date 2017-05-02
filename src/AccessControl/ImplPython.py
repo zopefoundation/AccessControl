@@ -13,17 +13,33 @@
 
 """Python implementation of the access control machinery."""
 
-import os
-import string
-from logging import getLogger
-
+from AccessControl.interfaces import ISecurityManager
+from AccessControl.interfaces import ISecurityPolicy
+from AccessControl.Permission import getPermissionIdentifier
+from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.SimpleObjectPolicies import _noroles
+from AccessControl.SimpleObjectPolicies import Containers
+from AccessControl.unauthorized import Unauthorized
+from AccessControl.ZopeGuards import guarded_getitem
+# AccessControl.ZopeSecurityPolicy
+# --------------------------------
+#
+#   TODO:  implement this in cAccessControl, and have Implementation
+#          do the indirection.
+#
+from AccessControl.ZopeSecurityPolicy import getRoles  # XXX
 from Acquisition import aq_acquire
 from Acquisition import aq_base
-from Acquisition import aq_inner
 from Acquisition import aq_inContextOf
+from Acquisition import aq_inner
 from Acquisition import aq_parent
 from ExtensionClass import Base
+from logging import getLogger
 from zope.interface import implementer
+
+import os
+import string
+
 
 # This is used when a permission maps explicitly to no permission.  We
 # try and get this from cAccessControl first to make sure that if both
@@ -33,14 +49,6 @@ try:
 except ImportError:
     _what_not_even_god_should_do = []
 
-from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.unauthorized import Unauthorized
-from AccessControl.interfaces import ISecurityPolicy
-from AccessControl.interfaces import ISecurityManager
-from AccessControl.SimpleObjectPolicies import Containers
-from AccessControl.SimpleObjectPolicies import _noroles
-from AccessControl.ZopeGuards import guarded_getitem
-from AccessControl.Permission import getPermissionIdentifier
 
 LOG = getLogger('ImplPython')
 
@@ -176,13 +184,6 @@ class imPermissionRole(Base):
         return len(v)
 
 
-# AccessControl.ZopeSecurityPolicy
-# --------------------------------
-#
-#   TODO:  implement this in cAccessControl, and have Implementation
-#          do the indirection.
-#
-from AccessControl.ZopeSecurityPolicy import getRoles  # XXX
 
 @implementer(ISecurityPolicy)
 class ZopeSecurityPolicy:

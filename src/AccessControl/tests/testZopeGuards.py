@@ -15,11 +15,10 @@
 """
 
 import doctest
-import unittest
-
-import os
 import operator
+import os
 import sys
+import unittest
 
 
 if sys.version_info >= (2, 5):

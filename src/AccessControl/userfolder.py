@@ -13,17 +13,6 @@
 """User folders.
 """
 
-from base64 import decodestring
-
-from Acquisition import aq_base
-from Acquisition import aq_parent
-from Acquisition import Implicit
-from Persistence import Persistent
-from Persistence import PersistentMapping
-from zExceptions import BadRequest
-from zExceptions import Unauthorized
-from zope.interface import implementer
-
 from AccessControl import AuthEncoding
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
@@ -34,13 +23,22 @@ from AccessControl.rolemanager import RoleManager
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
-from AccessControl.users import User
 from AccessControl.users import _remote_user_mode
-from AccessControl.users import emergency_user
-from AccessControl.users import nobody
 from AccessControl.users import addr_match
+from AccessControl.users import emergency_user
 from AccessControl.users import host_match
+from AccessControl.users import nobody
+from AccessControl.users import User
 from AccessControl.ZopeSecurityPolicy import _noroles
+from Acquisition import aq_base
+from Acquisition import aq_parent
+from Acquisition import Implicit
+from base64 import decodestring
+from Persistence import Persistent
+from Persistence import PersistentMapping
+from zExceptions import BadRequest
+from zExceptions import Unauthorized
+from zope.interface import implementer
 
 
 class BasicUserFolder(Implicit, Persistent, RoleManager):

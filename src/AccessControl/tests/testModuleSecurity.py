@@ -12,6 +12,7 @@
 ##############################################################################
 import unittest
 
+
 class ModuleSecurityTests(unittest.TestCase):
 
     def setUp(self):

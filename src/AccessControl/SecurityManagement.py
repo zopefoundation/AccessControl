@@ -12,6 +12,7 @@
 ##############################################################################
 """Security management
 """
+from . import SpecialUsers
 from __future__ import absolute_import
 
 
@@ -36,7 +37,6 @@ def setSecurityManager(manager):
     thread_id=get_ident()
     _managers[thread_id]=manager
 
-from . import SpecialUsers
 
 # AccessControl.Implementation inserts SecurityManager.
 
