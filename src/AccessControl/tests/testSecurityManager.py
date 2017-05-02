@@ -19,11 +19,13 @@ import unittest
 
 _THREAD_ID = 123
 
+
 class DummyContext:
 
     def __init__(self):
         self.user = object()
         self.stack = []
+
 
 class DummyPolicy:
 
@@ -40,6 +42,7 @@ class DummyPolicy:
         self.VALIDATE_ARGS = args
         return True
 
+
 class ExecutableObject:
     def __init__(self, new_policy):
         self._new_policy = new_policy
@@ -47,12 +50,14 @@ class ExecutableObject:
     def _customSecurityPolicy(self):
         return self._new_policy
 
+
 class ISecurityManagerConformance:
 
     def test_conforms_to_ISecurityManager(self):
         from AccessControl.interfaces import ISecurityManager
         from zope.interface.verify import verifyClass
         verifyClass(ISecurityManager, self._getTargetClass())
+
 
 class SecurityManagerTestBase:
 
@@ -176,7 +181,7 @@ class SecurityManagerTestBase:
                               CONTAINER,
                               NAME,
                               VALUE,
-                             )
+                              )
 
         self.failUnless(result)
         self.assertEqual(len(new_policy.VALIDATE_ARGS), 5)
@@ -203,7 +208,7 @@ class SecurityManagerTestBase:
                               NAME,
                               VALUE,
                               ROLES,
-                             )
+                              )
 
         self.failUnless(result)
         self.assertEqual(len(new_policy.VALIDATE_ARGS), 6)
@@ -231,7 +236,7 @@ class SecurityManagerTestBase:
                                   NAME,
                                   VALUE,
                                   MD,
-                                 )
+                                  )
 
         self.failUnless(result)
         self.assertEqual(len(new_policy.VALIDATE_ARGS), 5)

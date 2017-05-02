@@ -28,6 +28,7 @@ class ISuperDummy(Interface):
         """
         """
 
+
 class IDummy(ISuperDummy):
     """Just a marker interface"""
 
@@ -35,14 +36,28 @@ class IDummy(ISuperDummy):
         """
         """
 
+
 @implementer(IDummy)
 class Dummy1(object):
-    def foo(self): pass
-    def bar(self): pass
-    def baz(self): pass
-    def keg(self): pass
-    def wot(self): pass
-    def superMethod(self): pass
+
+    def foo(self):
+        pass
+
+    def bar(self):
+        pass
+
+    def baz(self):
+        pass
+
+    def keg(self):
+        pass
+
+    def wot(self):
+        pass
+
+    def superMethod(self):
+        pass
+
 
 class Dummy2(Dummy1):
     security = ClassSecurityInfo()
@@ -51,18 +66,23 @@ class Dummy2(Dummy1):
     security.declarePrivate('baz')
     security.declareProtected('View management screens', 'keg')
 
+
 class IDummy3(Interface):
     attr = TextLine(title=u"Attribute")
+
 
 @implementer(IDummy3)
 class Dummy3(object):
     attr = None
 
+
 class Dummy4(object):
     foo = None
 
+
 class Dummy5(object):
     pass
+
 
 def test_security_equivalence():
     """This test demonstrates that the traditional declarative security of
@@ -225,6 +245,7 @@ def test_set_warnings():
       >>> tearDown()
     """
 
+
 def test_checkPermission():
     """
     Test checkPermission
@@ -322,9 +343,10 @@ def test_checkPermission():
       >>> tearDown()
     """
 
+
 def test_register_permission():
     """This test demonstrates that if the <permission /> directive is used
-    to create a permission that does not already exist, it is created on 
+    to create a permission that does not already exist, it is created on
     startup, with roles defaulting to Manager.
 
       >>> from zope.component.testing import setUp, tearDown
@@ -356,7 +378,7 @@ def test_register_permission():
       ... ''')
       >>> from zope.configuration.xmlconfig import xmlconfig
       >>> xmlconfig(configure_zcml)
-      
+
     The permission will be made available globally, with default role set
     of ('Manager',).
 
@@ -394,6 +416,7 @@ def test_register_permission():
       >>> tearDown()
     """
 
+
 def test_register_permission_with_non_default_roles():
     """This test demonstrates that the <permission /> directive can be used
     as a grouping directive with <role/> subdirectives that specify the default
@@ -426,7 +449,7 @@ def test_register_permission_with_non_default_roles():
       ... ''')
       >>> from zope.configuration.xmlconfig import xmlconfig
       >>> xmlconfig(configure_zcml)
-      
+
     The permission will be made available globally, with the specified role set
     of ('Anonymous',).
 

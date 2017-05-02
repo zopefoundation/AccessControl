@@ -12,21 +12,21 @@
 ##############################################################################
 
 from __future__ import absolute_import
-from AuthEncoding.AuthEncoding import constant_time_compare  # NOQA: F401
-from AuthEncoding.AuthEncoding import is_encrypted  # NOQA: F401
-from AuthEncoding.AuthEncoding import listSchemes  # NOQA: F401
-from AuthEncoding.AuthEncoding import MySQLDigestScheme  # NOQA: F401
-from AuthEncoding.AuthEncoding import PasswordEncryptionScheme  # NOQA: F401
-from AuthEncoding.AuthEncoding import pw_encode  # NOQA: F401
-from AuthEncoding.AuthEncoding import pw_encrypt  # NOQA: F401
-from AuthEncoding.AuthEncoding import pw_validate  # NOQA: F401
-from AuthEncoding.AuthEncoding import registerScheme  # NOQA: F401
-from AuthEncoding.AuthEncoding import SHADigestScheme  # NOQA: F401
-from AuthEncoding.AuthEncoding import SSHADigestScheme  # NOQA: F401
+from AuthEncoding.AuthEncoding import constant_time_compare
+from AuthEncoding.AuthEncoding import is_encrypted
+from AuthEncoding.AuthEncoding import listSchemes
+from AuthEncoding.AuthEncoding import MySQLDigestScheme
+from AuthEncoding.AuthEncoding import PasswordEncryptionScheme
+from AuthEncoding.AuthEncoding import pw_encode
+from AuthEncoding.AuthEncoding import pw_encrypt
+from AuthEncoding.AuthEncoding import pw_validate
+from AuthEncoding.AuthEncoding import registerScheme
+from AuthEncoding.AuthEncoding import SHADigestScheme
+from AuthEncoding.AuthEncoding import SSHADigestScheme
 
 
 # Bogosity on various platforms due to ITAR restrictions
 try:
-    from AuthEncoding.AuthEncoding import CryptDigestScheme  # NOQA: F401
+    from AuthEncoding.AuthEncoding import CryptDigestScheme
 except ImportError:
     pass

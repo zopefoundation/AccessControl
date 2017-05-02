@@ -22,7 +22,8 @@ import unittest
 
 
 if sys.version_info >= (2, 5):
-    from AccessControl.ZopeGuards import guarded_any, guarded_all
+    from AccessControl.ZopeGuards import guarded_any
+    from AccessControl.ZopeGuards import guarded_all
     MIN_MAX_TAKE_KEY = True
 else:
     MIN_MAX_TAKE_KEY = False
@@ -31,8 +32,9 @@ try:
     __file__
 except NameError:
     __file__ = os.path.abspath(sys.argv[1])
-_FILEPATH = os.path.abspath( __file__ )
-_HERE = os.path.dirname( _FILEPATH )
+_FILEPATH = os.path.abspath(__file__)
+_HERE = os.path.dirname(_FILEPATH)
+
 
 class SecurityManager:
 
@@ -57,6 +59,7 @@ class SecurityManager:
     def checkPermission(self, *args):
         self.calls.append(('checkPermission', args))
         return not self.reject
+
 
 class GuardTestCase(unittest.TestCase):
 
@@ -120,9 +123,10 @@ class TestGuardedGetattr(GuardTestCase):
         _dict = type(d)
         old = ContainerAssertions.get(_dict)
 
-        mytable = {'keys': 1,
-                   'values': Method,
-                   }
+        mytable = {
+            'keys': 1,
+            'values': Method,
+        }
         ContainerAssertions[_dict] = mytable
         try:
             guarded_getattr(d, 'keys')
@@ -152,7 +156,7 @@ class TestDictGuards(GuardTestCase):
         from AccessControl.ZopeGuards import get_dict_get
         sm = SecurityManager()
         old = self.setSecurityManager(sm)
-        get = get_dict_get({'foo':GuardTestCase}, 'get')
+        get = get_dict_get({'foo': GuardTestCase}, 'get')
         try:
             get('foo')
         finally:
@@ -178,7 +182,7 @@ class TestDictGuards(GuardTestCase):
         from AccessControl.ZopeGuards import get_dict_get
         sm = SecurityManager()
         old = self.setSecurityManager(sm)
-        pop = get_dict_get({'foo':GuardTestCase}, 'pop')
+        pop = get_dict_get({'foo': GuardTestCase}, 'pop')
         try:
             pop('foo')
         finally:
@@ -189,7 +193,11 @@ class TestDictGuards(GuardTestCase):
 
         def test_iterkeys_simple(self):
             from AccessControl.ZopeGuards import get_iter
-            d = {'foo':1, 'bar':2, 'baz':3}
+            d = {
+                'foo': 1,
+                'bar': 2,
+                'baz': 3
+            }
             iterkeys = get_iter(d, 'iterkeys')
             keys = d.keys()
             keys.sort()
@@ -215,7 +223,11 @@ class TestDictGuards(GuardTestCase):
 
         def test_itervalues_simple(self):
             from AccessControl.ZopeGuards import get_iter
-            d = {'foo':1, 'bar':2, 'baz':3}
+            d = {
+                'foo': 1,
+                'bar': 2,
+                'baz': 3
+            }
             itervalues = get_iter(d, 'itervalues')
             values = d.values()
             values.sort()
@@ -238,6 +250,7 @@ class TestDictGuards(GuardTestCase):
             finally:
                 self.setSecurityManager(old)
             self.assert_(sm.calls)
+
 
 class TestListGuards(GuardTestCase):
 
@@ -269,48 +282,50 @@ class TestBuiltinFunctionGuards(GuardTestCase):
     def test_zip_fails(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_zip
-        sm = SecurityManager(1) # rejects
+        sm = SecurityManager(1)  # rejects
         old = self.setSecurityManager(sm)
-        self.assertRaises(Unauthorized, guarded_zip, [1,2,3], [3,2,1])
-        self.assertRaises(Unauthorized, guarded_zip, [1,2,3], [1])
+        self.assertRaises(Unauthorized, guarded_zip, [1, 2, 3], [3, 2, 1])
+        self.assertRaises(Unauthorized, guarded_zip, [1, 2, 3], [1])
         self.setSecurityManager(old)
 
     def test_map_fails(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_map
-        sm = SecurityManager(1) # rejects
+        sm = SecurityManager(1)  # rejects
         old = self.setSecurityManager(sm)
-        self.assertRaises(Unauthorized, guarded_map, str, 
-                          [1,2,3])
-        self.assertRaises(Unauthorized, guarded_map, lambda x,y: x+y, 
-                          [1,2,3], [3,2,1])
+        self.assertRaises(Unauthorized, guarded_map, str,
+                          [1, 2, 3])
+        self.assertRaises(Unauthorized, guarded_map, lambda x, y: x + y,
+                          [1, 2, 3], [3, 2, 1])
         self.setSecurityManager(old)
 
     if sys.version_info >= (2, 5):
         def test_all_fails(self):
             from AccessControl import Unauthorized
-            sm = SecurityManager(1) # rejects
+            sm = SecurityManager(1)  # rejects
             old = self.setSecurityManager(sm)
-            self.assertRaises(Unauthorized, guarded_all, [True,True,False])
+            self.assertRaises(Unauthorized, guarded_all, [True, True, False])
             self.setSecurityManager(old)
 
         def test_any_fails(self):
             from AccessControl import Unauthorized
-            sm = SecurityManager(1) # rejects
+            sm = SecurityManager(1)  # rejects
             old = self.setSecurityManager(sm)
-            self.assertRaises(Unauthorized, guarded_any, [True,True,False])
+            self.assertRaises(Unauthorized, guarded_any, [True, True, False])
             self.setSecurityManager(old)
 
     def test_min_fails(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_min
-        sm = SecurityManager(1) # rejects
+        sm = SecurityManager(1)  # rejects
         old = self.setSecurityManager(sm)
-        self.assertRaises(Unauthorized, guarded_min, [1,2,3])
-        self.assertRaises(Unauthorized, guarded_min, 1,2,3)
+        self.assertRaises(Unauthorized, guarded_min, [1, 2, 3])
+        self.assertRaises(Unauthorized, guarded_min, 1, 2, 3)
         if MIN_MAX_TAKE_KEY:
+
             class MyDict(dict):  # guard() skips 'dict' values
                 pass
+
             self.assertRaises(Unauthorized, guarded_min,
                               MyDict(x=1), MyDict(x=2),
                               key=operator.itemgetter('x'))
@@ -319,14 +334,16 @@ class TestBuiltinFunctionGuards(GuardTestCase):
     def test_max_fails(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_max
-        sm = SecurityManager(1) # rejects
+        sm = SecurityManager(1)  # rejects
         old = self.setSecurityManager(sm)
-        self.assertRaises(Unauthorized, guarded_max, [1,2,3])
-        self.assertRaises(Unauthorized, guarded_max, 1,2,3)
+        self.assertRaises(Unauthorized, guarded_max, [1, 2, 3])
+        self.assertRaises(Unauthorized, guarded_max, 1, 2, 3)
         if MIN_MAX_TAKE_KEY:
+
             class MyDict(dict):  # guard() skips 'dict' values
                 pass
-            self.assertRaises(Unauthorized, guarded_max, 
+
+            self.assertRaises(Unauthorized, guarded_max,
                               MyDict(x=1), MyDict(x=2),
                               key=operator.itemgetter('x'))
         self.setSecurityManager(old)
@@ -334,105 +351,112 @@ class TestBuiltinFunctionGuards(GuardTestCase):
     def test_enumerate_fails(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_enumerate
-        sm = SecurityManager(1) # rejects
+        sm = SecurityManager(1)  # rejects
         old = self.setSecurityManager(sm)
-        enum = guarded_enumerate([1,2,3])
+        enum = guarded_enumerate([1, 2, 3])
         self.assertRaises(Unauthorized, enum.next)
         self.setSecurityManager(old)
 
     def test_sum_fails(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_sum
-        sm = SecurityManager(1) # rejects
+        sm = SecurityManager(1)  # rejects
         old = self.setSecurityManager(sm)
-        self.assertRaises(Unauthorized, guarded_sum, [1,2,3])
+        self.assertRaises(Unauthorized, guarded_sum, [1, 2, 3])
         self.setSecurityManager(old)
 
     def test_zip_succeeds(self):
         from AccessControl.ZopeGuards import guarded_zip
-        sm = SecurityManager() # accepts
+        sm = SecurityManager()  # accepts
         old = self.setSecurityManager(sm)
-        self.assertEqual(guarded_zip([1,2,3], [3,2,1]), [(1,3),(2,2),(3,1)])
-        self.assertEqual(guarded_zip([1,2,3], [1]), [(1,1)])
+        self.assertEqual(guarded_zip([1, 2, 3],
+                                     [3, 2, 1]
+                                     ),
+                         [(1, 3), (2, 2), (3, 1)])
+        self.assertEqual(guarded_zip([1, 2, 3], [1]), [(1, 1)])
         self.setSecurityManager(old)
 
     def test_map_succeeds(self):
         from AccessControl.ZopeGuards import guarded_map
-        sm = SecurityManager() # accepts
+        sm = SecurityManager()  # accepts
         old = self.setSecurityManager(sm)
-        self.assertEqual(guarded_map(str, [1,2,3]), ['1','2','3'])
-        self.assertEqual(guarded_map(lambda x,y: x+y, [1,2,3], [3,2,1]), 
-                         [4,4,4])
+        self.assertEqual(guarded_map(str, [1, 2, 3]), ['1', '2', '3'])
+        self.assertEqual(guarded_map(lambda x, y: x + y, [1, 2, 3], [3, 2, 1]),
+                         [4, 4, 4])
         self.setSecurityManager(old)
 
     if sys.version_info >= (2, 5):
         def test_all_succeeds(self):
-            sm = SecurityManager() # accepts
+            sm = SecurityManager()  # accepts
             old = self.setSecurityManager(sm)
-            self.assertEqual(guarded_all([True,True,False]), False)
+            self.assertEqual(guarded_all([True, True, False]), False)
             self.setSecurityManager(old)
 
         def test_any_succeeds(self):
-            sm = SecurityManager() # accepts
+            sm = SecurityManager()  # accepts
             old = self.setSecurityManager(sm)
-            self.assertEquals(guarded_any([True,True,False]), True)
+            self.assertEquals(guarded_any([True, True, False]), True)
             self.setSecurityManager(old)
 
     def test_min_succeeds(self):
         from AccessControl.ZopeGuards import guarded_min
-        sm = SecurityManager() # accepts
+        sm = SecurityManager()  # accepts
         old = self.setSecurityManager(sm)
-        self.assertEqual(guarded_min([1,2,3]), 1)
-        self.assertEqual(guarded_min(1,2,3), 1)
+        self.assertEqual(guarded_min([1, 2, 3]), 1)
+        self.assertEqual(guarded_min(1, 2, 3), 1)
         if MIN_MAX_TAKE_KEY:
+
             class MyDict(dict):  # guard() skips 'dict' values
                 pass
+
             self.assertEqual(guarded_min(MyDict(x=1), MyDict(x=2),
                                          key=operator.itemgetter('x')),
-                             {'x':1})
+                             {'x': 1})
         self.setSecurityManager(old)
 
     def test_max_succeeds(self):
         from AccessControl.ZopeGuards import guarded_max
-        sm = SecurityManager() # accepts
+        sm = SecurityManager()  # accepts
         old = self.setSecurityManager(sm)
-        self.assertEqual(guarded_max([1,2,3]), 3)
-        self.assertEqual(guarded_max(1,2,3), 3)
+        self.assertEqual(guarded_max([1, 2, 3]), 3)
+        self.assertEqual(guarded_max(1, 2, 3), 3)
         if MIN_MAX_TAKE_KEY:
             class MyDict(dict):  # guard() skips 'dict' values
                 pass
             self.assertEqual(guarded_max(MyDict(x=1), MyDict(x=2),
                                          key=operator.itemgetter('x')),
-                             {'x':2})
+                             {'x': 2})
         self.setSecurityManager(old)
 
     def test_enumerate_succeeds(self):
         from AccessControl.ZopeGuards import guarded_enumerate
-        sm = SecurityManager() # accepts
+        sm = SecurityManager()  # accepts
         old = self.setSecurityManager(sm)
-        enum = guarded_enumerate([1,2,3])
-        self.assertEqual(next(enum), (0,1))
-        self.assertEqual(next(enum), (1,2))
-        self.assertEqual(next(enum), (2,3))
+        enum = guarded_enumerate([1, 2, 3])
+        self.assertEqual(next(enum), (0, 1))
+        self.assertEqual(next(enum), (1, 2))
+        self.assertEqual(next(enum), (2, 3))
         self.assertRaises(StopIteration, enum.next)
         self.setSecurityManager(old)
 
     def test_sum_succeeds(self):
         from AccessControl.ZopeGuards import guarded_sum
-        sm = SecurityManager() # accepts
+        sm = SecurityManager()  # accepts
         old = self.setSecurityManager(sm)
-        self.assertEqual(guarded_sum([1,2,3]), 6)
-        self.assertEqual(guarded_sum([1,2,3], start=36), 42)
+        self.assertEqual(guarded_sum([1, 2, 3]), 6)
+        self.assertEqual(guarded_sum([1, 2, 3], start=36), 42)
         self.setSecurityManager(old)
 
     def test_apply(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import safe_builtins
-        sm = SecurityManager(1) # rejects
+        sm = SecurityManager(1)  # rejects
         old = self.setSecurityManager(sm)
         gapply = safe_builtins['apply']
+
         def f(a=1, b=2):
-            return a+b
+            return a + b
+
         # This one actually succeeds, because apply isn't given anything
         # to unpack.
         self.assertEqual(gapply(f), 3)
@@ -443,7 +467,7 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         self.assertRaises(Unauthorized, gapply, f, (), {'a': 2})
         self.assertRaises(Unauthorized, gapply, f, [1], {'a': 2})
 
-        sm = SecurityManager(0) # accepts
+        sm = SecurityManager(0)  # accepts
         self.setSecurityManager(sm)
         self.assertEqual(gapply(f), 3)
         self.assertEqual(gapply(f, (), {}), 3)
@@ -453,38 +477,42 @@ class TestBuiltinFunctionGuards(GuardTestCase):
 
         self.setSecurityManager(old)
 
+
 class TestGuardedDictListTypes(unittest.TestCase):
 
     def testDictCreation(self):
         from AccessControl.ZopeGuards import safe_builtins
         d = safe_builtins['dict']
         self.assertEquals(d(), {})
-        self.assertEquals(d({1:2}), {1:2})
-        self.assertEquals(d(((1,2),)), {1:2})
-        self.assertEquals(d(foo=1), {"foo":1})
-        self.assertEquals(d.fromkeys((1,2,3)), {1:None, 2:None, 3:None})
-        self.assertEquals(d.fromkeys((1,2,3), 'f'), {1:'f', 2:'f', 3:'f'})
+        self.assertEquals(d({1: 2}), {1: 2})
+        self.assertEquals(d(((1, 2),)), {1: 2})
+        self.assertEquals(d(foo=1), {"foo": 1})
+        self.assertEquals(d.fromkeys((1, 2, 3)), {1: None, 2: None, 3: None})
+        self.assertEquals(d.fromkeys((1, 2, 3), 'f'), {1: 'f', 2: 'f', 3: 'f'})
 
     def testListCreation(self):
         from AccessControl.ZopeGuards import safe_builtins
         l = safe_builtins['list']
         self.assertEquals(l(), [])
-        self.assertEquals(l([1,2,3]), [1,2,3])
-        x = [3,2,1]
-        self.assertEquals(l(x), [3,2,1])
+        self.assertEquals(l([1, 2, 3]), [1, 2, 3])
+        x = [3, 2, 1]
+        self.assertEquals(l(x), [3, 2, 1])
         if sys.version_info >= (2, 4):
-            self.assertEquals(sorted(x), [1,2,3])
+            self.assertEquals(sorted(x), [1, 2, 3])
+
 
 class TestRestrictedPythonApply(GuardTestCase):
 
     def test_apply(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_apply
-        sm = SecurityManager(1) # rejects
+        sm = SecurityManager(1)  # rejects
         old = self.setSecurityManager(sm)
         gapply = guarded_apply
+
         def f(a=1, b=2):
-            return a+b
+            return a + b
+
         # This one actually succeeds, because apply isn't given anything
         # to unpack.
         self.assertEqual(gapply(*(f,)), 3)
@@ -495,7 +523,7 @@ class TestRestrictedPythonApply(GuardTestCase):
         self.assertRaises(Unauthorized, gapply, *(f,), **{'a': 2})
         self.assertRaises(Unauthorized, gapply, *(f, 1), **{'a': 2})
 
-        sm = SecurityManager(0) # accepts
+        sm = SecurityManager(0)  # accepts
         self.setSecurityManager(sm)
         self.assertEqual(gapply(*(f,)), 3)
         self.assertEqual(gapply(*(f,), **{}), 3)
@@ -508,6 +536,8 @@ class TestRestrictedPythonApply(GuardTestCase):
 
 # Map function name to the # of times it's been called.
 wrapper_count = {}
+
+
 class FuncWrapper:
     def __init__(self, funcname, func):
         self.funcname = funcname
@@ -521,11 +551,13 @@ class FuncWrapper:
     def __repr__(self):
         return "<FuncWrapper around %r>" % self.func
 
+
 # Given the high wall between AccessControl and RestrictedPython, I suppose
-# the next one could be called an integration test.  But we're simply
-# trying to run restricted Python with the *intended* implementations of
-# the special wrappers here, so no apologies.
+# the next one could be called an integration test.
+# But we're simply trying to run RestrictedPython with the *intended*
+# implementations of the special wrappers here, so no apologies.
 _ProtectedBase = None
+
 
 class TestActualPython(GuardTestCase):
 
@@ -534,7 +566,7 @@ class TestActualPython(GuardTestCase):
     def setUp(self):
         self._wrapped_dicts = []
 
-    def tearDown( self ):
+    def tearDown(self):
         self._restorePolicyAndManager()
         for munged, orig in self._wrapped_dicts:
             munged.update(orig)
@@ -566,7 +598,7 @@ class TestActualPython(GuardTestCase):
 
         if manager is None:
             thread_id = get_ident()
-            self._old_mgr = manager=_managers.get(thread_id, self._marker)
+            self._old_mgr = manager = _managers.get(thread_id, self._marker)
             newSecurityManager(None, UnderprivilegedUser())
         else:
             self._old_mgr = self.setSecurityManager(manager)
@@ -584,7 +616,6 @@ class TestActualPython(GuardTestCase):
             setSecurityPolicy(self._old_policy)
 
     def _getProtectedBaseClass(self):
-
         from AccessControl.class_init import InitializeClass
         from AccessControl.SecurityInfo import ClassSecurityInfo
         from ExtensionClass import Base
@@ -594,8 +625,8 @@ class TestActualPython(GuardTestCase):
 
             class ProtectedBase(Base):
                 security = ClassSecurityInfo()
-
                 security.declarePrivate('private_method')
+
                 def private_method(self):
                     return 'private_method called'
 
@@ -623,7 +654,7 @@ class TestActualPython(GuardTestCase):
             self.setSecurityManager(old)
 
         # Use wrapper_count to determine coverage.
-        ## print wrapper_count # uncomment to see wrapper names & counts
+        # print wrapper_count  # uncomment to see wrapper names & counts
         untouched = [k for k, v in wrapper_count.items() if v == 0]
         if untouched:
             untouched.sort()
@@ -655,8 +686,8 @@ print normal.private_method()
         except Unauthorized:
             pass
         else:
-            self.fail("Didn't raise Unauthorized: \n%s" % 
-                        its_globals['_print']())
+            self.fail("Didn't raise Unauthorized: \n%s" %
+                      its_globals['_print']())
 
     def test_derived_class_sneaky_en_suite(self):
 
@@ -696,7 +727,8 @@ sneaky = Sneaky()
 print sneaky.private_method()
 """
         try:
-            code, its_globals = self._compile_str(SNEAKY_SCRIPT, 'sneaky_script')
+            code, its_globals = self._compile_str(SNEAKY_SCRIPT,
+                                                  'sneaky_script')
         except SyntaxError:
             pass
         else:
@@ -724,7 +756,6 @@ print sneaky.private_method()
         else:
             self.fail("Didn't raise SyntaxError!")
 
-
     def test_dict_access(self):
         from RestrictedPython.tests import verify
 
@@ -749,8 +780,8 @@ print foo(**kw)
             self.setSecurityManager(old)
 
         self.assertEqual(its_globals['_print'](),
-                        'baz\nTrue\n')
-        
+                         'baz\nTrue\n')
+
     def _compile_str(self, text, name):
         from RestrictedPython import compile_restricted
         from AccessControl.ZopeGuards import get_safe_globals, guarded_getattr
@@ -760,7 +791,7 @@ print foo(**kw)
         g = get_safe_globals()
         g['_getattr_'] = guarded_getattr
         g['__debug__'] = 1  # so assert statements are active
-        g['__name__'] = __name__ # so classes can be defined in the script
+        g['__name__'] = __name__  # so classes can be defined in the script
         return code, g
 
     # Compile code in fname, as restricted Python. Return the
@@ -769,9 +800,10 @@ print foo(**kw)
     # in the same directory as this file.
     def _compile(self, fname):
         from RestrictedPython import compile_restricted
-        from AccessControl.ZopeGuards import get_safe_globals, guarded_getattr
+        from AccessControl.ZopeGuards import get_safe_globals
+        from AccessControl.ZopeGuards import guarded_getattr
 
-        fn = os.path.join( _HERE, fname)
+        fn = os.path.join(_HERE, fname)
         text = open(fn).read()
         return self._compile_str(text, fn)
 
@@ -786,6 +818,7 @@ print foo(**kw)
         for k, v in d.items():
             if callable(v) and v is not getattr(__builtin__, k, None):
                 d[k] = FuncWrapper(k, v)
+
 
 def test_inplacevar():
     """
@@ -838,6 +871,7 @@ But not on custom objects:
     untrusted code
 """
 
+
 if sys.version_info[:2] >= (2, 4):
     def test_inplacevar_for_py24():
         """
@@ -849,7 +883,7 @@ protected_inplacevar allows inplce ops on sets:
     [2, 4]
     >>> sorted(s)
     [2, 4]
-    
+
     >>> sorted(protected_inplacevar('|=', s, set((1, 3, 9))))
     [1, 2, 3, 4, 9]
     >>> sorted(s)
@@ -870,7 +904,7 @@ protected_inplacevar allows inplce ops on sets:
 def test_suite():
     suite = unittest.TestSuite([
         doctest.DocTestSuite(),
-        ])
+    ])
     for cls in (TestGuardedGetattr,
                 TestDictGuards,
                 TestBuiltinFunctionGuards,

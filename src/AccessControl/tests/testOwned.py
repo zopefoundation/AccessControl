@@ -151,7 +151,6 @@ class OwnedTests(unittest.TestCase):
         self.assertEqual(wrapped_owner, None)
 
     def test_getWrappedOwner_simple(self):
-
         root = FauxRoot()
         root.acl_users = FauxUserFolder()
 
@@ -163,7 +162,6 @@ class OwnedTests(unittest.TestCase):
         self.assertEqual(wrapped_owner.getId(), 'user')
 
     def test_getWrappedOwner_acquired(self):
-
         root = FauxRoot()
         root._owner = ('/acl_users', 'user')
         root.acl_users = FauxUserFolder()
@@ -175,7 +173,6 @@ class OwnedTests(unittest.TestCase):
         self.assertEqual(wrapped_owner.getId(), 'user')
 
     def test_getWrappedOwner_acquired_no_tricks(self):
-
         root = FauxRoot()
         root._owner = ('/acl_users', 'user')
         root.acl_users = FauxUserFolder()
@@ -249,9 +246,8 @@ class OwnershipChangeTests(unittest.TestCase):
         self.assertNotEquals(self.root.parent._owner, previous_parent_owner)
         self.assertEquals(self.root.parent._owner, (['acl_users'], 'user2'))
         self.assertEquals(self.root.parent.child._owner, previous_child_owner)
-        self.assertEquals( self.root.parent.child.grandchild._owner
-                         , previous_grandchild_owner
-                         )
+        self.assertEquals(self.root.parent.child.grandchild._owner,
+                          previous_grandchild_owner)
 
     def test_changeOwnership_recursive(self):
         previous_parent_owner = self.root.parent._owner
@@ -262,22 +258,22 @@ class OwnershipChangeTests(unittest.TestCase):
         self.root.parent.changeOwnership(newuser, recursive=True)
         self.assertNotEquals(self.root.parent._owner, previous_parent_owner)
         self.assertEquals(self.root.parent._owner, (['acl_users'], 'user2'))
-        self.assertNotEquals(self.root.parent.child._owner, previous_child_owner)
-        self.assertEquals( self.root.parent.child._owner
-                         , (['acl_users'], 'user2')
-                         )
-        self.assertNotEquals( self.root.parent.child.grandchild._owner
-                            , previous_grandchild_owner
-                            )
-        self.assertEquals( self.root.parent.child.grandchild._owner
-                         , (['acl_users'], 'user2')
-                         )
+        self.assertNotEquals(self.root.parent.child._owner,
+                             previous_child_owner)
+        self.assertEquals(self.root.parent.child._owner,
+                          (['acl_users'], 'user2'))
+        self.assertNotEquals(self.root.parent.child.grandchild._owner,
+                             previous_grandchild_owner)
+        self.assertEquals(self.root.parent.child.grandchild._owner,
+                          (['acl_users'], 'user2'))
 
     def test_changeOwnership_recursive_objectValues_acquisition(self):
         # See https://bugs.launchpad.net/bugs/143403
         from AccessControl.owner import Owned
+
         class FauxContent(Implicit, Owned):
             pass
+
         previous_parent_owner = self.root.parent._owner
         previous_child_owner = self.root.parent.child._owner
         previous_grandchild_owner = self.root.parent.child.grandchild._owner
@@ -287,6 +283,5 @@ class OwnershipChangeTests(unittest.TestCase):
         self.root.parent.bad.changeOwnership(newuser, recursive=True)
         self.assertEquals(self.root.parent._owner, previous_parent_owner)
         self.assertEquals(self.root.parent.child._owner, previous_child_owner)
-        self.assertEquals( self.root.parent.child.grandchild._owner
-                         , previous_grandchild_owner
-                         )
+        self.assertEquals(self.root.parent.child.grandchild._owner,
+                          previous_grandchild_owner)

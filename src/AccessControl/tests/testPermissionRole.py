@@ -31,15 +31,19 @@ class AppRoot(Explicit):
     _Edit_Things__Permission = ('Manager', 'Owner')
     # No default for delete permission.
 
+
 class ImplicitContainer(Implicit):
     pass
+
 
 class ExplicitContainer(Explicit):
     pass
 
+
 class RestrictiveObject(Implicit):
     _View_Permission = ('Manager',)
     _Delete_Permission = ()  # Nobody
+
 
 class PermissiveObject(Explicit):
     _Edit_Things__Permission = ['Anonymous']
@@ -61,15 +65,18 @@ def assertPRoles(ob, permission, expect):
         # embedded in the computed roles.  Remove the permission
         # names.
         roles = [r for r in roles if not r.endswith('_Permission')]
+
     if roles is None or expect is None:
-        if (roles is None or tuple(roles) == ('Anonymous',)) and (
-            expect is None or tuple(expect) == ('Anonymous',)):
+        if (roles is None or tuple(roles) == ('Anonymous', )) and \
+                (expect is None or tuple(expect) == ('Anonymous', )):
             same = 1
     else:
         got = {}
-        for r in roles: got[r] = 1
+        for r in roles:
+            got[r] = 1
         expected = {}
-        for r in expect: expected[r] = 1
+        for r in expect:
+            expected[r] = 1
         if got == expected:  # Dict compare does the Right Thing.
             same = 1
     assert same, 'Expected roles: %r, got: %r' % (expect, roles)
@@ -85,9 +92,9 @@ class PermissionRoleTests (unittest.TestCase):
             app.c = ImplicitContainer()
         app.c.o = RestrictiveObject()
         o = app.c.o
-        assertPRoles(o, ViewPermission,       ('Manager',))
-        assertPRoles(o, EditThingsPermission, ('Manager','Owner',))
-        assertPRoles(o, DeletePermission,     ())
+        assertPRoles(o, ViewPermission, ('Manager', ))
+        assertPRoles(o, EditThingsPermission, ('Manager', 'Owner', ))
+        assertPRoles(o, DeletePermission, ())
 
     def testPermissive(self, explicit=0):
         app = AppRoot()
@@ -97,9 +104,11 @@ class PermissionRoleTests (unittest.TestCase):
             app.c = ImplicitContainer()
         app.c.o = PermissiveObject()
         o = app.c.o
-        assertPRoles(o, ViewPermission,       ('Anonymous',))
-        assertPRoles(o, EditThingsPermission, ('Anonymous','Manager','Owner',))
-        assertPRoles(o, DeletePermission,     ('Manager',))
+        assertPRoles(o, ViewPermission, ('Anonymous', ))
+        assertPRoles(o, EditThingsPermission, ('Anonymous',
+                                               'Manager',
+                                               'Owner', ))
+        assertPRoles(o, DeletePermission, ('Manager', ))
 
     def testExplicit(self):
         self.testRestrictive(1)
@@ -107,13 +116,13 @@ class PermissionRoleTests (unittest.TestCase):
 
     def testAppDefaults(self):
         o = AppRoot()
-        assertPRoles(o, ViewPermission,       ('Anonymous',))
-        assertPRoles(o, EditThingsPermission, ('Manager','Owner',))
-        assertPRoles(o, DeletePermission,     ('Manager',))
+        assertPRoles(o, ViewPermission, ('Anonymous', ))
+        assertPRoles(o, EditThingsPermission, ('Manager', 'Owner', ))
+        assertPRoles(o, DeletePermission, ('Manager', ))
 
     def testPermissionRoleSupportsGetattr(self):
         a = PermissionRole('a')
-        self.failUnless(getattr(a, '__roles__') == ('Manager',))
-        self.failUnless(getattr(a, '_d') == ('Manager',))
+        self.failUnless(getattr(a, '__roles__') == ('Manager', ))
+        self.failUnless(getattr(a, '_d') == ('Manager', ))
         self.failUnless(getattr(a, '__name__') == 'a')
         self.failUnless(getattr(a, '_p') == '_a_Permission')

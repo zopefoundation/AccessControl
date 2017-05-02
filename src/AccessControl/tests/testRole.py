@@ -3,12 +3,11 @@ import unittest
 
 def _makeRootAndUser():
     from AccessControl.rolemanager import RoleManager
-    from Acquisition import Implicit, Explicit
-
+    from Acquisition import Implicit
+    from Acquisition import Explicit
 
     class DummyContext(Implicit, RoleManager):
         __roles__ = ('Manager',)
-
 
     class DummyUser(Explicit):
         def getRoles(self):
@@ -20,7 +19,6 @@ def _makeRootAndUser():
         def has_permission(self, permission, context):
             return True
 
-
     class DummyAclUsers(Explicit):
         def getUser(self, user_id):
             user = DummyUser()
@@ -28,7 +26,6 @@ def _makeRootAndUser():
 
         def absolute_url(self, relative=0):
             return 'acl_users'
-
 
     class DummyRoot(Explicit):
         acl_users = DummyAclUsers()
