@@ -729,7 +729,7 @@ class Normal(ProtectedBase):
     pass
 
 normal = Normal()
-print normal.private_method()
+print(normal.private_method())
 """
         code, its_globals = self._compile_str(NORMAL_SCRIPT, 'normal_script')
         its_globals['ProtectedBase'] = self._getProtectedBaseClass()
@@ -757,7 +757,7 @@ class Sneaky(ProtectedBase):
 
 
 sneaky = Sneaky()
-print sneaky.private_method()
+print(sneaky.private_method())
 """
         try:
             code, its_globals = self._compile_str(SNEAKY_SCRIPT,
@@ -780,7 +780,7 @@ class Sneaky(ProtectedBase):
 Sneaky.private_method__roles__ = None
 
 sneaky = Sneaky()
-print sneaky.private_method()
+print(sneaky.private_method())
 """
         try:
             code, its_globals = self._compile_str(SNEAKY_SCRIPT,
@@ -802,7 +802,7 @@ class Sneaky(ProtectedBase):
 
 sneaky = Sneaky()
 sneaky.private_method__roles__ = None
-print sneaky.private_method()
+print(sneaky.private_method())
 """
         try:
             code, its_globals = self._compile_str(SNEAKY_SCRIPT,
@@ -820,10 +820,10 @@ def foo(text):
     return text
 
 kw = {'text':'baz'}
-print foo(**kw)
+print(foo(**kw))
 
 kw = {'text':True}
-print foo(**kw)
+print(foo(**kw))
 """
         code, its_globals = self._compile_str(SIMPLE_DICT_ACCESS_SCRIPT, 'x')
         verify.verify(code)

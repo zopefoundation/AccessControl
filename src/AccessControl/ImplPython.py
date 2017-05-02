@@ -13,6 +13,7 @@
 
 """Python implementation of the access control machinery."""
 
+from logging import getLogger
 import os
 
 from Acquisition import aq_acquire
@@ -21,7 +22,7 @@ from Acquisition import aq_inContextOf
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from ExtensionClass import Base
-from logging import getLogger
+from six import string_types
 from zope.interface import implementer
 
 # This is used when a permission maps explicitly to no permission.  We
@@ -301,9 +302,10 @@ class ZopeSecurityPolicy:
                             None)
 
             if p is not None:
-                if not isinstance(p, int): # catches bool too
+                if not isinstance(p, (bool, int)):
                     if isinstance(p, dict):
-                        if isinstance(name, basestring):
+
+                        if isinstance(name, string_types):
                             p = p.get(name)
                         else:
                             p = 1
@@ -447,7 +449,7 @@ class ZopeSecurityPolicy:
 
     def checkPermission(self, permission, object, context):
         roles = rolesForPermissionOn(permission, object)
-        if isinstance(roles, basestring):
+        if isinstance(roles, string_types):
             roles = [roles]
 
         # check executable owner and proxy roles

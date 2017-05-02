@@ -14,6 +14,7 @@
 """Security handling
 """
 
+import six
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.component.zcml import utility
@@ -56,7 +57,7 @@ def clearSecurityInfo(klass):
     info = vars(klass)
     if '__ac_permissions__' in info:
         delattr(klass, '__ac_permissions__')
-    for k, v in info.items():
+    for k, v in list(info.items()):
         if k.endswith('__roles__'):
             delattr(klass, k)
 
@@ -74,11 +75,11 @@ def checkPermission(permission, object, interaction=None):
     CheckerPublic or None.
     """
     if (permission in ('zope.Public', 'zope2.Public') or
-        permission is None or permission is CheckerPublic):
+            permission is None or permission is CheckerPublic):
         return True
 
-    if isinstance(permission, basestring):
-        permission = queryUtility(IPermission, unicode(permission))
+    if isinstance(permission, six.string_types):
+        permission = queryUtility(IPermission, six.u(permission))
         if permission is None:
             return False
 
