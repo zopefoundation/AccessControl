@@ -24,10 +24,11 @@ _NOT_ALLOWED_CHARS = re.compile(r'[^a-zA-Z0-9_]')
 def getPermissionIdentifier(name):
     return '_' + re.sub(_NOT_ALLOWED_CHARS, '_', name) + "_Permission"
 
+
 # BBB
 pname = getPermissionIdentifier
 
-_marker=[]
+_marker = []
 
 
 class Permission:
@@ -98,7 +99,7 @@ class Permission:
             setattr(obj, self._p, roles)
 
         for name in self.data:
-            if name=='':
+            if name == '':
                 attr = obj
             else:
                 attr = getattr(obj, name)
@@ -128,7 +129,7 @@ class Permission:
             if isinstance(roles, list):
                 roles.append(role)
             else:
-                roles=roles + (role, )
+                roles = roles + (role, )
         self.setRoles(roles)
 
     def __len__(self):
@@ -165,7 +166,7 @@ def registerPermissions(permissions, defaultDefault=('Manager', )):
     for setting in permissions:
         if setting[0] in _registeredPermissions:
             continue
-        if len(setting)==2:
+        if len(setting) == 2:
             perm, methods = setting
             default = defaultDefault
         else:

@@ -66,7 +66,8 @@ class RoleManager:
         """Change the permission mapping
         """
         wrapper = getattr(self, '_permissionMapper', None)
-        if wrapper is None: wrapper=PM()
+        if wrapper is None:
+            wrapper = PM()
 
         perms = self.possible_permissions()
         for i in range(len(permission_names)):
