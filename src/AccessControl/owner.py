@@ -29,15 +29,16 @@ from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
 
 
-UnownableOwner=[]
+UnownableOwner = []
 
 
 def ownableFilter(self):
     _owner = aq_get(self, '_owner', None, 1)
     return _owner is not UnownableOwner
 
+
 # Marker to use as a getattr default.
-_mark=ownableFilter
+_mark = ownableFilter
 
 
 @implementer(IOwned)
@@ -50,16 +51,18 @@ class Owned(Base):
     def owner_info(self):
         """Get ownership info for display
         """
-        owner=self.getOwnerTuple()
+        owner = self.getOwnerTuple()
 
         if owner is None or owner is UnownableOwner:
             return owner
 
-        d={'path': '/'.join(owner[0]), 'id': owner[1],
-           'explicit': hasattr(self, '_owner'),
-           'userCanChangeOwnershipType':
-           getSecurityManager().checkPermission('Take ownership', self)
-           }
+        d = {
+            'path': '/'.join(owner[0]),
+            'id': owner[1],
+            'explicit': hasattr(self, '_owner'),
+            'userCanChangeOwnershipType':
+            getSecurityManager().checkPermission('Take ownership', self)
+        }
         return d
 
     security.declarePrivate('getOwner')
@@ -79,21 +82,23 @@ class Owned(Base):
                           'please use getOwnerTuple() instead.',
                           DeprecationWarning, stacklevel=2)
 
+        owner = aq_get(self, '_owner', None, 1)
+        if info or (owner is None):
+            return owner
 
-        owner=aq_get(self, '_owner', None, 1)
-        if info or (owner is None): return owner
-
-        if owner is UnownableOwner: return None
+        if owner is UnownableOwner:
+            return None
 
         udb, oid = owner
 
-        root=self.getPhysicalRoot()
-        udb=root.unrestrictedTraverse(udb, None)
+        root = self.getPhysicalRoot()
+        udb = root.unrestrictedTraverse(udb, None)
         if udb is None:
             user = SU.nobody
         else:
             user = udb.getUserById(oid, None)
-            if user is None: user = SU.nobody
+            if user is None:
+                user = SU.nobody
         return user
 
     security.declarePrivate('getOwnerTuple')
@@ -144,8 +149,8 @@ class Owned(Base):
         otherwise sub-objects retain their ownership information.
         """
         new = ownerInfo(user)
-        if new is None: 
-            return # Special user!
+        if new is None:
+            return  # Special user!
         old = self.getOwnerTuple()
 
         if not recursive:
@@ -153,7 +158,7 @@ class Owned(Base):
                 return
 
         if recursive:
-            children = getattr( aq_base(self), 'objectValues', lambda :() )()
+            children = getattr(aq_base(self), 'objectValues', lambda: ())()
             for child in children:
                 child.changeOwnership(user, 1)
 
@@ -161,12 +166,14 @@ class Owned(Base):
             self._owner = new
 
     def userCanTakeOwnership(self):
-        security=getSecurityManager()
-        user=security.getUser()
-        info=ownerInfo(user)
-        if info is None: return 0
-        owner=self.getOwnerTuple()
-        if owner == info: return 0
+        security = getSecurityManager()
+        user = security.getUser()
+        info = ownerInfo(user)
+        if info is None:
+            return 0
+        owner = self.getOwnerTuple()
+        if owner == info:
+            return 0
         return security.checkPermission('Take ownership', self)
 
     def _deleteOwnershipAfterAdd(self):
@@ -175,23 +182,28 @@ class Owned(Base):
             del self._owner
 
         for object in self.objectValues():
-            try: s=object._p_changed
-            except: s=0
-            try: object._deleteOwnershipAfterAdd()
-            except: pass
-            if s is None: object._p_deactivate()
+            try:
+                s = object._p_changed
+            except:
+                s = 0
+            try:
+                object._deleteOwnershipAfterAdd()
+            except:
+                pass
+            if s is None:
+                object._p_deactivate()
 
     def manage_fixupOwnershipAfterAdd(self):
         # Sigh, get the parent's _owner
-        parent=getattr(self, '__parent__', None)
-        if parent is not None: _owner=aq_get(parent, '_owner', None, 1)
-        else: _owner=None
+        parent = getattr(self, '__parent__', None)
+        if parent is not None:
+            _owner = aq_get(parent, '_owner', None, 1)
+        else:
+            _owner = None
 
         if (_owner is None and
-            ((getattr(self, '__parent__', None) is None) or
-             (not hasattr(self, 'getPhysicalRoot'))
-             )
-            ):
+                (getattr(self, '__parent__', None) is None or
+                 not hasattr(self, 'getPhysicalRoot'))):
             # This is a special case. An object is
             # being added to an object that hasn't
             # been added to the object hierarchy yet.
@@ -204,23 +216,29 @@ class Owned(Base):
             return self._deleteOwnershipAfterAdd()
         else:
             # Otherwise change the ownership
-            user=getSecurityManager().getUser()
+            user = getSecurityManager().getUser()
             if (SU.emergency_user and aq_base(user) is SU.emergency_user):
-                __creatable_by_emergency_user__=getattr(
-                    self,'__creatable_by_emergency_user__', None)
-                if (__creatable_by_emergency_user__ is None or
-                    (not __creatable_by_emergency_user__())):
+                __creatable_by_emergency_user__ = getattr(
+                    self, '__creatable_by_emergency_user__', None)
+                if __creatable_by_emergency_user__ is None or \
+                        not __creatable_by_emergency_user__():
                     raise EmergencyUserCannotOwn(
                         "Objects cannot be owned by the emergency user")
             self.changeOwnership(user)
 
         # Force all subs to acquire ownership!
         for object in self.objectValues():
-            try: s=object._p_changed
-            except: s=0
-            try: object._deleteOwnershipAfterAdd()
-            except: pass
-            if s is None: object._p_deactivate()
+            try:
+                s = object._p_changed
+            except:
+                s = 0
+            try:
+                object._deleteOwnershipAfterAdd()
+            except:
+                pass
+            if s is None:
+                object._p_deactivate()
+
 
 InitializeClass(Owned)
 
@@ -234,27 +252,33 @@ class EditUnowned(Exception):
 
 
 def absattr(attr):
-    if callable(attr): return attr()
+    if callable(attr):
+        return attr()
     return attr
 
 
 def ownerInfo(user, getattr=getattr):
     if user is None:
         return None
-    uid=user.getId()
-    if uid is None: return uid
-    db=aq_parent(aq_inner(user))
-    path=[absattr(db.id)]
-    root=db.getPhysicalRoot()
+    uid = user.getId()
+    if uid is None:
+        return uid
+    db = aq_parent(aq_inner(user))
+    path = [absattr(db.id)]
+    root = db.getPhysicalRoot()
     while 1:
-        db=getattr(db,'aq_inner', None)
-        if db is None: break
-        db=aq_parent(db)
-        if db is root: break
-        id=db.id
+        db = getattr(db, 'aq_inner', None)
+        if db is None:
+            break
+        db = aq_parent(db)
+        if db is root:
+            break
+        id = db.id
         if not isinstance(id, str):
-            try: id=id()
-            except: id=str(id)
+            try:
+                id = id()
+            except:
+                id = str(id)
         path.append(id)
 
     path.reverse()

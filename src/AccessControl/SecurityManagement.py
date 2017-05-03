@@ -13,29 +13,30 @@
 """Security management
 """
 from __future__ import absolute_import
-from . import SpecialUsers
+from AccessControl import SpecialUsers
 
 
 def getSecurityManager():
     """Get a security manager, for the current thread.
     """
-    thread_id=get_ident()
-    manager=_managers.get(thread_id, None)
+    thread_id = get_ident()
+    manager = _managers.get(thread_id, None)
     if manager is None:
         nobody = getattr(SpecialUsers, 'nobody', None)
         if nobody is None:
             # Initialize SpecialUsers by importing User.py.
-            from . import User
+            from AccessControl import User
             nobody = SpecialUsers.nobody
         manager = SecurityManager(thread_id, SecurityContext(nobody))
-        _managers[thread_id]=manager
+        _managers[thread_id] = manager
 
     return manager
 
+
 def setSecurityManager(manager):
     """install *manager* as current security manager for this thread."""
-    thread_id=get_ident()
-    _managers[thread_id]=manager
+    thread_id = get_ident()
+    _managers[thread_id] = manager
 
 
 # AccessControl.Implementation inserts SecurityManager.
@@ -46,20 +47,24 @@ except ImportError:
     def get_ident():
         return 0
 
-_managers={}
+_managers = {}
+
 
 def newSecurityManager(request, user):
     """Set up a new security context for a request for a user
     """
-    thread_id=get_ident()
-    _managers[thread_id]=SecurityManager(
+    thread_id = get_ident()
+    _managers[thread_id] = SecurityManager(
         thread_id,
         SecurityContext(user),
-        )
+    )
+
 
 def noSecurityManager():
-    try: del _managers[get_ident()]
-    except: pass
+    try:
+        del _managers[get_ident()]
+    except:
+        pass
 
 
 def setSecurityPolicy(aSecurityPolicy):
@@ -70,12 +75,13 @@ def setSecurityPolicy(aSecurityPolicy):
     """
     SecurityManager.setSecurityPolicy(aSecurityPolicy)
 
+
 class SecurityContext:
     """The security context is an object used internally to the security
     machinery. It captures data about the current security context.
     """
 
     def __init__(self, user):
-        self.stack=[]
-        self.user=user
+        self.stack = []
+        self.user = user
         self.objectCache = {}

@@ -19,14 +19,18 @@ import zExceptions
 class Unauthorized(zExceptions.Unauthorized):
 
     def getValueName(self):
-        v=self.value
-        n=getattr(v, 'getId', v)
-        if n is v:  n=getattr(v, 'id', v)
-        if n is v:  n=getattr(v, '__name__', v)
+        v = self.value
+        n = getattr(v, 'getId', v)
+        if n is v:
+            n = getattr(v, 'id', v)
+        if n is v:
+            n = getattr(v, '__name__', v)
         if n is not v:
             if callable(n):
-                try: n = n()
-                except TypeError: pass
+                try:
+                    n = n()
+                except TypeError:
+                    pass
             return n
 
         c = getattr(v, '__class__', type(v))
