@@ -102,7 +102,7 @@ class BasicUser(Implicit):
             if parent is not None:
                 object = parent
                 continue
-            if hasattr(object, 'im_self'):
+            if hasattr(object, '__self__'):
                 object = object.__self__
                 object = getattr(object, 'aq_inner', object)
                 continue

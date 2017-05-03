@@ -238,7 +238,7 @@ class SafeIter(object):
     __allow_access_to_unprotected_subobjects__ = 1
 
     def __init__(self, ob, container=None):
-        self._next = iter(ob).next
+        self._iter = iter(ob)
         if container is None:
             container = ob
         self.container = container
@@ -247,9 +247,10 @@ class SafeIter(object):
         return self
 
     def next(self):
-        ob = self._next()
+        ob = next(self._iter)
         guard(self.container, ob)
         return ob
+    __next__ = next # py3
 
 
 class NullIter(SafeIter):

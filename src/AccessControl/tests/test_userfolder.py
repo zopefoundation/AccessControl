@@ -44,7 +44,7 @@ class UserFolderTests(unittest.TestCase):
 
     def _makeBasicAuthToken(self, creds='user1:secret'):
         import base64
-        return 'Basic %s' % base64.encodestring(creds)
+        return 'Basic %s' % base64.encodestring(creds.encode()).decode()
 
     def _login(self, uf, name):
         from AccessControl.SecurityManagement import newSecurityManager
