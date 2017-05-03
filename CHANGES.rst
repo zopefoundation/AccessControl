@@ -3,10 +3,19 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.0 (unreleased)
-----------------
+4.0a5 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
+4.0a4 (2017-02-01)
+------------------
 
 - Use `@implementer` class decorator.
+
+- Remove ``AccessControl.Permission.name_trans`` to ease Python 3 migration.
+  Use ``AccessControl.Permission.getPermissionIdentifier()`` instead.
 
 4.0a3 (2016-08-05)
 ------------------

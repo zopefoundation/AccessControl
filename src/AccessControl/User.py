@@ -13,9 +13,9 @@
 """Access control package.
 """
 
-from AccessControl.users import emergency_user as super
-from AccessControl.users import UnrestrictedUser as Super
 # BBB
+from AccessControl.users import emergency_user
+from AccessControl.users import UnrestrictedUser as Super
 from AccessControl.users import _remote_user_mode
 from AccessControl.users import absattr
 from AccessControl.users import addr_match
@@ -32,7 +32,6 @@ from AccessControl.users import SpecialUser
 from AccessControl.users import system
 from AccessControl.users import User
 from zope.deferredimport import deprecated
-
 
 
 deprecated(
