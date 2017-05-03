@@ -246,11 +246,12 @@ class SafeIter(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         ob = next(self._iter)
         guard(self.container, ob)
         return ob
-    __next__ = next # py3
+
+    next = __next__  # Python 2 compat
 
 
 class NullIter(SafeIter):
