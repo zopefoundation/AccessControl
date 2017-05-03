@@ -16,7 +16,7 @@
 from zope.deferredimport import deprecated
 
 # BBB
-from .users import emergency_user as super
+from .users import emergency_user
 from .users import UnrestrictedUser as Super
 from .users import _remote_user_mode
 from .users import absattr
