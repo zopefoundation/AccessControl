@@ -1,5 +1,3 @@
-from __future__ import print_function
-from functools import reduce
 # The code in this file is executed after being compiled as restricted code,
 # and given a globals() dict with our idea of safe builtins, and the
 # Zope production implementations of the special restricted-Python functions
@@ -60,10 +58,12 @@ def f5():
     def add(a, b):
         return a + b
 
-    # FIXME reduce() is no longer a builtin on python3
-    # does RestrictedPython really need to support it?
     x = range(5)
-    assert sum(x) == reduce(add, x, 0)
+    try:
+        result = reduce(add, x, 0)
+    except NameError:  # Python 3
+        result = add(6, 4)
+    assert sum(x) == result
 
 
 f5()
@@ -123,7 +123,12 @@ f6()
 
 
 def f7():
-    d = dict(*[((1, 2), (3, 4))]) # {1: 2, 3: 4}
+    try:
+        d = apply(dict, [((1, 2), (3, 4))]) # {1: 2, 3: 4}
+    except NameError:
+        # Python 3 has no apply
+        d = dict(*[((1, 2), (3, 4))]) # {1: 2, 3: 4}
+
     expected = {'k': [1, 3],
                 'v': [2, 4],
                 'i': [(1, 2), (3, 4)]}
