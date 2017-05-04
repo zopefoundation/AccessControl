@@ -61,16 +61,19 @@ class ClassSecurityInfoTests(unittest.TestCase):
                 ('Manager', 'Role A', 'Role B', 'Role C')
             )
 
+            # pseudo decorator
             security.declarePublic('public')
-            def public(self, REQUEST=None):
+            def public(self, REQUEST=None):  # NOQA: E306
                 """ """
 
+            # pseudo decorator
             security.declarePrivate('private')
-            def private(self, REQUEST=None):
+            def private(self, REQUEST=None):  # NOQA: E306
                 """ """
 
+            # pseudo decorator
             security.declareProtected('Test permission', 'protected')
-            def protected(self, REQUEST=None):
+            def protected(self, REQUEST=None):  # NOQA: E306
                 """ """
 
             # same with decorators
@@ -138,12 +141,12 @@ class ClassSecurityInfoTests(unittest.TestCase):
 
             # security not used as a decorator, so does not protect
             security.protected('Test permission 1')
-            def unprotected1(self, REQUEST=None):
+            def unprotected1(self, REQUEST=None):  # NOQA: E306
                 """ """
 
-            # see above
+            # see above (pseudo decorator)
             security.protected('Test permission 2')
-            def unprotected2(self, REQUEST=None):
+            def unprotected2(self, REQUEST=None):  # NOQA: E306
                 """ """
 
             @security.protected('Test permission 3')

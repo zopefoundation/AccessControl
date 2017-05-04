@@ -14,8 +14,6 @@
 from AccessControl.requestmethod import requestmethod
 from zope.interface import implementer
 from zope.publisher.interfaces.browser import IBrowserRequest
-import unittest
-import zExceptions
 
 import unittest
 import zExceptions

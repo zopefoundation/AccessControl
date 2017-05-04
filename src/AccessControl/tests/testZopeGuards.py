@@ -25,6 +25,7 @@ import six
 import sys
 import unittest
 
+
 try:
     __file__
 except NameError:

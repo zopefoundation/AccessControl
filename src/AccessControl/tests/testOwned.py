@@ -1,13 +1,12 @@
 """Unit tests for AccessControl.Owned
 """
 
-import unittest
-
+from AccessControl.owner import Owned
 from Acquisition import aq_inner
 from Acquisition import Implicit
 from persistent import Persistent
 
-from AccessControl.owner import Owned
+import unittest
 
 
 class FauxUser(Implicit):

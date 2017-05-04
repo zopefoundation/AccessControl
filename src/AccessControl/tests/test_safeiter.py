@@ -14,9 +14,9 @@
 """Tests for the guarded iterartor.
 """
 
-import unittest
-
 from AccessControl import ZopeGuards
+
+import unittest
 
 
 class SafeIterTestCase(unittest.TestCase):

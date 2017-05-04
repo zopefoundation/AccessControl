@@ -13,10 +13,10 @@
 ##############################################################################
 """Test of the implementation selection support."""
 
-import unittest
-
 from AccessControl.Implementation import getImplementationName
 from AccessControl.Implementation import setImplementation
+
+import unittest
 
 
 class AccessControlImplementationTest(unittest.TestCase):

@@ -13,9 +13,8 @@
 """ TaintedString tests.
 """
 
-import unittest
-
 import six
+import unittest
 
 
 class TestTaintedString(unittest.TestCase):

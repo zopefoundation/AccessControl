@@ -10,8 +10,10 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-import unittest
+
 from AccessControl.ZopeGuards import import_default_level
+
+import unittest
 
 
 class ModuleSecurityTests(unittest.TestCase):
