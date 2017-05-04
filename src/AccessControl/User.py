@@ -14,7 +14,6 @@
 """
 
 from AccessControl.users import UnrestrictedUser as Super
-# BBB
 from AccessControl.users import _remote_user_mode
 from AccessControl.users import absattr
 from AccessControl.users import addr_match
