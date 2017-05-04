@@ -676,6 +676,7 @@ _safe_globals = {
     '_print_': RestrictedPython.PrintCollector,
     '_write_': full_write_guard,
     '_inplacevar_': protected_inplacevar,
+    '_unpack_sequence_': guarded_unpack_sequence,
     # The correct implementation of _getattr_, aka
     # guarded_getattr, isn't known until
     # AccessControl.Implementation figures that out, then
