@@ -201,6 +201,7 @@ def f9():
 
     assert same_type(3, 2, 1), 'expected same type'
     assert not same_type(3, 2, 'a'), 'expected not same type'
+    return printed
 
 
 f9()

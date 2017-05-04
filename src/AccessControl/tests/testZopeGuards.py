@@ -765,7 +765,7 @@ class Normal(ProtectedBase):
     pass
 
 normal = Normal()
-print(normal.private_method())
+result = normal.private_method()
 """
         code, its_globals = self._compile_str(NORMAL_SCRIPT, 'normal_script')
         its_globals['ProtectedBase'] = self._getProtectedBaseClass()
@@ -775,7 +775,7 @@ print(normal.private_method())
         with self.assertRaises(Unauthorized):
             exec(code, its_globals)
             self.fail("Didn't raise Unauthorized: \n%s" %
-                      its_globals['_print']())
+                      its_globals['result']())
 
     def test_derived_class_sneaky_en_suite(self):
         #  Disallow declaration of security-affecting names in classes
@@ -787,7 +787,7 @@ class Sneaky(ProtectedBase):
 
 
 sneaky = Sneaky()
-print(sneaky.private_method())
+result = sneaky.private_method()
 """
         with self.assertRaises(SyntaxError):
             self._compile_str(SNEAKY_SCRIPT, 'sneaky_script')
@@ -804,7 +804,7 @@ class Sneaky(ProtectedBase):
 Sneaky.private_method__roles__ = None
 
 sneaky = Sneaky()
-print(sneaky.private_method())
+result = sneaky.private_method()
 """
         with self.assertRaises(SyntaxError):
             self._compile_str(SNEAKY_SCRIPT, 'sneaky_script')
@@ -820,7 +820,7 @@ class Sneaky(ProtectedBase):
 
 sneaky = Sneaky()
 sneaky.private_method__roles__ = None
-print(sneaky.private_method())
+result = sneaky.private_method()
 """
         with self.assertRaises(SyntaxError):
             self._compile_str(SNEAKY_SCRIPT, 'sneaky_script')
@@ -836,6 +836,7 @@ print(foo(**kw))
 
 kw = {'text':True}
 print(foo(**kw))
+printed  # Prevent a warning of RestrictedPython that itis not used.
 """
         code, its_globals = self._compile_str(SIMPLE_DICT_ACCESS_SCRIPT, 'x')
 
