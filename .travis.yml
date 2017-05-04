@@ -7,6 +7,19 @@ python:
     - 3.5
     - 3.6
 
+env:
+    - ENVIRON=py
+    - ENVIRON=isort,flake8
+
+matrix:
+    exclude:
+        - env: ENVIRON=isort,flake8
+    include:
+        - python: "2.7"
+          env: ENVIRON=isort,flake8
+        - python: "3.6"
+          env: ENVIRON=isort,flake8
+
 install:
     - pip install -U setuptools==33.1.1 coveralls coverage
     - python bootstrap.py
