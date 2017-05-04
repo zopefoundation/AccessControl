@@ -16,6 +16,7 @@ from __future__ import absolute_import
 from functools import reduce
 import math
 import random
+import six
 import string
 import sys
 import warnings
@@ -154,18 +155,27 @@ _dict_white_list = {
     'copy': 1,
     'fromkeys': 1,
     'get': get_dict_get,
-    'has_key': 1,
     'items': 1,
-    'iteritems': 1,
-    'keys': 1,
-    'iterkeys': get_iter,
-    'itervalues': get_iter,
     'pop': get_dict_pop,
     'popitem': 1,
     'setdefault': 1,
     'update': 1,
-    'values': 1,
 }
+
+if six.PY3:
+    _dict_white_list.update({
+        'keys': get_iter,
+        'values': get_iter,
+    })
+else:
+    _dict_white_list.update({
+        'has_key': 1,
+        'iteritems': 1,
+        'iterkeys': get_iter,
+        'itervalues': get_iter,
+        'keys': 1,
+        'values': 1,
+    })
 
 
 def _check_dict_access(name, value):
@@ -257,10 +267,12 @@ class SafeIter(object):
 
 class NullIter(SafeIter):
     def __init__(self, ob):
-        self._next = ob.next
+        self._iter = ob
 
-    def next(self):
-        return self._next()
+    def __next__(self):
+        return next(self._iter)
+
+    next = __next__  # Python 2 compat
 
 
 def _error(index):
@@ -273,7 +285,7 @@ def guarded_iter(*args):
         # Don't double-wrap
         if isinstance(i, SafeIter):
             return i
-        if not isinstance(i, xrange):
+        if not isinstance(i, six.moves.range):
             return SafeIter(i)
     # Other call styles / targets don't need to be guarded
     return NullIter(iter(*args))
@@ -351,7 +363,7 @@ def guarded_map(f, *seqs):
     for seqno in range(len(seqs)):
         seq = guarded_getitem(seqs, seqno)
         safe_seqs.append(guarded_iter(seq))
-    return map(f, *safe_seqs)
+    return list(map(f, *safe_seqs))
 
 
 safe_builtins['map'] = guarded_map
@@ -362,14 +374,20 @@ def guarded_zip(*seqs):
     for seqno in range(len(seqs)):
         seq = guarded_getitem(seqs, seqno)
         safe_seqs.append(guarded_iter(seq))
-    return zip(*safe_seqs)
+    return list(zip(*safe_seqs))
 
 
 safe_builtins['zip'] = guarded_zip
 
 
+if six.PY3:
+    import_default_level = 0
+else:
+    import_default_level = -1
+
+
 def guarded_import(mname, globals=None, locals=None, fromlist=None,
-                   level=-1):
+                   level=import_default_level):
     if fromlist is None:
         fromlist = ()
     if '*' in fromlist:
@@ -379,7 +397,7 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
     if locals is None:
         locals = {}
     # Refs https://bugs.launchpad.net/zope2/+bug/659968
-    if level != -1:
+    if level != import_default_level:
         raise Unauthorized("Using import with a level specification isn't "
                            "supported by AccessControl: %s" % mname)
 

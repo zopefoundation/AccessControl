@@ -438,8 +438,7 @@ class RoleManager(Base, RoleManager):
         for p in self.ac_inherited_permissions(1):
             d[p[0]] = 1
 
-        d = d.keys()
-        d.sort()
+        d = sorted(d.keys())
         return d
 
 

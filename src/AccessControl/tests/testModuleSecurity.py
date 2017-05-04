@@ -11,6 +11,7 @@
 #
 ##############################################################################
 import unittest
+from ..ZopeGuards import import_default_level
 
 
 class ModuleSecurityTests(unittest.TestCase):
@@ -33,13 +34,13 @@ class ModuleSecurityTests(unittest.TestCase):
             if module in sys.modules:
                 del sys.modules[module]
 
-    def assertUnauth(self, module, fromlist, level=-1):
+    def assertUnauth(self, module, fromlist, level=import_default_level):
         from zExceptions import Unauthorized
         from AccessControl.ZopeGuards import guarded_import
         self.assertRaises(Unauthorized, guarded_import, module,
                           fromlist=fromlist, level=level)
 
-    def assertAuth(self, module, fromlist, level=-1):
+    def assertAuth(self, module, fromlist, level=import_default_level):
         from AccessControl.ZopeGuards import guarded_import
         guarded_import(module, fromlist=fromlist, level=level)
 
@@ -83,7 +84,8 @@ class ModuleSecurityTests(unittest.TestCase):
         self.failUnless('AccessControl.tests.nonesuch' in MS)
 
     def test_level_default(self):
-        self.assertAuth('AccessControl.tests.public_module', (), level=-1)
+        self.assertAuth('AccessControl.tests.public_module', (),
+                        level=import_default_level)
 
     def test_level_nondefault(self):
         self.assertUnauth('AccessControl.tests.public_module', (), level=1)

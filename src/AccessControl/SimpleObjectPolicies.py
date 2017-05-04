@@ -91,6 +91,7 @@ ContainerAssertions = {
     type(()): 1,
     type(''): 1,
     type(u''): 1,
+    range: 1,
 }
 
 Containers = ContainerAssertions.get

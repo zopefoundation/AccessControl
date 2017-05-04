@@ -673,8 +673,7 @@ class SecurityManager:
             del stack[-1]
         else:
             indexes = range(len(stack))
-            indexes.reverse()
-            for i in indexes:
+            for i in reversed(indexes):
                 top = stack[i]
                 if top is anExecutableObject:
                     del stack[i:]

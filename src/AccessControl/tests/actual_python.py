@@ -34,21 +34,21 @@ f1()
 
 
 def f2():
-    assert map(lambda x: x + 1, range(3)) == range(1, 4)
+    assert list(map(lambda x: x + 1, range(3))) == list(range(1, 4))
 
 
 f2()
 
 
 def f3():
-    assert filter(None, range(10)) == range(1, 10)
+    assert list(filter(None, range(10))) == list(range(1, 10))
 
 
 f3()
 
 
 def f4():
-    assert [i + 1 for i in range(3)] == range(*(1, 4))
+    assert [i + 1 for i in range(3)] == list(range(*(1, 4)))
 
 
 f4()
@@ -123,21 +123,25 @@ f6()
 
 
 def f7():
+    d = apply(dict, [((1, 2), (3, 4))])  # {1: 2, 3: 4}
+    methods = [('keys', 'k'),
+               ('items', 'i'),
+               ('values', 'v')]
     try:
-        d = apply(dict, [((1, 2), (3, 4))]) # {1: 2, 3: 4}
-    except NameError:
-        # Python 3 has no apply
-        d = dict(*[((1, 2), (3, 4))]) # {1: 2, 3: 4}
+        {}.iterkeys
+    except AttributeError:
+        pass
+    else:
+        # Python 2 only:
+        methods.extend([
+            ('iterkeys', 'k'),
+            ('iteritems', 'i'),
+            ('itervalues', 'v')])
 
     expected = {'k': [1, 3],
                 'v': [2, 4],
                 'i': [(1, 2), (3, 4)]}
-    for meth, kind in [('iterkeys', 'k'),
-                       ('iteritems', 'i'),
-                       ('itervalues', 'v'),
-                       ('keys', 'k'),
-                       ('items', 'i'),
-                       ('values', 'v')]:
+    for meth, kind in methods:
         access = getattr(d, meth)
         result = list(access())
         result.sort()

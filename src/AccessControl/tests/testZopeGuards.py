@@ -14,9 +14,12 @@
 """Test Zope Guards
 """
 
+from AccessControl.ZopeGuards import guarded_getattr
+
 import doctest
 import operator
 import os
+import six
 import sys
 import unittest
 
@@ -186,7 +189,8 @@ class TestGuardedHasattr(GuardTestCase):
 
     def test_hit(self):
         from AccessControl.ZopeGuards import guarded_hasattr
-        obj, name = Method(), 'args'
+        obj = Method(2411)
+        name = 'args'
         value = getattr(obj, name)
         rc = sys.getrefcount(value)
         self.assertTrue(guarded_hasattr(obj, name))
@@ -245,67 +249,103 @@ class TestDictGuards(GuardTestCase):
             self.setSecurityManager(old)
         self.assert_(sm.calls)
 
-    if sys.version_info >= (2, 2):
+    @unittest.skipIf(six.PY3, "iter... is Python 2 only")
+    def test_iterkeys_simple(self):
+        from AccessControl.ZopeGuards import get_iter
+        d = {
+            'foo': 1,
+            'bar': 2,
+            'baz': 3
+        }
+        iterkeys = get_iter(d, 'iterkeys')
+        keys = d.keys()
+        keys.sort()
+        ikeys = list(iterkeys())
+        ikeys.sort()
+        self.assertEqual(keys, ikeys)
 
-        def test_iterkeys_simple(self):
-            from AccessControl.ZopeGuards import get_iter
-            d = {
-                'foo': 1,
-                'bar': 2,
-                'baz': 3
-            }
-            iterkeys = get_iter(d, 'iterkeys')
-            keys = d.keys()
-            keys.sort()
-            ikeys = list(iterkeys())
-            ikeys.sort()
-            self.assertEqual(keys, ikeys)
+    @unittest.skipIf(six.PY3, "iter... is Python 2 only")
+    def test_iterkeys_empty(self):
+        from AccessControl.ZopeGuards import get_iter
+        iterkeys = get_iter({}, 'iterkeys')
+        self.assertEqual(list(iterkeys()), [])
 
-        def test_iterkeys_empty(self):
-            from AccessControl.ZopeGuards import get_iter
-            iterkeys = get_iter({}, 'iterkeys')
-            self.assertEqual(list(iterkeys()), [])
+    @unittest.skipIf(six.PY2, "keys() is only in Python 3 a generator")
+    def test_keys_empty(self):
+        from AccessControl.ZopeGuards import get_iter
+        keys = get_iter({}, 'keys')
+        self.assertEqual(list(keys()), [])
 
-        def test_iterkeys_validates(self):
-            from AccessControl.ZopeGuards import get_iter
-            sm = SecurityManager()
-            old = self.setSecurityManager(sm)
-            iterkeys = get_iter({GuardTestCase: 1}, 'iterkeys')
-            try:
-                next(iterkeys())
-            finally:
-                self.setSecurityManager(old)
-            self.assert_(sm.calls)
+    @unittest.skipIf(six.PY3, "iter... is Python 2 only")
+    def test_iterkeys_validates(self):
+        sm = SecurityManager()
+        old = self.setSecurityManager(sm)
+        iterkeys = guarded_getattr({GuardTestCase: 1}, 'iterkeys')
+        try:
+            next(iterkeys())
+        finally:
+            self.setSecurityManager(old)
+        self.assert_(sm.calls)
 
-        def test_itervalues_simple(self):
-            from AccessControl.ZopeGuards import get_iter
-            d = {
-                'foo': 1,
-                'bar': 2,
-                'baz': 3
-            }
-            itervalues = get_iter(d, 'itervalues')
-            values = d.values()
-            values.sort()
-            ivalues = list(itervalues())
-            ivalues.sort()
-            self.assertEqual(values, ivalues)
+    @unittest.skipIf(six.PY2, "keys() is only in Python 3 a generator")
+    def test_keys_validates(self):
+        sm = SecurityManager()
+        old = self.setSecurityManager(sm)
+        keys = guarded_getattr({GuardTestCase: 1}, 'keys')
+        try:
+            next(keys())
+        finally:
+            self.setSecurityManager(old)
+        self.assert_(sm.calls)
 
-        def test_itervalues_empty(self):
-            from AccessControl.ZopeGuards import get_iter
-            itervalues = get_iter({}, 'itervalues')
-            self.assertEqual(list(itervalues()), [])
+    @unittest.skipIf(six.PY3, "iter... is Python 2 only")
+    def test_itervalues_simple(self):
+        from AccessControl.ZopeGuards import get_iter
+        d = {
+            'foo': 1,
+            'bar': 2,
+            'baz': 3
+        }
+        itervalues = get_iter(d, 'itervalues')
+        values = d.values()
+        values.sort()
+        ivalues = list(itervalues())
+        ivalues.sort()
+        self.assertEqual(values, ivalues)
 
-        def test_itervalues_validates(self):
-            from AccessControl.ZopeGuards import get_iter
-            sm = SecurityManager()
-            old = self.setSecurityManager(sm)
-            itervalues = get_iter({GuardTestCase: 1}, 'itervalues')
-            try:
-                next(itervalues())
-            finally:
-                self.setSecurityManager(old)
-            self.assert_(sm.calls)
+    @unittest.skipIf(six.PY3, "iter... is Python 2 only")
+    def test_itervalues_empty(self):
+        from AccessControl.ZopeGuards import get_iter
+        itervalues = get_iter({}, 'itervalues')
+        self.assertEqual(list(itervalues()), [])
+
+    @unittest.skipIf(six.PY2, "values() is only in Python 3 a generator")
+    def test_values_empty(self):
+        from AccessControl.ZopeGuards import get_iter
+        values = get_iter({}, 'values')
+        self.assertEqual(list(values()), [])
+
+    @unittest.skipIf(six.PY3, "iter... is Python 2 only")
+    def test_itervalues_validates(self):
+        sm = SecurityManager()
+        old = self.setSecurityManager(sm)
+        itervalues = guarded_getattr({GuardTestCase: 1}, 'itervalues')
+        try:
+            next(itervalues())
+        finally:
+            self.setSecurityManager(old)
+        self.assert_(sm.calls)
+
+    @unittest.skipIf(six.PY2, "values() is only in Python 3 a generator")
+    def test_values_validates(self):
+        sm = SecurityManager()
+        old = self.setSecurityManager(sm)
+        values = guarded_getattr({GuardTestCase: 1}, 'values')
+        try:
+            next(values())
+        finally:
+            self.setSecurityManager(old)
+        self.assert_(sm.calls)
 
 
 class TestListGuards(GuardTestCase):
@@ -692,10 +732,7 @@ class TestActualPython(GuardTestCase):
         return _ProtectedBase
 
     def testPython(self):
-        from RestrictedPython.tests import verify
-
         code, its_globals = self._compile("actual_python.py")
-        # verify.verify(code)
 
         # Fiddle the global and safe-builtins dicts to count how many times
         # the special functions are called.
@@ -722,7 +759,6 @@ class TestActualPython(GuardTestCase):
 
     def test_derived_class_normal(self):
         from AccessControl import Unauthorized
-        from RestrictedPython.tests import verify
 
         NORMAL_SCRIPT = """
 class Normal(ProtectedBase):
@@ -733,7 +769,6 @@ print(normal.private_method())
 """
         code, its_globals = self._compile_str(NORMAL_SCRIPT, 'normal_script')
         its_globals['ProtectedBase'] = self._getProtectedBaseClass()
-        verify.verify(code)
 
         self._initPolicyAndManager()
 
@@ -749,7 +784,6 @@ print(normal.private_method())
 
         #  Disallow declaration of security-affecting names in classes
         #  defined in restricted code (compile-time check).
-        from RestrictedPython.tests import verify
 
         SNEAKY_SCRIPT = """
 class Sneaky(ProtectedBase):
@@ -771,7 +805,6 @@ print(sneaky.private_method())
 
         #  Assignment to a class outside its suite fails at
         #  compile time with a SyntaxError.
-        from RestrictedPython.tests import verify
 
         SNEAKY_SCRIPT = """
 class Sneaky(ProtectedBase):
@@ -794,7 +827,6 @@ print(sneaky.private_method())
 
         #  Assignment of security-sensitive names to an instance
         #  fails at compile time with a SyntaxError.
-        from RestrictedPython.tests import verify
 
         SNEAKY_SCRIPT = """
 class Sneaky(ProtectedBase):
@@ -813,8 +845,6 @@ print(sneaky.private_method())
             self.fail("Didn't raise SyntaxError!")
 
     def test_dict_access(self):
-        from RestrictedPython.tests import verify
-
         SIMPLE_DICT_ACCESS_SCRIPT = """
 def foo(text):
     return text
@@ -826,7 +856,6 @@ kw = {'text':True}
 print(foo(**kw))
 """
         code, its_globals = self._compile_str(SIMPLE_DICT_ACCESS_SCRIPT, 'x')
-        verify.verify(code)
 
         sm = SecurityManager()
         old = self.setSecurityManager(sm)
@@ -840,13 +869,9 @@ print(foo(**kw))
 
     def test_guarded_next__1(self):
         """There is a `safe_builtin` named `next`."""
-        from RestrictedPython.tests import verify
-
         SCRIPT = "result = next(iterator)"
 
         code, its_globals = self._compile_str(SCRIPT, 'ignored')
-        verify.verify(code)
-
         its_globals['iterator'] = iter([2411, 123])
 
         sm = SecurityManager()
@@ -860,14 +885,11 @@ print(foo(**kw))
 
     def test_guarded_next__2(self):
         """It guards the access during iteration."""
-        from RestrictedPython.tests import verify
         from AccessControl import Unauthorized
 
         SCRIPT = "next(iterator)"
 
         code, its_globals = self._compile_str(SCRIPT, 'ignored')
-        verify.verify(code)
-
         its_globals['iterator'] = iter([2411, 123])
 
         sm = SecurityManager(reject=True)
@@ -881,15 +903,12 @@ print(foo(**kw))
 
     def test_guarded_next__3(self):
         """It does not double check if using a `SafeIter`."""
-        from RestrictedPython.tests import verify
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import SafeIter
 
         SCRIPT = "next(iter([2411, 123]))"
 
         code, its_globals = self._compile_str(SCRIPT, 'ignored')
-        verify.verify(code)
-
         its_globals['iterator'] = SafeIter([2411, 123])
 
         sm = SecurityManager()
@@ -928,14 +947,14 @@ print(foo(**kw))
 
     # d is a dict, the globals for execution or our safe builtins.
     # The callable values which aren't the same as the corresponding
-    # entries in __builtin__ are wrapped in a FuncWrapper, so we can
+    # entries in builtins are wrapped in a FuncWrapper, so we can
     # tell whether they're executed.
     def _wrap_replaced_dict_callables(self, d):
-        import __builtin__
+        from RestrictedPython.Guards import builtins
         orig = d.copy()
         self._wrapped_dicts.append((d, orig))
         for k, v in d.items():
-            if callable(v) and v is not getattr(__builtin__, k, None):
+            if callable(v) and v is not getattr(builtins, k, None):
                 d[k] = FuncWrapper(k, v)
 
 
@@ -953,7 +972,9 @@ Basic operations on objects without inplace slots work as expected:
     3
     >>> protected_inplacevar('*=', 5, 2)
     10
-    >>> protected_inplacevar('/=', 6, 2)
+    >>> protected_inplacevar('/=', 6, 2.0)
+    3.0
+    >>> protected_inplacevar('//=', 6, 2)
     3
     >>> protected_inplacevar('%=', 5, 2)
     1
