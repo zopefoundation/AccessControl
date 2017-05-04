@@ -18,7 +18,6 @@ import math
 import random
 import six
 import string
-import sys
 import warnings
 
 import RestrictedPython
@@ -425,9 +424,8 @@ class GuardedListType:
     def __call__(self, *args, **kwargs):
         return list(*args, **kwargs)
 
-    if sys.version_info >= (2, 4):
-        def sorted(self, iterable, cmp=None, key=None, reverse=False):
-            return list.sorted(iterable, cmp=None, key=None, reverse=False)
+    def sorted(self, iterable, cmp=None, key=None, reverse=False):
+        return list.sorted(iterable, cmp=None, key=None, reverse=False)
 
 
 safe_builtins['list'] = GuardedListType()
@@ -511,16 +509,18 @@ def builtin_guarded_apply(func, args=(), kws={}):
 safe_builtins['apply'] = builtin_guarded_apply
 
 
-# Similar to min and reduce, use guarded_iter on the sequence being
-# tested and apply the original function.
-if sys.version_info >= (2, 5):
-    def guarded_any(seq):
-        return any(guarded_iter(seq))
-    safe_builtins['any'] = guarded_any
+def guarded_any(seq):
+    return any(guarded_iter(seq))
 
-    def guarded_all(seq):
-        return all(guarded_iter(seq))
-    safe_builtins['all'] = guarded_all
+
+safe_builtins['any'] = guarded_any
+
+
+def guarded_all(seq):
+    return all(guarded_iter(seq))
+
+
+safe_builtins['all'] = guarded_all
 
 
 # This metaclass supplies the security declarations that allow all

@@ -14,6 +14,8 @@
 """Test Zope Guards
 """
 
+from AccessControl.ZopeGuards import guarded_all
+from AccessControl.ZopeGuards import guarded_any
 from AccessControl.ZopeGuards import guarded_getattr
 
 import doctest
@@ -22,14 +24,6 @@ import os
 import six
 import sys
 import unittest
-
-
-if sys.version_info >= (2, 5):
-    from AccessControl.ZopeGuards import guarded_any
-    from AccessControl.ZopeGuards import guarded_all
-    MIN_MAX_TAKE_KEY = True
-else:
-    MIN_MAX_TAKE_KEY = False
 
 try:
     __file__
@@ -395,20 +389,19 @@ class TestBuiltinFunctionGuards(GuardTestCase):
                           [1, 2, 3], [3, 2, 1])
         self.setSecurityManager(old)
 
-    if sys.version_info >= (2, 5):
-        def test_all_fails(self):
-            from AccessControl import Unauthorized
-            sm = SecurityManager(1)  # rejects
-            old = self.setSecurityManager(sm)
-            self.assertRaises(Unauthorized, guarded_all, [True, True, False])
-            self.setSecurityManager(old)
+    def test_all_fails(self):
+        from AccessControl import Unauthorized
+        sm = SecurityManager(1)  # rejects
+        old = self.setSecurityManager(sm)
+        self.assertRaises(Unauthorized, guarded_all, [True, True, False])
+        self.setSecurityManager(old)
 
-        def test_any_fails(self):
-            from AccessControl import Unauthorized
-            sm = SecurityManager(1)  # rejects
-            old = self.setSecurityManager(sm)
-            self.assertRaises(Unauthorized, guarded_any, [True, True, False])
-            self.setSecurityManager(old)
+    def test_any_fails(self):
+        from AccessControl import Unauthorized
+        sm = SecurityManager(1)  # rejects
+        old = self.setSecurityManager(sm)
+        self.assertRaises(Unauthorized, guarded_any, [True, True, False])
+        self.setSecurityManager(old)
 
     def test_min_fails(self):
         from AccessControl import Unauthorized
@@ -417,14 +410,13 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         old = self.setSecurityManager(sm)
         self.assertRaises(Unauthorized, guarded_min, [1, 2, 3])
         self.assertRaises(Unauthorized, guarded_min, 1, 2, 3)
-        if MIN_MAX_TAKE_KEY:
 
-            class MyDict(dict):  # guard() skips 'dict' values
-                pass
+        class MyDict(dict):  # guard() skips 'dict' values
+            pass
 
-            self.assertRaises(Unauthorized, guarded_min,
-                              MyDict(x=1), MyDict(x=2),
-                              key=operator.itemgetter('x'))
+        self.assertRaises(Unauthorized, guarded_min,
+                          MyDict(x=1), MyDict(x=2),
+                          key=operator.itemgetter('x'))
         self.setSecurityManager(old)
 
     def test_max_fails(self):
@@ -434,14 +426,12 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         old = self.setSecurityManager(sm)
         self.assertRaises(Unauthorized, guarded_max, [1, 2, 3])
         self.assertRaises(Unauthorized, guarded_max, 1, 2, 3)
-        if MIN_MAX_TAKE_KEY:
+        class MyDict(dict):  # guard() skips 'dict' values
+            pass
 
-            class MyDict(dict):  # guard() skips 'dict' values
-                pass
-
-            self.assertRaises(Unauthorized, guarded_max,
-                              MyDict(x=1), MyDict(x=2),
-                              key=operator.itemgetter('x'))
+        self.assertRaises(Unauthorized, guarded_max,
+                          MyDict(x=1), MyDict(x=2),
+                          key=operator.itemgetter('x'))
         self.setSecurityManager(old)
 
     def test_enumerate_fails(self):
@@ -481,18 +471,17 @@ class TestBuiltinFunctionGuards(GuardTestCase):
                          [4, 4, 4])
         self.setSecurityManager(old)
 
-    if sys.version_info >= (2, 5):
-        def test_all_succeeds(self):
-            sm = SecurityManager()  # accepts
-            old = self.setSecurityManager(sm)
-            self.assertEqual(guarded_all([True, True, False]), False)
-            self.setSecurityManager(old)
+    def test_all_succeeds(self):
+        sm = SecurityManager()  # accepts
+        old = self.setSecurityManager(sm)
+        self.assertEqual(guarded_all([True, True, False]), False)
+        self.setSecurityManager(old)
 
-        def test_any_succeeds(self):
-            sm = SecurityManager()  # accepts
-            old = self.setSecurityManager(sm)
-            self.assertEquals(guarded_any([True, True, False]), True)
-            self.setSecurityManager(old)
+    def test_any_succeeds(self):
+        sm = SecurityManager()  # accepts
+        old = self.setSecurityManager(sm)
+        self.assertEquals(guarded_any([True, True, False]), True)
+        self.setSecurityManager(old)
 
     def test_min_succeeds(self):
         from AccessControl.ZopeGuards import guarded_min
@@ -500,14 +489,12 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         old = self.setSecurityManager(sm)
         self.assertEqual(guarded_min([1, 2, 3]), 1)
         self.assertEqual(guarded_min(1, 2, 3), 1)
-        if MIN_MAX_TAKE_KEY:
+        class MyDict(dict):  # guard() skips 'dict' values
+            pass
 
-            class MyDict(dict):  # guard() skips 'dict' values
-                pass
-
-            self.assertEqual(guarded_min(MyDict(x=1), MyDict(x=2),
-                                         key=operator.itemgetter('x')),
-                             {'x': 1})
+        self.assertEqual(guarded_min(MyDict(x=1), MyDict(x=2),
+                                     key=operator.itemgetter('x')),
+                         {'x': 1})
         self.setSecurityManager(old)
 
     def test_max_succeeds(self):
@@ -516,12 +503,11 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         old = self.setSecurityManager(sm)
         self.assertEqual(guarded_max([1, 2, 3]), 3)
         self.assertEqual(guarded_max(1, 2, 3), 3)
-        if MIN_MAX_TAKE_KEY:
-            class MyDict(dict):  # guard() skips 'dict' values
-                pass
-            self.assertEqual(guarded_max(MyDict(x=1), MyDict(x=2),
-                                         key=operator.itemgetter('x')),
-                             {'x': 2})
+        class MyDict(dict):  # guard() skips 'dict' values
+            pass
+        self.assertEqual(guarded_max(MyDict(x=1), MyDict(x=2),
+                                     key=operator.itemgetter('x')),
+                         {'x': 2})
         self.setSecurityManager(old)
 
     def test_enumerate_succeeds(self):
@@ -593,8 +579,7 @@ class TestGuardedDictListTypes(unittest.TestCase):
         self.assertEquals(l([1, 2, 3]), [1, 2, 3])
         x = [3, 2, 1]
         self.assertEquals(l(x), [3, 2, 1])
-        if sys.version_info >= (2, 4):
-            self.assertEquals(sorted(x), [1, 2, 3])
+        self.assertEquals(sorted(x), [1, 2, 3])
 
 
 class TestRestrictedPythonApply(GuardTestCase):
@@ -990,10 +975,9 @@ But not on custom objects:
 """
 
 
-if sys.version_info[:2] >= (2, 4):
-    def test_inplacevar_for_py24():
-        """
-protected_inplacevar allows inplce ops on sets:
+def test_inplacevar_for_py24():
+    """
+protected_inplacevar allows in-place ops on sets:
 
     >>> from AccessControl.ZopeGuards import protected_inplacevar
     >>> s = set((1,2,3,4))
