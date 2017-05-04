@@ -292,7 +292,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
         if innerparent is not None:
             # this is not a method, we needn't treat it specially
             c = innerparent
-        elif hasattr(v, 'im_self'):
+        elif getattr(v, '__self__', None) is not None:
             # this is a method, we need to treat it specially
             c = v.__self__
             c = getattr(v, 'aq_inner', v)

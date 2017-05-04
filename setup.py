@@ -38,10 +38,8 @@ else:
                      join('include', 'Acquisition', 'Acquisition.h')]),
     ]
 
-__version__ = '4.0a5.dev0'
-
 setup(name='AccessControl',
-      version=__version__,
+      version='4.0a5.dev0',
       url='http://pypi.python.org/pypi/AccessControl',
       license='ZPL 2.1',
       description="Security framework for Zope2.",
