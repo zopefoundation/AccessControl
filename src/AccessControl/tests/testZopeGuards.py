@@ -102,22 +102,14 @@ class TestGuardedGetattr(GuardTestCase):
     def test_unauthorized(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_getattr
-
-        try:
-            # PyPy
-            from sys import getrefcount
-        except ImportError:
-            def getrefcount(obj):
-                return 1
-
         obj, name = Method(), 'args'
         value = getattr(obj, name)
-        rc = getrefcount(value)
+        rc = sys.getrefcount(value)
         self.__sm.reject = True
         self.assertRaises(Unauthorized, guarded_getattr, obj, name)
         self.assertEqual(len(self.__sm.calls), 1)
         del self.__sm.calls[:]
-        self.assertEqual(rc, getrefcount(value))
+        self.assertEqual(rc, sys.getrefcount(value))
 
     def test_calls_validate_for_unknown_type(self):
         from AccessControl.ZopeGuards import guarded_getattr
@@ -372,7 +364,7 @@ class TestBuiltinFunctionGuards(GuardTestCase):
     def test_zip_fails(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_zip
-        sm = SecurityManager(1)  # rejects
+        sm = SecurityManager(reject=True)
         old = self.setSecurityManager(sm)
         self.assertRaises(Unauthorized, guarded_zip, [1, 2, 3], [3, 2, 1])
         self.assertRaises(Unauthorized, guarded_zip, [1, 2, 3], [1])
@@ -391,14 +383,14 @@ class TestBuiltinFunctionGuards(GuardTestCase):
 
     def test_all_fails(self):
         from AccessControl import Unauthorized
-        sm = SecurityManager(1)  # rejects
+        sm = SecurityManager(reject=True)
         old = self.setSecurityManager(sm)
         self.assertRaises(Unauthorized, guarded_all, [True, True, False])
         self.setSecurityManager(old)
 
     def test_any_fails(self):
         from AccessControl import Unauthorized
-        sm = SecurityManager(1)  # rejects
+        sm = SecurityManager(reject=True)
         old = self.setSecurityManager(sm)
         self.assertRaises(Unauthorized, guarded_any, [True, True, False])
         self.setSecurityManager(old)
@@ -406,7 +398,7 @@ class TestBuiltinFunctionGuards(GuardTestCase):
     def test_min_fails(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_min
-        sm = SecurityManager(1)  # rejects
+        sm = SecurityManager(reject=True)
         old = self.setSecurityManager(sm)
         self.assertRaises(Unauthorized, guarded_min, [1, 2, 3])
         self.assertRaises(Unauthorized, guarded_min, 1, 2, 3)
@@ -422,10 +414,11 @@ class TestBuiltinFunctionGuards(GuardTestCase):
     def test_max_fails(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_max
-        sm = SecurityManager(1)  # rejects
+        sm = SecurityManager(reject=True)
         old = self.setSecurityManager(sm)
         self.assertRaises(Unauthorized, guarded_max, [1, 2, 3])
         self.assertRaises(Unauthorized, guarded_max, 1, 2, 3)
+
         class MyDict(dict):  # guard() skips 'dict' values
             pass
 
@@ -437,7 +430,7 @@ class TestBuiltinFunctionGuards(GuardTestCase):
     def test_enumerate_fails(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_enumerate
-        sm = SecurityManager(1)  # rejects
+        sm = SecurityManager(reject=True)
         old = self.setSecurityManager(sm)
         enum = guarded_enumerate([1, 2, 3])
         self.assertRaises(Unauthorized, enum.next)
@@ -446,7 +439,7 @@ class TestBuiltinFunctionGuards(GuardTestCase):
     def test_sum_fails(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_sum
-        sm = SecurityManager(1)  # rejects
+        sm = SecurityManager(reject=True)
         old = self.setSecurityManager(sm)
         self.assertRaises(Unauthorized, guarded_sum, [1, 2, 3])
         self.setSecurityManager(old)
@@ -489,6 +482,7 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         old = self.setSecurityManager(sm)
         self.assertEqual(guarded_min([1, 2, 3]), 1)
         self.assertEqual(guarded_min(1, 2, 3), 1)
+
         class MyDict(dict):  # guard() skips 'dict' values
             pass
 
@@ -503,6 +497,7 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         old = self.setSecurityManager(sm)
         self.assertEqual(guarded_max([1, 2, 3]), 3)
         self.assertEqual(guarded_max(1, 2, 3), 3)
+
         class MyDict(dict):  # guard() skips 'dict' values
             pass
         self.assertEqual(guarded_max(MyDict(x=1), MyDict(x=2),
@@ -532,7 +527,7 @@ class TestBuiltinFunctionGuards(GuardTestCase):
     def test_apply(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import safe_builtins
-        sm = SecurityManager(1)  # rejects
+        sm = SecurityManager(reject=True)
         old = self.setSecurityManager(sm)
         gapply = safe_builtins['apply']
 
@@ -549,7 +544,7 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         self.assertRaises(Unauthorized, gapply, f, (), {'a': 2})
         self.assertRaises(Unauthorized, gapply, f, [1], {'a': 2})
 
-        sm = SecurityManager(0)  # accepts
+        sm = SecurityManager()  # accepts
         self.setSecurityManager(sm)
         self.assertEqual(gapply(f), 3)
         self.assertEqual(gapply(f, (), {}), 3)
@@ -587,7 +582,7 @@ class TestRestrictedPythonApply(GuardTestCase):
     def test_apply(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_apply
-        sm = SecurityManager(1)  # rejects
+        sm = SecurityManager(reject=True)
         old = self.setSecurityManager(sm)
         gapply = guarded_apply
 
@@ -604,7 +599,7 @@ class TestRestrictedPythonApply(GuardTestCase):
         self.assertRaises(Unauthorized, gapply, *(f,), **{'a': 2})
         self.assertRaises(Unauthorized, gapply, *(f, 1), **{'a': 2})
 
-        sm = SecurityManager(0)  # accepts
+        sm = SecurityManager()  # accepts
         self.setSecurityManager(sm)
         self.assertEqual(gapply(*(f,)), 3)
         self.assertEqual(gapply(*(f,), **{}), 3)

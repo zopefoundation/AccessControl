@@ -38,7 +38,7 @@ class TaintedString:
 
     if six.PY2:
         def __cmp__(self, o):
-            return cmp(self._value, o)  # NOQA
+            return cmp(self._value, o)  # noqa
 
     def __eq__(self, o):
         return self._value == o

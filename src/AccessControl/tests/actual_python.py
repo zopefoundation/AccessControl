@@ -15,18 +15,14 @@ def f1():
         range_ = range
 
     iterator = iter(range_(3))
-    try:
-        assert next(iterator) == 0
-    except AttributeError:  # Py3
-        assert next(iterator) == 0
-
+    assert next(iterator) == 0
     assert next(iterator) == 1
     assert next(iterator) == 2
     try:
         next(iterator)
     except StopIteration:
         pass
-    else:
+    else:  # pragma: no cover , Safety belt
         assert 0, "expected StopIteration"
 
 
@@ -59,10 +55,7 @@ def f5():
         return a + b
 
     x = range(5)
-    try:
-        result = reduce(add, x, 0)
-    except NameError:  # Python 3
-        result = add(6, 4)
+    result = reduce(add, x, 0)  # noqa, We have this as guarded_reduce
     assert sum(x) == result
 
 
@@ -223,33 +216,24 @@ f11()
 
 
 def f12():
-    try:
-        all
-    except NameError:
-        pass  # Python < 2.5
-    else:
-        assert all([True, True, True]) is True
-        assert all([True, False, True]) is False
+    assert all([True, True, True]) is True
+    assert all([True, False, True]) is False
 
 
 f12()
 
 
 def f13():
-    try:
-        any
-    except NameError:
-        pass  # Python < 2.5
-    else:
-        assert any([True, True, True]) is True
-        assert any([True, False, True]) is True
-        assert any([False, False, False]) is False
+    assert any([True, True, True]) is True
+    assert any([True, False, True]) is True
+    assert any([False, False, False]) is False
 
 
 f13()
 
 
 def f14():
+    """provoke _unpack_sequence_"""
     (a, (b, c)) = (1, (3, (4, 5)))
     assert a == 1
     assert b == 3

@@ -90,7 +90,6 @@ def test_security_equivalence():
     Zope 2 can be replaced by ZCML statements without any loss of
     information.
 
-      >>> import six
       >>> from zope.component.testing import setUp, tearDown
       >>> setUp()
 
@@ -117,7 +116,7 @@ def test_security_equivalence():
     ZCML declarations for ``Dummy1``:
 
       >>> from io import StringIO
-      >>> configure_zcml = StringIO(six.u('''
+      >>> configure_zcml = StringIO(u'''
       ... <configure xmlns="http://namespaces.zope.org/zope">
       ...   <class class="AccessControl.tests.testZCML.Dummy1">
       ...     <allow attributes="foo" />
@@ -129,7 +128,7 @@ def test_security_equivalence():
       ...              />
       ...   </class>
       ... </configure>
-      ... '''))
+      ... ''')
       >>> from zope.configuration.xmlconfig import xmlconfig
       >>> xmlconfig(configure_zcml)
 
@@ -191,7 +190,6 @@ def test_set_warnings():
     Zope 2, but we want to be able to re-use Zope Toolkit packages that use
     them without error.
 
-      >>> import six
       >>> from zope.component.testing import setUp, tearDown
       >>> setUp()
 
@@ -206,7 +204,7 @@ def test_set_warnings():
     Now we provide some ZCML declarations for ``Dummy1``:
 
       >>> from io import StringIO
-      >>> configure_zcml = StringIO(six.u('''
+      >>> configure_zcml = StringIO(u'''
       ... <configure xmlns="http://namespaces.zope.org/zope">
       ...
       ...   <class class="AccessControl.tests.testZCML.Dummy3">
@@ -228,7 +226,7 @@ def test_set_warnings():
       ...   </class>
       ...
       ... </configure>
-      ... '''))
+      ... ''')
 
       Running this should not throw an exception (but will print a warning to
       stderr)
@@ -352,7 +350,6 @@ def test_register_permission():
     to create a permission that does not already exist, it is created on
     startup, with roles defaulting to Manager.
 
-      >>> import six
       >>> from zope.component.testing import setUp, tearDown
       >>> setUp()
 
@@ -369,7 +366,7 @@ def test_register_permission():
     We can now register a permission in ZCML:
 
       >>> from io import StringIO
-      >>> configure_zcml = StringIO(six.u('''
+      >>> configure_zcml = StringIO(u'''
       ... <configure xmlns="http://namespaces.zope.org/zope"
       ...            i18n_domain="test">
       ...
@@ -379,7 +376,7 @@ def test_register_permission():
       ...       />
       ...
       ... </configure>
-      ... '''))
+      ... ''')
       >>> from zope.configuration.xmlconfig import xmlconfig
       >>> xmlconfig(configure_zcml)
 
@@ -399,7 +396,7 @@ def test_register_permission():
       >>> addPermission('Dummy: Other dummy', ('Anonymous', ))
 
       >>> from io import StringIO
-      >>> configure_zcml = StringIO(six.u('''
+      >>> configure_zcml = StringIO(u'''
       ... <configure xmlns="http://namespaces.zope.org/zope"
       ...            i18n_domain="test">
       ...
@@ -409,7 +406,7 @@ def test_register_permission():
       ...       />
       ...
       ... </configure>
-      ... '''))
+      ... ''')
       >>> from zope.configuration.xmlconfig import xmlconfig
       >>> xmlconfig(configure_zcml)
 
@@ -426,7 +423,6 @@ def test_register_permission_with_non_default_roles():
     as a grouping directive with <role/> subdirectives that specify the default
     roles for the permission.
 
-      >>> import six
       >>> from zope.component.testing import setUp, tearDown
       >>> setUp()
 
@@ -440,7 +436,7 @@ def test_register_permission_with_non_default_roles():
     We can now register a permission in ZCML:
 
       >>> from io import StringIO
-      >>> configure_zcml = StringIO(six.u('''
+      >>> configure_zcml = StringIO(u'''
       ... <configure xmlns="http://namespaces.zope.org/zope"
       ...            i18n_domain="test">
       ...
@@ -451,7 +447,7 @@ def test_register_permission_with_non_default_roles():
       ...   </permission>
       ...
       ... </configure>
-      ... '''))
+      ... ''')
       >>> from zope.configuration.xmlconfig import xmlconfig
       >>> xmlconfig(configure_zcml)
 

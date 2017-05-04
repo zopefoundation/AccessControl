@@ -242,22 +242,15 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         self.assertPolicyAllows(item, 'dangerous_m')
 
     def testIdentityProxy(self):
-        try:
-            # PyPy
-            from sys import getrefcount
-        except ImportError:
-            def getrefcount(obj):
-                return 1
-
         eo = ImplictAcqObject()
         eo.getOwner = lambda: None
         self.context.stack.append(eo)
-        rc = getrefcount(eo)
+        rc = sys.getrefcount(eo)
         self.testUserAccess()
-        self.assertEqual(rc, getrefcount(eo))
+        self.assertEqual(rc, sys.getrefcount(eo))
         eo._proxy_roles = ()
         self.testUserAccess()
-        self.assertEqual(rc, getrefcount(eo))
+        self.assertEqual(rc, sys.getrefcount(eo))
 
     def testAccessToUnprotectedSubobjects(self):
         item = self.item

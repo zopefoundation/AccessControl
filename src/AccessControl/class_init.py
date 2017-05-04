@@ -15,7 +15,7 @@
 
 import logging
 
-from AccessControl.Permission import ApplicationDefaultPermissions
+from AccessControl.Permission import ApplicationDefaultPermissions  # BBB
 
 
 def InitializeClass(self):
