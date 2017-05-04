@@ -13,7 +13,7 @@
 """Class initialization.
 """
 
-from AccessControl.Permission import ApplicationDefaultPermissions  # BBB
+from AccessControl.Permission import ApplicationDefaultPermissions  # BBB  # NOQA: F401,E501
 
 import logging
 

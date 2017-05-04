@@ -13,6 +13,8 @@
 """Access control support
 """
 
+# flake8: NOQA: E401
+
 # BBB
 from AccessControl.rolemanager import _isBeingUsedAsAMethod
 from AccessControl.rolemanager import _isNotBeingUsedAsAMethod

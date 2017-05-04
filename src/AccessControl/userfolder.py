@@ -222,7 +222,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
 
     if _remote_user_mode:
 
-        def validate(self, request, auth='', roles=_noroles):
+        def validate(self, request, auth='', roles=_noroles):  # NOQA: F811
             v = request['PUBLISHED']
             a, c, n, v = self._getobcontext(v, request)
             name = request.environ.get('REMOTE_USER', None)

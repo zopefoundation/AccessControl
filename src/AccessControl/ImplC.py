@@ -11,6 +11,8 @@
 #
 ##############################################################################
 
+# flake8: NOQA: E401
+
 """C implementation of the access control machinery."""
 
 from AccessControl.cAccessControl import SecurityManager as cSecurityManager

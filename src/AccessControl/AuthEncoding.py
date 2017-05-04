@@ -11,6 +11,8 @@
 #
 ##############################################################################
 
+# flake8: NOQA: E401
+
 from __future__ import absolute_import
 from AuthEncoding.AuthEncoding import constant_time_compare
 from AuthEncoding.AuthEncoding import is_encrypted
@@ -27,6 +29,6 @@ from AuthEncoding.AuthEncoding import SSHADigestScheme
 
 # Bogosity on various platforms due to ITAR restrictions
 try:
-    from AuthEncoding.AuthEncoding import CryptDigestScheme  # NOQA
+    from AuthEncoding.AuthEncoding import CryptDigestScheme
 except ImportError:
     pass

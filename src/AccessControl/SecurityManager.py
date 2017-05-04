@@ -14,7 +14,7 @@
 '''
 
 from AccessControl import ImplPython as _ImplPython
-from AccessControl.SimpleObjectPolicies import _noroles
+# from AccessControl.SimpleObjectPolicies import _noroles
 
 
 def setSecurityPolicy(aSecurityPolicy):

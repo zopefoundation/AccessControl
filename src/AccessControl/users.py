@@ -19,7 +19,6 @@ from AccessControl.interfaces import IUser
 from AccessControl.PermissionRole import _what_not_even_god_should_do
 from AccessControl.PermissionRole import rolesForPermissionOn
 from Acquisition import aq_inContextOf
-from Acquisition import aq_parent
 from Acquisition import Implicit
 from Persistence import Persistent
 from zope.interface import implementer

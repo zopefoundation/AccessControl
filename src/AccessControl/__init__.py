@@ -11,6 +11,7 @@
 #
 ##############################################################################
 
+# flake8: NOQA: E401
 
 # This has to happen early so things get initialized properly
 from AccessControl.Implementation import setImplementation

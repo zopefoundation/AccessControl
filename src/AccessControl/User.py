@@ -13,6 +13,8 @@
 """Access control package.
 """
 
+# flake8: NOQA: E401
+
 from AccessControl.users import UnrestrictedUser as Super
 from AccessControl.users import _remote_user_mode
 from AccessControl.users import absattr

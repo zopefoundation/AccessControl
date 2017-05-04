@@ -13,6 +13,8 @@
 """Support for owned objects
 """
 
+# flake8: NOQA: E401
+
 # BBB
 from AccessControl.owner import absattr
 from AccessControl.owner import EditUnowned
