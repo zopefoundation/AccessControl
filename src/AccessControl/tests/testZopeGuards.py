@@ -904,13 +904,11 @@ print(foo(**kw))
     def _compile_str(self, text, name):
         from RestrictedPython import compile_restricted
         from AccessControl.ZopeGuards import get_safe_globals, guarded_getattr
-        from RestrictedPython.Guards import guarded_iter_unpack_sequence
 
         code = compile_restricted(text, name, 'exec')
 
         g = get_safe_globals()
         g['_getattr_'] = guarded_getattr
-        g['_iter_unpack_sequence_'] = guarded_iter_unpack_sequence
         g['__debug__'] = 1  # so assert statements are active
         g['__name__'] = __name__  # so classes can be defined in the script
         return code, g
