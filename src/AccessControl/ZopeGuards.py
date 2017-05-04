@@ -24,6 +24,7 @@ import RestrictedPython
 from RestrictedPython.Eval import RestrictionCapableEval
 from RestrictedPython.Guards import full_write_guard
 from RestrictedPython.Guards import guarded_iter_unpack_sequence
+from RestrictedPython.Guards import guarded_unpack_sequence
 from RestrictedPython.Guards import safe_builtins
 from RestrictedPython.Utilities import utility_builtins
 from zExceptions import Unauthorized
@@ -657,6 +658,7 @@ _safe_globals = {
     '_print_': RestrictedPython.PrintCollector,
     '_write_': full_write_guard,
     '_inplacevar_': protected_inplacevar,
+    '_unpack_sequence_': guarded_unpack_sequence,
     # The correct implementation of _getattr_, aka
     # guarded_getattr, isn't known until
     # AccessControl.Implementation figures that out, then
