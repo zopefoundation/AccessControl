@@ -217,7 +217,7 @@ class OwnershipChangeTests(unittest.TestCase):
         parent.child.grandchild._owner = (['acl_users'], 'user1')
 
     def test_changeOwnership_bad_owner(self):
-        from AccessControl.User import nobody
+        from AccessControl.users import nobody
         previous = self.root.parent._owner
 
         self.root.parent.changeOwnership(nobody)
