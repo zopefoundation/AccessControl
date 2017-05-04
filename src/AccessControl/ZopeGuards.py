@@ -24,6 +24,7 @@ import RestrictedPython
 from RestrictedPython.Eval import RestrictionCapableEval
 from RestrictedPython.Guards import full_write_guard
 from RestrictedPython.Guards import guarded_iter_unpack_sequence
+from RestrictedPython.Guards import guarded_unpack_sequence
 from RestrictedPython.Guards import safe_builtins
 from RestrictedPython.Utilities import utility_builtins
 from zExceptions import Unauthorized
@@ -671,6 +672,7 @@ _safe_globals = {
     '_getitem_': guarded_getitem,
     '_getiter_': guarded_iter,
     '_iter_unpack_sequence_': guarded_iter_unpack_sequence,
+    '_unpack_sequence_': guarded_unpack_sequence,
     '_print_': RestrictedPython.PrintCollector,
     '_write_': full_write_guard,
     '_inplacevar_': protected_inplacevar,

@@ -247,3 +247,13 @@ def f13():
 
 
 f13()
+
+
+def f14():
+    (a, (b, c)) = (1, (3, (4, 5)))
+    assert a == 1
+    assert b == 3
+    assert c == (4, 5)
+
+
+f14()
