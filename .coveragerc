@@ -1,11 +1,6 @@
 [run]
 branch = True
 source = AccessControl
-omit =
-    src/AccessControl/tests
-    src/AccessControl/tests/*.py
-    tests/*.py
-    bootstrap.py
 
 [report]
 precision = 3
