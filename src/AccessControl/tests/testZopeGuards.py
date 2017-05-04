@@ -387,7 +387,7 @@ class TestBuiltinFunctionGuards(GuardTestCase):
     def test_map_fails(self):
         from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import guarded_map
-        sm = SecurityManager(1)  # rejects
+        sm = SecurityManager(reject=True)
         old = self.setSecurityManager(sm)
         self.assertRaises(Unauthorized, guarded_map, str,
                           [1, 2, 3])
@@ -772,16 +772,12 @@ print(normal.private_method())
 
         self._initPolicyAndManager()
 
-        try:
+        with self.assertRaises(Unauthorized):
             exec(code, its_globals)
-        except Unauthorized:
-            pass
-        else:
             self.fail("Didn't raise Unauthorized: \n%s" %
                       its_globals['_print']())
 
     def test_derived_class_sneaky_en_suite(self):
-
         #  Disallow declaration of security-affecting names in classes
         #  defined in restricted code (compile-time check).
 
@@ -793,16 +789,11 @@ class Sneaky(ProtectedBase):
 sneaky = Sneaky()
 print(sneaky.private_method())
 """
-        try:
-            code, its_globals = self._compile_str(SNEAKY_SCRIPT,
-                                                  'sneaky_script')
-        except SyntaxError:
-            pass
-        else:
+        with self.assertRaises(SyntaxError):
+            self._compile_str(SNEAKY_SCRIPT, 'sneaky_script')
             self.fail("Didn't raise SyntaxError!")
 
     def test_derived_sneaky_post_facto(self):
-
         #  Assignment to a class outside its suite fails at
         #  compile time with a SyntaxError.
 
@@ -815,16 +806,11 @@ Sneaky.private_method__roles__ = None
 sneaky = Sneaky()
 print(sneaky.private_method())
 """
-        try:
-            code, its_globals = self._compile_str(SNEAKY_SCRIPT,
-                                                  'sneaky_script')
-        except SyntaxError:
-            pass
-        else:
+        with self.assertRaises(SyntaxError):
+            self._compile_str(SNEAKY_SCRIPT, 'sneaky_script')
             self.fail("Didn't raise SyntaxError!")
 
     def test_derived_sneaky_instance(self):
-
         #  Assignment of security-sensitive names to an instance
         #  fails at compile time with a SyntaxError.
 
@@ -836,12 +822,8 @@ sneaky = Sneaky()
 sneaky.private_method__roles__ = None
 print(sneaky.private_method())
 """
-        try:
-            code, its_globals = self._compile_str(SNEAKY_SCRIPT,
-                                                  'sneaky_script')
-        except SyntaxError:
-            pass
-        else:
+        with self.assertRaises(SyntaxError):
+            self._compile_str(SNEAKY_SCRIPT, 'sneaky_script')
             self.fail("Didn't raise SyntaxError!")
 
     def test_dict_access(self):
@@ -903,7 +885,6 @@ print(foo(**kw))
 
     def test_guarded_next__3(self):
         """It does not double check if using a `SafeIter`."""
-        from AccessControl import Unauthorized
         from AccessControl.ZopeGuards import SafeIter
 
         SCRIPT = "next(iter([2411, 123]))"
@@ -937,10 +918,6 @@ print(foo(**kw))
     # fname is the string name of a Python file; it must be found
     # in the same directory as this file.
     def _compile(self, fname):
-        from RestrictedPython import compile_restricted
-        from AccessControl.ZopeGuards import get_safe_globals
-        from AccessControl.ZopeGuards import guarded_getattr
-
         fn = os.path.join(_HERE, fname)
         text = open(fn).read()
         return self._compile_str(text, fn)

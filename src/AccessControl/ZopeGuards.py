@@ -245,7 +245,6 @@ safe_builtins['next'] = guarded_next
 
 
 class SafeIter(object):
-    # __slots__ = '_next', 'container'
     __allow_access_to_unprotected_subobjects__ = 1
 
     def __init__(self, ob, container=None):
