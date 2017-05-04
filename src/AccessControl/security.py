@@ -14,7 +14,9 @@
 """Security handling
 """
 
-import six
+from AccessControl.Permission import addPermission
+from AccessControl.SecurityInfo import ClassSecurityInfo
+from AccessControl.SecurityManagement import getSecurityManager
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.component.zcml import utility
@@ -33,9 +35,7 @@ from zope.security.permission import Permission
 from zope.security.simplepolicies import ParanoidSecurityPolicy
 from zope.security.zcml import IPermissionDirective
 
-from AccessControl.Permission import addPermission
-from AccessControl.SecurityInfo import ClassSecurityInfo
-from AccessControl.SecurityManagement import getSecurityManager
+import six
 
 
 CheckerPublicId = 'zope.Public'

@@ -241,6 +241,7 @@ def guarded_next(iterator):
         guard(ob, ob)
     return ob
 
+
 safe_builtins['next'] = guarded_next
 
 
@@ -675,6 +676,7 @@ _safe_globals = {
     '_unpack_sequence_': guarded_unpack_sequence,
     '_print_': RestrictedPython.PrintCollector,
     '_write_': full_write_guard,
+    # '_del_': full_write_guard,
     '_inplacevar_': protected_inplacevar,
     # The correct implementation of _getattr_, aka
     # guarded_getattr, isn't known until
