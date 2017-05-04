@@ -26,7 +26,8 @@ install:
     - bin/buildout
 
 script:
-    - coverage run bin/test -v1
+    #- coverage run bin/test -v1
+    - tox -e $ENVIRON
 after_success:
     - coverage combine
     - coveralls
