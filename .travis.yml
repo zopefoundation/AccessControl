@@ -21,7 +21,7 @@ matrix:
           env: ENVIRON=isort,flake8
 
 install:
-    - pip install -U setuptools==33.1.1 coveralls coverage
+    - pip install -U setuptools==33.1.1 tox coveralls coverage
     - python bootstrap.py
     - bin/buildout
 
