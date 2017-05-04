@@ -12,15 +12,11 @@
 ##############################################################################
 
 from __future__ import absolute_import
-
+from AccessControl.SecurityInfo import secureModule
+from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.SimpleObjectPolicies import ContainerAssertions
+from AccessControl.SimpleObjectPolicies import Containers
 from functools import reduce
-import math
-import random
-import six
-import string
-import warnings
-
-import RestrictedPython
 from RestrictedPython.Eval import RestrictionCapableEval
 from RestrictedPython.Guards import full_write_guard
 from RestrictedPython.Guards import guarded_iter_unpack_sequence
@@ -29,10 +25,12 @@ from RestrictedPython.Guards import safe_builtins
 from RestrictedPython.Utilities import utility_builtins
 from zExceptions import Unauthorized
 
-from AccessControl.SecurityInfo import secureModule
-from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.SimpleObjectPolicies import ContainerAssertions
-from AccessControl.SimpleObjectPolicies import Containers
+import math
+import random
+import RestrictedPython
+import six
+import string
+import warnings
 
 
 _marker = []  # Create a new marker object.
