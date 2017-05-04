@@ -109,8 +109,9 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
     def identify(self, auth):
         if auth and auth.lower().startswith('basic '):
             try:
-                name, password = decodestring(auth.split(' ')[-1].encode()).decode() \
-                    .split(':', 1)
+                name, password = decodestring(
+                    auth.split(' ')[-1].encode()
+                ).decode().split(':', 1)
             except:
                 raise BadRequest('Invalid authentication token')
             return name, password

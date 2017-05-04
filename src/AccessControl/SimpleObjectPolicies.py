@@ -130,5 +130,5 @@ for tree_type, has_values in [
         allow_type(key_type)
 
     if has_values:
-        assert key_type is type(tree.values())
-        assert key_type is type(tree.items())
+        assert isinstance(tree.values(), key_type)
+        assert isinstance(tree.items(), key_type)

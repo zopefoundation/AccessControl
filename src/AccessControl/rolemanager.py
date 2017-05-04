@@ -20,7 +20,7 @@ from AccessControl.Permission import getPermissions
 from AccessControl.Permission import Permission
 from AccessControl.PermissionMapping import RoleManager
 from AccessControl.Permissions import change_permissions
-from AccessControl.SecurityManagement import newSecurityManager
+# from AccessControl.SecurityManagement import newSecurityManager
 from Acquisition import Acquired
 from Acquisition import aq_base
 from Acquisition import aq_get
@@ -105,10 +105,12 @@ class RoleManager(Base, RoleManager):
                 'hashed_name': _string_hash(name),
                 'acquire': isinstance(roles, list) and 'CHECKED' or '',
                 'roles': tuple(map(
-                    lambda ir, roles=roles, valid=valid, ip=ip:
-                    {
-                       'name': "permission_%srole_%s" % (_string_hash(permission_name), _string_hash(valid[ir])),
-                       'checked': (valid[ir] in roles) and 'CHECKED' or '',
+                    lambda ir, roles=roles, valid=valid, ip=ip: {
+                        'name': "permission_%srole_%s" % (
+                            _string_hash(permission_name),
+                            _string_hash(valid[ir])
+                        ),
+                        'checked': (valid[ir] in roles) and 'CHECKED' or '',
                     },
                     indexes
                 ))

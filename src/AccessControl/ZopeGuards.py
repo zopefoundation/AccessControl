@@ -304,7 +304,7 @@ def guard(container, value, index=None):
 
 
 def guarded_filter(f, seq, skip_unauthorized=0):
-    if type(seq) is type(''):
+    if isinstance(seq, str):  # type(seq) is type(''):
         return filter(f, seq)
 
     if f is None:

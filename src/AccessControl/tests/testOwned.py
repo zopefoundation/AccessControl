@@ -31,7 +31,7 @@ class FauxRoot(Implicit):
 
     def unrestrictedTraverse(self, path, default=None):
 
-        if type(path) is type(''):
+        if isinstance(path, str):  # type(path) is type(''):
             path = path.split('/')
 
         if not path[0]:
