@@ -276,14 +276,14 @@ class RoleManager(Base, RoleManager):
     # in the __ac_local_roles__ dict containing the extra roles.
 
     def has_local_roles(self):
-        dict = self.__ac_local_roles__ or {}
-        return len(dict)
+        roles = self.__ac_local_roles__ or {}
+        return len(roles)
 
     def get_local_roles(self):
         roles = self.__ac_local_roles__ or {}
         info = []
         for key in sorted(roles.keys()):
-            info.append((key, tuple(dict[key])))
+            info.append((key, tuple(roles[key])))
         return tuple(info)
 
     def users_with_local_role(self, role):
@@ -295,7 +295,7 @@ class RoleManager(Base, RoleManager):
 
     def get_valid_userids(self):
         item = self
-        dict = {}
+        userids = {}
         _notfound = []
         while 1:
             aclu = getattr(aq_base(item), '__allow_groups__', _notfound)
@@ -313,29 +313,29 @@ class RoleManager(Base, RoleManager):
                     if len(unl) > mlu and mlu != 0:
                         raise OverflowError
                     for name in unl:
-                        dict[name] = 1
+                        userids[name] = 1
             item = getattr(item, '__parent__', _notfound)
             if item is _notfound:
                 break
-        return tuple(sorted(dict.keys()))
+        return tuple(sorted(userids.keys()))
 
     def get_local_roles_for_userid(self, userid):
-        dict = self.__ac_local_roles__ or {}
-        return tuple(dict.get(userid, []))
+        roles = self.__ac_local_roles__ or {}
+        return tuple(roles.get(userid, []))
 
     security.declareProtected(change_permissions, 'manage_addLocalRoles')
     def manage_addLocalRoles(self, userid, roles):
         """Set local roles for a user."""
         if not roles:
             raise ValueError('One or more roles must be given!')
-        dict = self.__ac_local_roles__
-        if dict is None:
-            self.__ac_local_roles__ = dict = {}
-        local_roles = list(dict.get(userid, []))
+        roles = self.__ac_local_roles__
+        if roles is None:
+            self.__ac_local_roles__ = roles = {}
+        local_roles = list(roles.get(userid, []))
         for r in roles:
             if r not in local_roles:
                 local_roles.append(r)
-        dict[userid] = local_roles
+        roles[userid] = local_roles
         self._p_changed = True
 
     security.declareProtected(change_permissions, 'manage_setLocalRoles')
@@ -343,21 +343,21 @@ class RoleManager(Base, RoleManager):
         """Set local roles for a user."""
         if not roles:
             raise ValueError('One or more roles must be given!')
-        dict = self.__ac_local_roles__
-        if dict is None:
-            self.__ac_local_roles__ = dict = {}
-        dict[userid] = roles
+        roles = self.__ac_local_roles__
+        if roles is None:
+            self.__ac_local_roles__ = roles = {}
+        roles[userid] = roles
         self._p_changed = True
 
     security.declareProtected(change_permissions, 'manage_delLocalRoles')
     def manage_delLocalRoles(self, userids):
         """Remove all local roles for a user."""
-        dict = self.__ac_local_roles__
-        if dict is None:
-            self.__ac_local_roles__ = dict = {}
+        roles = self.__ac_local_roles__
+        if roles is None:
+            self.__ac_local_roles__ = roles = {}
         for userid in userids:
-            if userid in dict:
-                del dict[userid]
+            if userid in roles:
+                del roles[userid]
         self._p_changed = True
 
     security.declarePrivate('access_debug_info')
@@ -386,20 +386,20 @@ class RoleManager(Base, RoleManager):
         """Return list of valid roles.
         """
         obj = self
-        dict = {}
-        dup = dict.has_key
+        valid = {}
+        dup = valid.has_key
         x = 0
         while x < 100:
             if hasattr(obj, '__ac_roles__'):
                 roles = obj.__ac_roles__
                 for role in roles:
                     if not dup(role):
-                        dict[role] = 1
+                        valid[role] = 1
             if getattr(obj, '__parent__', None) is None:
                 break
             obj = obj.__parent__
             x = x + 1
-        roles = sorted(dict.keys())
+        roles = sorted(valid.keys())
         return tuple(roles)
 
     def validate_roles(self, roles):
