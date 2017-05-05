@@ -1,5 +1,7 @@
 include *.txt
 include *.rst
+include .coveragerc
+include tox.ini
 
 recursive-include include *
 recursive-include src/AccessControl *
