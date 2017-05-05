@@ -1,12 +1,17 @@
 """Unit tests for AccessControl.Owned
 """
 
-from AccessControl.owner import Owned
-from Acquisition import aq_inner
-from Acquisition import Implicit
+# Standard Library Imports
+import unittest
+
 from persistent import Persistent
 
-import unittest
+# Zope Imports
+from Acquisition import Implicit
+from Acquisition import aq_inner
+
+# AccessControl internal imports
+from AccessControl.owner import Owned
 
 
 class FauxUser(Implicit):

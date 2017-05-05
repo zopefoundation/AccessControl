@@ -14,10 +14,13 @@
 """Test security induced by ZCML
 """
 
-from AccessControl.SecurityInfo import ClassSecurityInfo
-from zope.interface import implementer
+# Zope Imports
 from zope.interface import Interface
+from zope.interface import implementer
 from zope.schema import TextLine
+
+# AccessControl internal imports
+from AccessControl.SecurityInfo import ClassSecurityInfo
 
 
 class ISuperDummy(Interface):

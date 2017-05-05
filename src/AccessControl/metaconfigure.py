@@ -12,11 +12,15 @@
 #
 ##############################################################################
 
-from AccessControl.class_init import InitializeClass
-from AccessControl.security import protectName
+# Standard Library Imports
+import warnings
+
+# Zope Imports
 from zope.security import metaconfigure
 
-import warnings
+# AccessControl internal imports
+from AccessControl.class_init import InitializeClass
+from AccessControl.security import protectName
 
 
 class ClassDirective(metaconfigure.ClassDirective):

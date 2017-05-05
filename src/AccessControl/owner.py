@@ -13,6 +13,15 @@
 """Support for owned objects
 """
 
+# Zope Imports
+from Acquisition import aq_base
+from Acquisition import aq_get
+from Acquisition import aq_inner
+from Acquisition import aq_parent
+from ExtensionClass import Base
+from zope.interface import implementer
+
+# AccessControl internal imports
 from AccessControl import SpecialUsers as SU
 from AccessControl.class_init import InitializeClass
 from AccessControl.interfaces import IOwned
@@ -20,12 +29,6 @@ from AccessControl.Permissions import take_ownership
 from AccessControl.Permissions import view_management_screens
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
-from Acquisition import aq_base
-from Acquisition import aq_get
-from Acquisition import aq_inner
-from Acquisition import aq_parent
-from ExtensionClass import Base
-from zope.interface import implementer
 
 
 UnownableOwner = []

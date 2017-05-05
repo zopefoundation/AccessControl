@@ -13,11 +13,17 @@
 """Define Zope's default security policy
 """
 from __future__ import absolute_import
+
+# Standard Library Imports
+from types import MethodType
+
+# Python 2 / 3 compatibility helper libraries
+from six import string_types
+
+# AccessControl internal imports
 # AccessControl.Implementation inserts:
 #   ZopeSecurityPolicy, getRoles, rolesForPermissionOn
 from AccessControl.SimpleObjectPolicies import _noroles
-from six import string_types
-from types import MethodType
 
 
 rolesForPermissionOn = None  # XXX:  avoid import loop

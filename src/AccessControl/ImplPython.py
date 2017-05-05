@@ -15,18 +15,21 @@
 
 # isort:skip
 
+# Standard Library Imports
+from logging import getLogger
+import os
+
+# Python 2 / 3 compatibility helper libraries
+from six import string_types
+
+# Zope Imports
 from Acquisition import aq_acquire
 from Acquisition import aq_base
 from Acquisition import aq_inContextOf
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from ExtensionClass import Base
-from logging import getLogger
-from six import string_types
 from zope.interface import implementer
-
-import os
-# import string
 
 
 # This is used when a permission maps explicitly to no permission.  We

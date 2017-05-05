@@ -11,12 +11,17 @@
 #
 ##############################################################################
 
-from AccessControl.requestmethod import requestmethod
+# Standard Library Imports
+import unittest
+
+import zExceptions
+
+# Zope Imports
 from zope.interface import implementer
 from zope.publisher.interfaces.browser import IBrowserRequest
 
-import unittest
-import zExceptions
+# AccessControl internal imports
+from AccessControl.requestmethod import requestmethod
 
 
 @implementer(IBrowserRequest)

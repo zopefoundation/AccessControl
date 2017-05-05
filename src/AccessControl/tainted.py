@@ -18,9 +18,11 @@ value of this string, and raised exceptions in Zope will use the repr()
 conversion.
 """
 
+# Standard Library Imports
 from cgi import escape
 from functools import total_ordering
 
+# Python 2 / 3 compatibility helper libraries
 import six
 
 

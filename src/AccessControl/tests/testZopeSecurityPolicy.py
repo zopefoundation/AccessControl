@@ -11,16 +11,21 @@
 #
 ##############################################################################
 
-from AccessControl.SecurityManagement import SecurityContext
-from AccessControl.userfolder import UserFolder
-from Acquisition import Explicit
-from Acquisition import Implicit
+# Standard Library Imports
 from doctest import DocTestSuite
+import sys
+import unittest
+
 from MethodObject import Method
 from zExceptions import Unauthorized
 
-import sys
-import unittest
+# Zope Imports
+from Acquisition import Explicit
+from Acquisition import Implicit
+
+# AccessControl internal imports
+from AccessControl.SecurityManagement import SecurityContext
+from AccessControl.userfolder import UserFolder
 
 
 try:

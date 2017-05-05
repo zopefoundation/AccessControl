@@ -13,9 +13,11 @@
 """Permissions
 """
 
-from Acquisition import aq_base
-
+# Standard Library Imports
 import re
+
+# Zope Imports
+from Acquisition import aq_base
 
 
 _NOT_ALLOWED_CHARS = re.compile(r'[^a-zA-Z0-9_]')

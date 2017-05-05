@@ -14,17 +14,18 @@
 # flake8: NOQA: E401
 
 from __future__ import absolute_import
+
+from AuthEncoding.AuthEncoding import MySQLDigestScheme
+from AuthEncoding.AuthEncoding import PasswordEncryptionScheme
+from AuthEncoding.AuthEncoding import SHADigestScheme
+from AuthEncoding.AuthEncoding import SSHADigestScheme
 from AuthEncoding.AuthEncoding import constant_time_compare
 from AuthEncoding.AuthEncoding import is_encrypted
 from AuthEncoding.AuthEncoding import listSchemes
-from AuthEncoding.AuthEncoding import MySQLDigestScheme
-from AuthEncoding.AuthEncoding import PasswordEncryptionScheme
 from AuthEncoding.AuthEncoding import pw_encode
 from AuthEncoding.AuthEncoding import pw_encrypt
 from AuthEncoding.AuthEncoding import pw_validate
 from AuthEncoding.AuthEncoding import registerScheme
-from AuthEncoding.AuthEncoding import SHADigestScheme
-from AuthEncoding.AuthEncoding import SSHADigestScheme
 
 
 # Bogosity on various platforms due to ITAR restrictions

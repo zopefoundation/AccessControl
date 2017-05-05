@@ -14,16 +14,20 @@
 """Test Zope Guards
 """
 
-from AccessControl.ZopeGuards import guarded_all
-from AccessControl.ZopeGuards import guarded_any
-from AccessControl.ZopeGuards import guarded_getattr
-
+# Standard Library Imports
 import doctest
 import operator
 import os
-import six
 import sys
 import unittest
+
+# Python 2 / 3 compatibility helper libraries
+import six
+
+# AccessControl internal imports
+from AccessControl.ZopeGuards import guarded_all
+from AccessControl.ZopeGuards import guarded_any
+from AccessControl.ZopeGuards import guarded_getattr
 
 
 try:

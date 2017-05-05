@@ -13,8 +13,11 @@
 """ TaintedString tests.
 """
 
-import six
+# Standard Library Imports
 import unittest
+
+# Python 2 / 3 compatibility helper libraries
+import six
 
 
 class TestTaintedString(unittest.TestCase):

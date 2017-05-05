@@ -11,9 +11,11 @@
 #
 ##############################################################################
 
-from AccessControl.ZopeGuards import import_default_level
-
+# Standard Library Imports
 import unittest
+
+# AccessControl internal imports
+from AccessControl.ZopeGuards import import_default_level
 
 
 class ModuleSecurityTests(unittest.TestCase):
