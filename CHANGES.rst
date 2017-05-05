@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.0a5 (unreleased)
+4.0a5 (2017-05-05)
 ------------------
 
 - Add support for Python 3.4 up to 3.6. (only Python implementation)
