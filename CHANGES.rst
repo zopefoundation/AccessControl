@@ -6,7 +6,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0a5 (unreleased)
 ------------------
 
-- Add support for Python 3.4 up to 3.6.
+- Add support for Python 3.4 up to 3.6. (only Python implementation)
 
 - Depend on RestrictedPython >= 4.0.
 
