@@ -8,6 +8,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Add support for Python 3.4 up to 3.6.
 
+- Depend on RestrictedPython >= 4.0.
+
 
 4.0a4 (2017-02-01)
 ------------------
