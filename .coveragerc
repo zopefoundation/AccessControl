@@ -4,8 +4,8 @@ source = AccessControl
 omit =
     bootstrap.py
     tests/*.py
-    src/AccessControl/tests
-    src/AccessControl/tests/*.py
+    #src/AccessControl/tests
+    #src/AccessControl/tests/*.py
 
 [report]
 precision = 3
