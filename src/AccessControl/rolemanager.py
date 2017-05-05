@@ -76,9 +76,8 @@ class RoleManager(Base, RoleManager):
                         r.append(p)
 
             r = list(perms) + r
-            r.sort()
 
-        return tuple(r)
+        return tuple(sorted(r))
 
     security.declareProtected(change_permissions, 'permission_settings')
     def permission_settings(self, permission=None):
@@ -174,13 +173,11 @@ class RoleManager(Base, RoleManager):
         d = {'user_defined_in': '/' + uf.absolute_url(1)}
 
         # roles
-        roles = list(userObj.getRoles())
-        roles.sort()
+        roles = sorted(userObj.getRoles())
         d['roles'] = roles
 
         # roles in context
-        roles = list(userObj.getRolesInContext(self))
-        roles.sort()
+        roles = sorted(userObj.getRolesInContext(self))
         d['roles_in_context'] = roles
 
         # permissions
@@ -283,13 +280,10 @@ class RoleManager(Base, RoleManager):
         return len(dict)
 
     def get_local_roles(self):
-        dict = self.__ac_local_roles__ or {}
-        keys = dict.keys()
-        keys.sort()
+        roles = self.__ac_local_roles__ or {}
         info = []
-        for key in keys:
-            value = tuple(dict[key])
-            info.append((key, value))
+        for key in sorted(roles.keys()):
+            info.append((key, tuple(dict[key])))
         return tuple(info)
 
     def users_with_local_role(self, role):
@@ -405,8 +399,7 @@ class RoleManager(Base, RoleManager):
                 break
             obj = obj.__parent__
             x = x + 1
-        roles = dict.keys()
-        roles.sort()
+        roles = sorted(dict.keys())
         return tuple(roles)
 
     def validate_roles(self, roles):
