@@ -276,14 +276,14 @@ class RoleManager(Base, RoleManager):
     # in the __ac_local_roles__ dict containing the extra roles.
 
     def has_local_roles(self):
-        roles = self.__ac_local_roles__ or {}
-        return len(roles)
+        rolemap = self.__ac_local_roles__ or {}
+        return len(rolemap)
 
     def get_local_roles(self):
-        roles = self.__ac_local_roles__ or {}
+        rolemap = self.__ac_local_roles__ or {}
         info = []
-        for key in sorted(roles.keys()):
-            info.append((key, tuple(roles[key])))
+        for key in sorted(rolemap.keys()):
+            info.append((key, tuple(rolemap[key])))
         return tuple(info)
 
     def users_with_local_role(self, role):
@@ -320,22 +320,22 @@ class RoleManager(Base, RoleManager):
         return tuple(sorted(userids.keys()))
 
     def get_local_roles_for_userid(self, userid):
-        roles = self.__ac_local_roles__ or {}
-        return tuple(roles.get(userid, []))
+        rolemap = self.__ac_local_roles__ or {}
+        return tuple(rolemap.get(userid, []))
 
     security.declareProtected(change_permissions, 'manage_addLocalRoles')
     def manage_addLocalRoles(self, userid, roles):
         """Set local roles for a user."""
         if not roles:
             raise ValueError('One or more roles must be given!')
-        roles = self.__ac_local_roles__
-        if roles is None:
-            self.__ac_local_roles__ = roles = {}
-        local_roles = list(roles.get(userid, []))
+        rolemap = self.__ac_local_roles__
+        if rolemap is None:
+            self.__ac_local_roles__ = rolemap = {}
+        local_roles = list(rolemap.get(userid, []))
         for r in roles:
             if r not in local_roles:
                 local_roles.append(r)
-        roles[userid] = local_roles
+        rolemap[userid] = local_roles
         self._p_changed = True
 
     security.declareProtected(change_permissions, 'manage_setLocalRoles')
@@ -343,21 +343,21 @@ class RoleManager(Base, RoleManager):
         """Set local roles for a user."""
         if not roles:
             raise ValueError('One or more roles must be given!')
-        roles = self.__ac_local_roles__
-        if roles is None:
-            self.__ac_local_roles__ = roles = {}
-        roles[userid] = roles
+        rolemap = self.__ac_local_roles__
+        if rolemap is None:
+            self.__ac_local_roles__ = rolemap = {}
+        rolemap[userid] = roles
         self._p_changed = True
 
     security.declareProtected(change_permissions, 'manage_delLocalRoles')
     def manage_delLocalRoles(self, userids):
         """Remove all local roles for a user."""
-        roles = self.__ac_local_roles__
-        if roles is None:
-            self.__ac_local_roles__ = roles = {}
+        rolemap = self.__ac_local_roles__
+        if rolemap is None:
+            self.__ac_local_roles__ = rolemap = {}
         for userid in userids:
-            if userid in roles:
-                del roles[userid]
+            if userid in rolemap:
+                del rolemap[userid]
         self._p_changed = True
 
     security.declarePrivate('access_debug_info')

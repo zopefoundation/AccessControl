@@ -61,3 +61,35 @@ class TestRoleManager(unittest.TestCase):
         root.context1.manage_getUserRolesAndPermissions('dummy_user')
         user = getSecurityManager().getUser()
         self.assertTrue(verifyAcquisitionContext(user, root.context2, ()))
+
+    def test_has_local_roles(self):
+        root, user = _makeRootAndUser()
+        self.assertFalse(root.context1.has_local_roles())
+
+    def test_get_local_roles(self):
+        root, user = _makeRootAndUser()
+        root.context1.__ac_local_roles__ = {'user1': ['Role1']}
+        roles = root.context1.get_local_roles()
+        self.assertEqual(roles, (
+            ('user1', ('Role1',)),
+        ))
+
+    def test_manage_addLocalRoles(self):
+        root, user = _makeRootAndUser()
+        root.context1.manage_addLocalRoles('user1', ['Role1'])
+        roles = root.context1.get_local_roles_for_userid('user1')
+        self.assertEqual(roles, ('Role1',))
+
+    def test_manage_setLocalRoles(self):
+        root, user = _makeRootAndUser()
+        root.context1.__ac_local_roles__ = {'user1': ('Role1',)}
+        root.context1.manage_setLocalRoles('user1', ['Role2'])
+        roles = root.context1.get_local_roles_for_userid('user1')
+        self.assertEqual(roles, ('Role2',))
+
+    def test_manage_delLocalRoles(self):
+        root, user = _makeRootAndUser()
+        root.context1.__ac_local_roles__ = {'user1': ('Role1',)}
+        root.context1.manage_delLocalRoles(['user1'])
+        roles = root.context1.get_local_roles_for_userid('user1')
+        self.assertEqual(roles, ())
