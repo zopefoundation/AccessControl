@@ -60,13 +60,7 @@ from BTrees.OOBTree import OOBTree
 from BTrees.OOBTree import OOBucket
 from BTrees.OOBTree import OOSet
 
-import Record
-
-
 _noroles = []  # this is imported in various places
-
-# Allow access to unprotected attributes
-Record.Record.__allow_access_to_unprotected_subobjects__ = 1
 
 # ContainerAssertions are used by cAccessControl to check access to
 # attributes of container types, like dict, list, or string.
