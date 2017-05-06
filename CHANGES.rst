@@ -6,7 +6,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0a6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Drop `Record` dependency, which now does its own security declaration.
 
 
 4.0a5 (2017-05-05)

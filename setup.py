@@ -71,7 +71,6 @@ setup(name='AccessControl',
           'DateTime',  # optional dependency of RestrictedPython
           'ExtensionClass>=4.2.1',
           'Persistence>=3.0a3',
-          'Record',
           'RestrictedPython >= 4.0a1',
           'six',
           'transaction',
