@@ -14,6 +14,9 @@
 """Test security induced by ZCML
 """
 
+import doctest
+import unittest
+
 from zope.interface import implementer
 from zope.interface import Interface
 from zope.schema import TextLine
@@ -85,103 +88,112 @@ class Dummy5(object):
     pass
 
 
-def test_security_equivalence():
-    """This test demonstrates that the traditional declarative security of
-    Zope 2 can be replaced by ZCML statements without any loss of
-    information.
+class TestSecurity(unittest.TestCase):
 
-      >>> from zope.component.testing import setUp, tearDown
-      >>> setUp()
+    def setUp(self):
+        from zope.component.testing import setUp
+        setUp()
 
-    We start out with two classes, ``Dummy1`` and ``Dummy2``.  They
-    are identical in every way, except that ``Dummy2`` has security
-    declarations and ``Dummy1`` does not.  Before we do anything, none
-    of them have security access controls:
+    def tearDown(self):
+        from zope.component.testing import tearDown
+        from AccessControl.security import clearSecurityInfo
+        clearSecurityInfo(Dummy1)
+        clearSecurityInfo(Dummy2)
+        tearDown()
 
-      >>> from AccessControl.tests.testZCML import Dummy1, Dummy2
-      >>> hasattr(Dummy1, '__ac_permissions__')
-      False
-      >>> hasattr(Dummy2, '__ac_permissions__')
-      False
+    def test_security_equivalence(self):
+        """
+        This test demonstrates that the traditional declarative security of
+        Zope 2 can be replaced by ZCML statements without any loss of
+        information.
+        """
 
-    Before we can make security declarations through ZCML, we need to
-    register the directive and the permission:
+        # We start out with two classes, ``Dummy1`` and ``Dummy2``.  They
+        # are identical in every way, except that ``Dummy2`` has security
+        # declarations and ``Dummy1`` does not.  Before we do anything, none
+        # of them have security access controls:
 
-      >>> import AccessControl
-      >>> from zope.configuration.xmlconfig import XMLConfig
-      >>> XMLConfig('meta.zcml', AccessControl)()
-      >>> XMLConfig('permissions.zcml', AccessControl)()
+        from AccessControl.tests.testZCML import Dummy1, Dummy2
+        self.assertFalse(hasattr(Dummy1, '__ac_permissions__'))
+        self.assertFalse(hasattr(Dummy2, '__ac_permissions__'))
 
-    Now we initialize the security for ``Dummy2`` and provide some
-    ZCML declarations for ``Dummy1``:
+        # Before we can make security declarations through ZCML, we need to
+        # register the directive and the permission:
 
-      >>> from io import StringIO
-      >>> configure_zcml = StringIO(u'''
-      ... <configure xmlns="http://namespaces.zope.org/zope">
-      ...   <class class="AccessControl.tests.testZCML.Dummy1">
-      ...     <allow attributes="foo" />
-      ...     <!--deny attributes="baz" /--> <!-- XXX not yet supported -->
-      ...   </class>
-      ...   <class class="AccessControl.tests.testZCML.Dummy1">
-      ...     <require attributes="bar keg"
-      ...              permission="zope2.ViewManagementScreens"
-      ...              />
-      ...   </class>
-      ... </configure>
-      ... ''')
-      >>> from zope.configuration.xmlconfig import xmlconfig
-      >>> xmlconfig(configure_zcml)
+        import AccessControl
+        from zope.configuration.xmlconfig import XMLConfig
+        XMLConfig('meta.zcml', AccessControl)()
+        XMLConfig('permissions.zcml', AccessControl)()
 
-      >>> from AccessControl.class_init import InitializeClass
-      >>> InitializeClass(Dummy2)
+        # Now we initialize the security for ``Dummy2`` and provide some
+        # ZCML declarations for ``Dummy1``:
 
-    Now we compare their access controls:
+        from io import StringIO
+        configure_zcml = StringIO(u'''
+            <configure xmlns="http://namespaces.zope.org/zope">
+              <class class="AccessControl.tests.testZCML.Dummy1">
+                <allow attributes="foo" />
+                <!--deny attributes="baz" /--> <!-- XXX not yet supported -->
+              </class>
+              <class class="AccessControl.tests.testZCML.Dummy1">
+                <require attributes="bar keg"
+                         permission="zope2.ViewManagementScreens"
+                         />
+              </class>
+            </configure>
+            ''')
+        from zope.configuration.xmlconfig import xmlconfig
+        xmlconfig(configure_zcml)
 
-      >>> ac1 = getattr(Dummy1, '__ac_permissions__')
-      >>> ac2 = getattr(Dummy2, '__ac_permissions__')
-      >>> ac1 == ac2
-      True
+        from AccessControl.class_init import InitializeClass
+        InitializeClass(Dummy2)
 
-    Now we look at the individual permissions:
+        # Now we compare their access controls:
 
-      >>> from AccessControl.ZopeSecurityPolicy import getRoles
-      >>> from AccessControl import ACCESS_PUBLIC
-      >>> from AccessControl import ACCESS_PRIVATE
+        ac1 = getattr(Dummy1, '__ac_permissions__')
+        ac2 = getattr(Dummy2, '__ac_permissions__')
+        self.assertEqual(ac1, ac2)
 
-      >>> dummy1 = Dummy1()
-      >>> getRoles(dummy1, 'bar', dummy1.bar, ('Def',))
-      ('Manager',)
+        # Now we look at the individual permissions:
 
-      >>> getRoles(dummy1, 'keg', dummy1.keg, ('Def',))
-      ('Manager',)
+        from AccessControl.ZopeSecurityPolicy import getRoles
+        from AccessControl import ACCESS_PUBLIC
+        from AccessControl import ACCESS_PRIVATE
 
-      >>> getRoles(dummy1, 'foo', dummy1.foo, ('Def',)) is ACCESS_PUBLIC
-      True
+        dummy1 = Dummy1()
+        self.assertEqual(
+            getRoles(dummy1, 'bar', dummy1.bar, ('Def', )),
+            ('Manager', ))
 
-      #>>> getRoles(dummy1, 'baz', dummy1.baz, ('Def',)) is ACCESS_PRIVATE
-      #True XXX Not yet supported.
+        self.assertEqual(
+            getRoles(dummy1, 'keg', dummy1.keg, ('Def', )),
+            ('Manager', ))
 
-      >>> dummy2 = Dummy2()
-      >>> getRoles(dummy2, 'bar', dummy2.bar, ('Def',))
-      ('Manager',)
+        self.assertEqual(
+            getRoles(dummy1, 'foo', dummy1.foo, ('Def', )),
+            ACCESS_PUBLIC)
 
-      >>> getRoles(dummy2, 'keg', dummy2.keg, ('Def',))
-      ('Manager',)
+        # XXX Not yet supported.
+        # self.assertEqual(
+        #     getRoles(dummy1, 'baz', dummy1.baz, ('Def', )),
+        #     ACCESS_PRIVATE)
 
-      >>> getRoles(dummy2, 'foo', dummy2.foo, ('Def',)) is ACCESS_PUBLIC
-      True
+        dummy2 = Dummy2()
+        self.assertEqual(
+            getRoles(dummy2, 'bar', dummy2.bar, ('Def', )),
+            ('Manager', ))
 
-      >>> getRoles(dummy2, 'baz', dummy2.baz, ('Def',)) is ACCESS_PRIVATE
-      True
+        self.assertEqual(
+            getRoles(dummy2, 'keg', dummy2.keg, ('Def', )),
+            ('Manager', ))
 
-    Before we end we should clean up after ourselves:
+        self.assertEqual(
+            getRoles(dummy2, 'foo', dummy2.foo, ('Def', )),
+            ACCESS_PUBLIC)
 
-      >>> from AccessControl.security import clearSecurityInfo
-      >>> clearSecurityInfo(Dummy1)
-      >>> clearSecurityInfo(Dummy2)
-
-      >>> tearDown()
-    """
+        self.assertEqual(
+            getRoles(dummy2, 'baz', dummy2.baz, ('Def', )),
+            ACCESS_PRIVATE)
 
 
 def test_set_warnings():
@@ -465,5 +477,7 @@ def test_register_permission_with_non_default_roles():
 
 
 def test_suite():
-    import doctest
-    return doctest.DocTestSuite(optionflags=doctest.ELLIPSIS)
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestSecurity))
+    suite.addTest(doctest.DocTestSuite(optionflags=doctest.ELLIPSIS))
+    return suite
