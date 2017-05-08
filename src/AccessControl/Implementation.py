@@ -72,7 +72,8 @@ def setImplementation(name):
     _implementation_set = 1
 
 
-_default_implementation = None
+# start with the default, mostly because we need something for the tests
+_default_implementation = 'C'
 _implementation_name = None
 _implementation_set = 0
 
@@ -94,14 +95,6 @@ _policy_names = {
     "AccessControl.ZopeSecurityPolicy": ("ZopeSecurityPolicy",
                                          ),
 }
-
-# start with the default, mostly because we need something for the tests
-try:
-    from . import ImplC
-    _default_implementation = 'C'
-    del ImplC
-except ImportError:
-    _default_implementation = 'PYTHON'
 
 setImplementation(_default_implementation)
 

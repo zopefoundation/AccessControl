@@ -28,14 +28,6 @@ try:
 except ImportError:
     import thread
 
-
-try:
-    from AccessControl import ImplC
-except ImportError:
-    HAVE_IMPLC = False
-else:
-    HAVE_IMPLC = True
-
 user_roles = ('RoleOfUser',)
 eo_roles = ('RoleOfExecutableOwner',)
 sysadmin_roles = ('RoleOfSysAdmin',)
@@ -440,15 +432,12 @@ class Python_ZSPTests(ZopeSecurityPolicyTestBase,
         return ZopeSecurityPolicy
 
 
-if HAVE_IMPLC:
-    class C_ZSPTests(ZopeSecurityPolicyTestBase,
-                     ISecurityPolicyConformance,
-                     ):
-        def _getTargetClass(self):
-            return ImplC.ZopeSecurityPolicy
-else:
-    class C_ZSPTests(unittest.TestCase):
-        pass
+class C_ZSPTests(ZopeSecurityPolicyTestBase,
+                 ISecurityPolicyConformance,
+                 ):
+    def _getTargetClass(self):
+        from AccessControl.ImplC import ZopeSecurityPolicy
+        return ZopeSecurityPolicy
 
 
 class SecurityManagerTestsBase(unittest.TestCase):
@@ -519,16 +508,13 @@ class Python_SMTests(SecurityManagerTestsBase):
         return ImplPython
 
 
-if HAVE_IMPLC:
-    class C_SMTests(SecurityManagerTestsBase):
+class C_SMTests(SecurityManagerTestsBase):
 
-        _implementation_name = "C"
+    _implementation_name = "C"
 
-        def _getModule(self):
-            return ImplC
-else:
-    class C_SMTests(unittest.TestCase):
-        pass
+    def _getModule(self):
+        from AccessControl import ImplC
+        return ImplC
 
 
 def test_getRoles():
