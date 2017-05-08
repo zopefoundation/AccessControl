@@ -244,22 +244,4 @@ static PyExtensionClass NAME ## Type = { PyVarObject_HEAD_INIT(NULL, 0) # NAME, 
   ((PyExtensionClassCAPI != NULL) || \
    (PyExtensionClassCAPI = PyCapsule_Import("ExtensionClass.CAPI2", 0)))
 
-
-/* These are being overridded to use tp_free when used with
-   new-style classes. This is to allow old extention-class code
-   to work.
-*/
-
-#undef PyMem_DEL
-#undef PyObject_DEL
-
-#define PyMem_DEL(O)                                   \
-  if ((Py_TYPE(O)->tp_flags & Py_TPFLAGS_HAVE_CLASS) \
-      && (Py_TYPE(O)->tp_free != NULL))              \
-    Py_TYPE(O)->tp_free((PyObject*)(O));             \
-  else                                                 \
-    PyObject_FREE((O));
-
-#define PyObject_DEL(O) PyMem_DEL(O)
-
 #endif /* EXTENSIONCLASS_H */
