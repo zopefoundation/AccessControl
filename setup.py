@@ -13,30 +13,21 @@
 ##############################################################################
 
 from os.path import join
-import platform
-import sys
 
 from setuptools import setup, find_packages, Extension
 
 README = open('README.rst').read()
 CHANGES = open('CHANGES.rst').read()
 
-# PyPy won't build the extension
-py_impl = getattr(platform, 'python_implementation', lambda: None)
-is_pypy = py_impl() == 'PyPy'
-py3k = sys.version_info >= (3, )
-if is_pypy or py3k:
-    ext_modules = []
-else:
-    ext_modules = [
-        Extension(
-            name='AccessControl.cAccessControl',
-            include_dirs=['include', 'src'],
-            sources=[join('src', 'AccessControl', 'cAccessControl.c')],
-            depends=[join('include', 'ExtensionClass', 'ExtensionClass.h'),
-                     join('include', 'ExtensionClass', '_compat.h'),
-                     join('include', 'Acquisition', 'Acquisition.h')]),
-    ]
+ext_modules = [
+    Extension(
+        name='AccessControl.cAccessControl',
+        include_dirs=['include', 'src'],
+        sources=[join('src', 'AccessControl', 'cAccessControl.c')],
+        depends=[join('include', 'ExtensionClass', 'ExtensionClass.h'),
+                 join('include', 'ExtensionClass', '_compat.h'),
+                 join('include', 'Acquisition', 'Acquisition.h')]),
+]
 
 setup(name='AccessControl',
       version='4.0a6.dev0',

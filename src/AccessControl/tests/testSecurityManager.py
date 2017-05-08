@@ -256,15 +256,12 @@ class PythonSecurityManagerTests(SecurityManagerTestBase,
         return SecurityManager
 
 
-try:
-    from AccessControl.ImplC import SecurityManager
-    # N.B.:  The C version mixes in the Python version, which is why we
-    #        can test for conformance to ISecurityManager.
-    class C_SecurityManagerTests(SecurityManagerTestBase,
-                                 ISecurityManagerConformance,
-                                 unittest.TestCase):
+class C_SecurityManagerTests(SecurityManagerTestBase,
+                             ISecurityManagerConformance,
+                             unittest.TestCase):
+    # The C version mixes in the Python version, which is why we
+    # can test for conformance to ISecurityManager.
 
-        def _getTargetClass(self):
-            return SecurityManager
-except ImportError:
-    pass
+    def _getTargetClass(self):
+        from AccessControl.ImplC import SecurityManager
+        return SecurityManager
