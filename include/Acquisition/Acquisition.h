@@ -16,17 +16,17 @@
 #define __ACQUISITION_H_
 
 typedef struct {
-    PyObject *(*AQ_Acquire) (PyObject *obj, PyObject *name, PyObject *filter,
-        PyObject *extra, int explicit, PyObject *deflt,
-        int containment);
-    PyObject *(*AQ_Get) (PyObject *obj, PyObject *name, PyObject *deflt,
-        int containment);
-    int (*AQ_IsWrapper) (PyObject *obj);
-    PyObject *(*AQ_Base) (PyObject *obj);
-    PyObject *(*AQ_Parent) (PyObject *obj);
-    PyObject *(*AQ_Self) (PyObject *obj);
-    PyObject *(*AQ_Inner) (PyObject *obj);
-    PyObject *(*AQ_Chain) (PyObject *obj, int containment);
+	PyObject *(*AQ_Acquire) (PyObject *obj, PyObject *name, PyObject *filter,
+		PyObject *extra, int explicit, PyObject *deflt,
+		int containment);
+	PyObject *(*AQ_Get) (PyObject *obj, PyObject *name, PyObject *deflt,
+		int containment);
+	int (*AQ_IsWrapper) (PyObject *obj);
+	PyObject *(*AQ_Base) (PyObject *obj);
+	PyObject *(*AQ_Parent) (PyObject *obj);
+	PyObject *(*AQ_Self) (PyObject *obj);
+	PyObject *(*AQ_Inner) (PyObject *obj);
+	PyObject *(*AQ_Chain) (PyObject *obj, int containment);
 } ACQUISITIONCAPI;
 
 #ifndef _IN_ACQUISITION_C
@@ -44,13 +44,7 @@ typedef struct {
 static ACQUISITIONCAPI *AcquisitionCAPI = NULL;
 
 #define aq_init() { \
-    PyObject *module; \
-    PyObject *api; \
-    if (! (module = PyImport_ImportModule("Acquisition"))) return NULL; \
-    if (! (api = PyObject_GetAttrString(module,"AcquisitionCAPI"))) return NULL; \
-    Py_DECREF(module); \
-    AcquisitionCAPI = PyCObject_AsVoidPtr(api); \
-    Py_DECREF(api); \
+    AcquisitionCAPI = PyCapsule_Import("Acquisition.AcquisitionCAPI", 0); \
 }
 
 
