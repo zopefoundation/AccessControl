@@ -1,6 +1,7 @@
 /.tox/
 /bin/
 /build/
+/reports
 /coverage*
 /.coverage*
 !.coveragerc
