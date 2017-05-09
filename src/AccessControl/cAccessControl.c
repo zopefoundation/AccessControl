@@ -2260,6 +2260,7 @@ static struct PyModuleDef moduledef =
 
 static PyObject*
 module_init(void) {
+	PyObject *tmp;
 	PyObject *module;
 	PyObject *dict;
         PURE_MIXIN_CLASS(RestrictedDTMLMixin,
@@ -2313,45 +2314,45 @@ module_init(void) {
 	/*| from SimpleObjectPolicies import Containers
 	*/
 
-	IMPORT(module, "AccessControl.SimpleObjectPolicies");
-	GETATTR(module, Containers);
-	GETATTR(module, ContainerAssertions);
-	Py_DECREF(module);
-	module = NULL;
+	IMPORT(tmp, "AccessControl.SimpleObjectPolicies");
+	GETATTR(tmp, Containers);
+	GETATTR(tmp, ContainerAssertions);
+	Py_DECREF(tmp);
+	tmp = NULL;
 
 
 	/*| from ZopeSecurityPolicy import getRoles
 	*/
 
-	IMPORT(module, "AccessControl.ZopeSecurityPolicy");
-	GETATTR(module, getRoles);
-	Py_DECREF(module);
-	module = NULL;
+	IMPORT(tmp, "AccessControl.ZopeSecurityPolicy");
+	GETATTR(tmp, getRoles);
+	Py_DECREF(tmp);
+	tmp = NULL;
 
 
 	/*| from unauthorized import Unauthorized
 	*/
 
-	IMPORT(module, "AccessControl.unauthorized");
-	GETATTR(module, Unauthorized);
-	Py_DECREF(module);
-	module = NULL;
+	IMPORT(tmp, "AccessControl.unauthorized");
+	GETATTR(tmp, Unauthorized);
+	Py_DECREF(tmp);
+	tmp = NULL;
 
 	/*| from AccessControl.SecurityManagement import getSecurityManager
 	*/
 
-	IMPORT(module, "AccessControl.SecurityManagement");
-	GETATTR(module, getSecurityManager);
-	Py_DECREF(module);
-	module = NULL;
+	IMPORT(tmp, "AccessControl.SecurityManagement");
+	GETATTR(tmp, getSecurityManager);
+	Py_DECREF(tmp);
+	tmp = NULL;
 
 	/*| from logger_wrapper import warn
 	*/
 
-	IMPORT(module, "AccessControl.logger_wrapper");
-	GETATTR(module, warn);
-	Py_DECREF(module);
-	module = NULL;
+	IMPORT(tmp, "AccessControl.logger_wrapper");
+	GETATTR(tmp, warn);
+	Py_DECREF(tmp);
+	tmp = NULL;
 
   return module;
 }
