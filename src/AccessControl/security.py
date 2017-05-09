@@ -14,14 +14,17 @@
 """Security handling
 """
 
+# Python 2 / 3 compatibility helper libraries
 import six
+
+# Zope Imports
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.component.zcml import utility
 from zope.configuration.config import GroupingContextDecorator
 from zope.configuration.interfaces import IConfigurationContext
-from zope.interface import implementer
 from zope.interface import Interface
+from zope.interface import implementer
 from zope.interface import provider
 from zope.schema import ASCIILine
 from zope.security.checker import CheckerPublic
@@ -33,6 +36,7 @@ from zope.security.permission import Permission
 from zope.security.simplepolicies import ParanoidSecurityPolicy
 from zope.security.zcml import IPermissionDirective
 
+# AccessControl internal imports
 from AccessControl.Permission import addPermission
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager

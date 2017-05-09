@@ -13,6 +13,7 @@
 """Support for owned objects
 """
 
+# Zope Imports
 from Acquisition import aq_base
 from Acquisition import aq_get
 from Acquisition import aq_inner
@@ -20,6 +21,7 @@ from Acquisition import aq_parent
 from ExtensionClass import Base
 from zope.interface import implementer
 
+# AccessControl internal imports
 from AccessControl import SpecialUsers as SU
 from AccessControl.class_init import InitializeClass
 from AccessControl.interfaces import IOwned
@@ -48,7 +50,7 @@ class Owned(Base):
     security.setPermissionDefault(take_ownership, ('Owner', ))
 
     security.declareProtected(view_management_screens, 'owner_info')
-    def owner_info(self):
+    def owner_info(self):  # NOQA: E301  # pseudo decorator
         """Get ownership info for display
         """
         owner = self.getOwnerTuple()
@@ -66,7 +68,7 @@ class Owned(Base):
         return d
 
     security.declarePrivate('getOwner')
-    def getOwner(self, info=0,
+    def getOwner(self, info=0,  # NOQA: E301  # pseudo decorator
                  aq_get=aq_get,
                  UnownableOwner=UnownableOwner,
                  getSecurityManager=getSecurityManager,
@@ -102,7 +104,7 @@ class Owned(Base):
         return user
 
     security.declarePrivate('getOwnerTuple')
-    def getOwnerTuple(self):
+    def getOwnerTuple(self):  # NOQA: E301  # pseudo decorator
         """Return a tuple, (userdb_path, user_id) for the owner.
 
         o Ownership can be acquired, but only from the containment path.
@@ -112,7 +114,7 @@ class Owned(Base):
         return aq_get(self, '_owner', None, 1)
 
     security.declarePrivate('getWrappedOwner')
-    def getWrappedOwner(self):
+    def getWrappedOwner(self):  # NOQA: E301  # pseudo decorator
         """Get the owner, modestly wrapped in the user folder.
 
         o If the object is not owned, return None.
@@ -141,8 +143,8 @@ class Owned(Base):
 
         return user.__of__(udb)
 
-    security.declarePrivate('changeOwnership')
-    def changeOwnership(self, user, recursive=0):
+    security.declarePrivate('changeOwnership')  # pseudo decorator
+    def changeOwnership(self, user, recursive=0):  # NOQA: E301
         """Change the ownership to the given user.
 
         If 'recursive' is true then also take ownership of all sub-objects,

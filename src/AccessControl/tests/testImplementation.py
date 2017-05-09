@@ -13,8 +13,10 @@
 ##############################################################################
 """Test of the implementation selection support."""
 
+# Standard Library Imports
 import unittest
 
+# AccessControl internal imports
 from AccessControl.Implementation import getImplementationName
 from AccessControl.Implementation import setImplementation
 
@@ -26,7 +28,7 @@ class AccessControlImplementationTest(unittest.TestCase):
     def setUp(self):
         if self.have_cAccessControl is None:
             try:
-                import AccessControl.cAccessControl
+                import AccessControl.cAccessControl  # NOQA: F401
             except ImportError:
                 v = False
             else:

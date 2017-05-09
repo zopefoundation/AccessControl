@@ -38,12 +38,15 @@
 
 """
 
+# Standard Library Imports
 from logging import getLogger
 import sys
 
+# Zope Imports
 from Acquisition import Implicit
 from Persistence import Persistent
 
+# AccessControl internal imports
 from AccessControl.class_init import InitializeClass
 from AccessControl.ImplPython import _what_not_even_god_should_do
 
@@ -83,49 +86,49 @@ class SecurityInfo(Implicit):
             self.names[name] = access
 
     declarePublic__roles__ = ACCESS_PRIVATE
-    def declarePublic(self, name, *names):
+    def declarePublic(self, name, *names):  # NOQA: E301  # pseudo decorator
         """Declare names to be publicly accessible."""
         self._setaccess((name,) + names, ACCESS_PUBLIC)
 
     declarePrivate__roles__ = ACCESS_PRIVATE
-    def declarePrivate(self, name, *names):
+    def declarePrivate(self, name, *names):  # NOQA: E301  # pseudo decorator
         """Declare names to be inaccessible to restricted code."""
         self._setaccess((name,) + names, ACCESS_PRIVATE)
 
-    declareProtected__roles__ = ACCESS_PRIVATE
-    def declareProtected(self, permission_name, name, *names):
+    declareProtected__roles__ = ACCESS_PRIVATE  # pseudo decorator
+    def declareProtected(self, permission_name, name, *names):  # NOQA: E301
         """Declare names to be associated with a permission."""
         self._setaccess((name,) + names, permission_name)
 
     declareObjectPublic__roles__ = ACCESS_PRIVATE
-    def declareObjectPublic(self):
+    def declareObjectPublic(self):  # NOQA: E301  # pseudo decorator
         """Declare the object to be publicly accessible."""
         self._setaccess(('',), ACCESS_PUBLIC)
 
     declareObjectPrivate__roles__ = ACCESS_PRIVATE
-    def declareObjectPrivate(self):
+    def declareObjectPrivate(self):  # NOQA: E301  # pseudo decorator
         """Declare the object to be inaccessible to restricted code."""
         self._setaccess(('',), ACCESS_PRIVATE)
 
-    declareObjectProtected__roles__ = ACCESS_PRIVATE
-    def declareObjectProtected(self, permission_name):
+    declareObjectProtected__roles__ = ACCESS_PRIVATE  # pseudo decorator
+    def declareObjectProtected(self, permission_name):  # NOQA: E301
         """Declare the object to be associated with a permission."""
         self._setaccess(('',), permission_name)
 
     public__roles__ = ACCESS_PRIVATE
-    def public(self, func):
+    def public(self, func):  # NOQA: E301  # pseudo decorator
         """Decorate a function to be publicly accessible."""
         self.declarePublic(func.__name__)
         return func
 
     private__roles__ = ACCESS_PRIVATE
-    def private(self, func):
+    def private(self, func):  # NOQA: E301  # pseudo decorator
         """Decorate a function to be inaccessible to restricted code."""
         self.declarePrivate(func.__name__)
         return func
 
     protected__roles__ = ACCESS_PRIVATE
-    def protected(self, permission_name):
+    def protected(self, permission_name):  # NOQA: E301  # pseudo decorator
         """Return a decorator to associate a function with a permission."""
         # the decorator returned is remembered in a set and will
         # remove itself upon call. self.apply will check for an empty
@@ -142,8 +145,8 @@ class SecurityInfo(Implicit):
         self._unused_protected_decorators.add(key)
         return decor
 
-    setPermissionDefault__roles__ = ACCESS_PRIVATE
-    def setPermissionDefault(self, permission_name, roles):
+    setPermissionDefault__roles__ = ACCESS_PRIVATE  # pseudo decorator
+    def setPermissionDefault(self, permission_name, roles):  # NOQA: E301
         """Declare default roles for a permission"""
         rdict = {}
         for role in roles:
@@ -155,7 +158,7 @@ class SecurityInfo(Implicit):
         self.roles[permission_name] = rdict
 
     setDefaultAccess__roles__ = ACCESS_PRIVATE
-    def setDefaultAccess(self, access):
+    def setDefaultAccess(self, access):  # NOQA: E301  # pseudo decorator
         """Declare default attribute access policy.
 
         This should be a boolean value, a map of attribute names to
@@ -178,7 +181,7 @@ class ClassSecurityInfo(SecurityInfo):
     __roles__ = ACCESS_PRIVATE
 
     apply__roles__ = ACCESS_PRIVATE
-    def apply(self, classobj):
+    def apply(self, classobj):  # NOQA: E301  # pseudo decorator
         """Apply security information to the given class object."""
 
         # make sure all decorators handed out by security.protected were used
@@ -307,7 +310,7 @@ class _ModuleSecurityInfo(SecurityInfo):
             _moduleSecurity[module_name] = self
 
     __call____roles__ = ACCESS_PRIVATE
-    def __call__(self, name, value):
+    def __call__(self, name, value):  # NOQA: E301  # pseudo decorator
         """Callback for __allow_access_to_unprotected_subobjects__ hook."""
         access = self.names.get(name, _marker)
         if access is not _marker:
@@ -316,7 +319,7 @@ class _ModuleSecurityInfo(SecurityInfo):
         return getattr(self, 'access', 0)
 
     apply__roles__ = ACCESS_PRIVATE
-    def apply(self, dict):
+    def apply(self, dict):  # NOQA: E301  # pseudo decorator
         """Apply security information to the given module dict."""
 
         # Start with default attribute access policy
@@ -328,18 +331,18 @@ class _ModuleSecurityInfo(SecurityInfo):
             LOG.warn('Module "%s" had conflicting '
                      'security declarations' % dict['__name__'])
 
-    declareProtected__roles__ = ACCESS_PRIVATE
-    def declareProtected(self, permission_name, *names):
+    declareProtected__roles__ = ACCESS_PRIVATE  # pseudo decorator
+    def declareProtected(self, permission_name, *names):  # NOQA: E301
         """Cannot declare module names protected."""
         pass
 
-    declareObjectProtected__roles__ = ACCESS_PRIVATE
-    def declareObjectProtected(self, permission_name):
+    declareObjectProtected__roles__ = ACCESS_PRIVATE  # pseudo decorator
+    def declareObjectProtected(self, permission_name):  # NOQA: E301
         """Cannot declare module protected."""
         pass
 
-    setDefaultRoles__roles__ = ACCESS_PRIVATE
-    def setDefaultRoles(self, permission_name, roles):
+    setDefaultRoles__roles__ = ACCESS_PRIVATE  # pseudo decorator
+    def setDefaultRoles(self, permission_name, roles):  # NOQA: E301
         """Cannot set default roles for permissions in a module."""
         pass
 

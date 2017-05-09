@@ -1,6 +1,10 @@
 [run]
 branch = True
 source = AccessControl
+omit =
 
 [report]
-precision = 3
+precision = 2
+
+[html]
+directory = reports/coverage

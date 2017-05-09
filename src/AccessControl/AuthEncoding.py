@@ -11,16 +11,25 @@
 #
 ##############################################################################
 
+# flake8: NOQA: E401
+
 from __future__ import absolute_import
 
-# BBB
-from AuthEncoding.AuthEncoding import (  # NOQA
-    constant_time_compare, PasswordEncryptionScheme, registerScheme,
-    listSchemes, SSHADigestScheme, SHADigestScheme, MySQLDigestScheme,
-    pw_validate, is_encrypted, pw_encrypt, pw_encode)
+from AuthEncoding.AuthEncoding import MySQLDigestScheme
+from AuthEncoding.AuthEncoding import PasswordEncryptionScheme
+from AuthEncoding.AuthEncoding import SHADigestScheme
+from AuthEncoding.AuthEncoding import SSHADigestScheme
+from AuthEncoding.AuthEncoding import constant_time_compare
+from AuthEncoding.AuthEncoding import is_encrypted
+from AuthEncoding.AuthEncoding import listSchemes
+from AuthEncoding.AuthEncoding import pw_encode
+from AuthEncoding.AuthEncoding import pw_encrypt
+from AuthEncoding.AuthEncoding import pw_validate
+from AuthEncoding.AuthEncoding import registerScheme
+
 
 # Bogosity on various platforms due to ITAR restrictions
 try:
-    from AuthEncoding.AuthEncoding import CryptDigestScheme  # NOQA
+    from AuthEncoding.AuthEncoding import CryptDigestScheme
 except ImportError:
     pass

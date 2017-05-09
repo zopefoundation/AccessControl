@@ -11,17 +11,22 @@
 #
 ##############################################################################
 
+# Standard Library Imports
 from doctest import DocTestSuite
 import sys
 import unittest
 
-from Acquisition import Explicit
-from Acquisition import Implicit
 from MethodObject import Method
 from zExceptions import Unauthorized
 
+# Zope Imports
+from Acquisition import Explicit
+from Acquisition import Implicit
+
+# AccessControl internal imports
 from AccessControl.SecurityManagement import SecurityContext
 from AccessControl.userfolder import UserFolder
+
 
 try:
     import _thread as thread  # Py3

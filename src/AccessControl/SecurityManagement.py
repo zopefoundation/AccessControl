@@ -13,6 +13,8 @@
 """Security management
 """
 from __future__ import absolute_import
+
+# AccessControl internal imports
 from AccessControl import SpecialUsers
 
 
@@ -25,7 +27,7 @@ def getSecurityManager():
         nobody = getattr(SpecialUsers, 'nobody', None)
         if nobody is None:
             # Initialize SpecialUsers by importing User.py.
-            from AccessControl import User
+            from AccessControl import User  # NOQA: F401
             nobody = SpecialUsers.nobody
         manager = SecurityManager(thread_id, SecurityContext(nobody))
         _managers[thread_id] = manager

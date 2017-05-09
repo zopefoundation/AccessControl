@@ -13,18 +13,23 @@
 
 """Python implementation of the access control machinery."""
 
+# isort:skip
+
+# Standard Library Imports
 from logging import getLogger
+import os
+
+# Python 2 / 3 compatibility helper libraries
+from six import string_types
+
+# Zope Imports
 from Acquisition import aq_acquire
 from Acquisition import aq_base
 from Acquisition import aq_inContextOf
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from ExtensionClass import Base
-from six import string_types
 from zope.interface import implementer
-
-import os
-import string
 
 
 # This is used when a permission maps explicitly to no permission.  We
@@ -35,21 +40,21 @@ try:
 except ImportError:
     _what_not_even_god_should_do = []
 
-from AccessControl.interfaces import ISecurityManager
-from AccessControl.interfaces import ISecurityPolicy
-from AccessControl.Permission import getPermissionIdentifier
-from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.SimpleObjectPolicies import _noroles
-from AccessControl.SimpleObjectPolicies import Containers
-from AccessControl.unauthorized import Unauthorized
-from AccessControl.ZopeGuards import guarded_getitem  # NOQA
+from AccessControl.interfaces import ISecurityManager  # isort:skip
+from AccessControl.interfaces import ISecurityPolicy  # isort:skip
+from AccessControl.Permission import getPermissionIdentifier  # isort:skip
+from AccessControl.SecurityManagement import getSecurityManager  # isort:skip
+from AccessControl.SimpleObjectPolicies import _noroles  # isort:skip
+from AccessControl.SimpleObjectPolicies import Containers  # isort:skip
+from AccessControl.unauthorized import Unauthorized  # isort:skip
+# from AccessControl.ZopeGuards import guarded_getitem
 # AccessControl.ZopeSecurityPolicy
 # --------------------------------
 #
 #   TODO:  implement this in cAccessControl, and have Implementation
 #          do the indirection.
 #
-from AccessControl.ZopeSecurityPolicy import getRoles  # XXX
+from AccessControl.ZopeSecurityPolicy import getRoles  # XXX  # isort:skip
 
 
 LOG = getLogger('ImplPython')

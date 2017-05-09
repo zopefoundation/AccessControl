@@ -13,22 +13,28 @@
 
 from __future__ import absolute_import
 
+# Standard Library Imports
 from functools import reduce
 import math
 import random
-import six
 import string
 import warnings
 
-import RestrictedPython
+# Python 2 / 3 compatibility helper libraries
+import six
+
+from zExceptions import Unauthorized
+
+# Zope Imports
 from RestrictedPython.Eval import RestrictionCapableEval
 from RestrictedPython.Guards import full_write_guard
 from RestrictedPython.Guards import guarded_iter_unpack_sequence
 from RestrictedPython.Guards import guarded_unpack_sequence
 from RestrictedPython.Guards import safe_builtins
 from RestrictedPython.Utilities import utility_builtins
-from zExceptions import Unauthorized
+import RestrictedPython
 
+# AccessControl internal imports
 from AccessControl.SecurityInfo import secureModule
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SimpleObjectPolicies import ContainerAssertions
@@ -241,6 +247,7 @@ def guarded_next(iterator):
         guard(ob, ob)
     return ob
 
+
 safe_builtins['next'] = guarded_next
 
 
@@ -305,7 +312,7 @@ def guard(container, value, index=None):
 
 
 def guarded_filter(f, seq, skip_unauthorized=0):
-    if type(seq) is type(''):
+    if isinstance(seq, str):  # type(seq) is type(''):
         return filter(f, seq)
 
     if f is None:
@@ -675,6 +682,7 @@ _safe_globals = {
     '_unpack_sequence_': guarded_unpack_sequence,
     '_print_': RestrictedPython.PrintCollector,
     '_write_': full_write_guard,
+    # '_del_': full_write_guard,
     '_inplacevar_': protected_inplacevar,
     # The correct implementation of _getattr_, aka
     # guarded_getattr, isn't known until

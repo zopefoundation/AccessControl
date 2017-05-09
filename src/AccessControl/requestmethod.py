@@ -11,9 +11,12 @@
 #
 ##############################################################################
 
+# Standard Library Imports
 import inspect
 
 from zExceptions import Forbidden
+
+# Zope Imports
 from zope.publisher.interfaces.browser import IBrowserRequest
 
 

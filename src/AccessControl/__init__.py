@@ -11,16 +11,18 @@
 #
 ##############################################################################
 
+# flake8: NOQA: E401
 
+# AccessControl internal imports
 # This has to happen early so things get initialized properly
 from AccessControl.Implementation import setImplementation
 from AccessControl.SecurityInfo import ACCESS_NONE
 from AccessControl.SecurityInfo import ACCESS_PRIVATE
 from AccessControl.SecurityInfo import ACCESS_PUBLIC
-from AccessControl.SecurityInfo import allow_class
-from AccessControl.SecurityInfo import allow_module
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
+from AccessControl.SecurityInfo import allow_class
+from AccessControl.SecurityInfo import allow_module
 from AccessControl.SecurityInfo import secureModule
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import setSecurityPolicy

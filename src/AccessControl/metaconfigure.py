@@ -12,10 +12,13 @@
 #
 ##############################################################################
 
+# Standard Library Imports
 import warnings
 
+# Zope Imports
 from zope.security import metaconfigure
 
+# AccessControl internal imports
 from AccessControl.class_init import InitializeClass
 from AccessControl.security import protectName
 

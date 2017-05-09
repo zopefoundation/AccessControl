@@ -13,23 +13,26 @@
 """Access control support
 """
 
+# Standard Library Imports
 from base64 import urlsafe_b64encode
 from cgi import escape
 
+# Zope Imports
+# from AccessControl.SecurityManagement import newSecurityManager
 from Acquisition import Acquired
 from Acquisition import aq_base
 from Acquisition import aq_get
 from ExtensionClass import Base
 from zope.interface import implementer
 
+# AccessControl internal imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
 from AccessControl.interfaces import IRoleManager
-from AccessControl.Permission import getPermissions
 from AccessControl.Permission import Permission
+from AccessControl.Permission import getPermissions
 from AccessControl.PermissionMapping import RoleManager
 from AccessControl.Permissions import change_permissions
-from AccessControl.SecurityManagement import newSecurityManager
 
 
 DEFAULTMAXLISTUSERS = 250
@@ -57,7 +60,7 @@ class RoleManager(Base, RoleManager):
     __ac_local_roles__ = None
 
     security.declareProtected(change_permissions, 'ac_inherited_permissions')
-    def ac_inherited_permissions(self, all=0):
+    def ac_inherited_permissions(self, all=0):  # NOQA: E301,E501  # pseudo decorator
         # Get all permissions not defined in ourself that are inherited
         # This will be a sequence of tuples with a name as the first item and
         # an empty tuple as the second.
@@ -81,7 +84,7 @@ class RoleManager(Base, RoleManager):
         return tuple(r)
 
     security.declareProtected(change_permissions, 'permission_settings')
-    def permission_settings(self, permission=None):
+    def permission_settings(self, permission=None):  # NOQA: E301,E501  # pseudo decorator
         """Return user-role permission settings.
 
         If 'permission' is passed to the method then only the settings for
@@ -107,10 +110,12 @@ class RoleManager(Base, RoleManager):
                 'hashed_name': _string_hash(name),
                 'acquire': isinstance(roles, list) and 'CHECKED' or '',
                 'roles': tuple(map(
-                    lambda ir, roles=roles, valid=valid, ip=ip:
-                    {
-                       'name': "permission_%srole_%s" % (_string_hash(permission_name), _string_hash(valid[ir])),
-                       'checked': (valid[ir] in roles) and 'CHECKED' or '',
+                    lambda ir, roles=roles, valid=valid, ip=ip: {
+                        'name': "permission_%srole_%s" % (
+                            _string_hash(permission_name),
+                            _string_hash(valid[ir])
+                        ),
+                        'checked': (valid[ir] in roles) and 'CHECKED' or '',
                     },
                     indexes
                 ))
@@ -121,7 +126,7 @@ class RoleManager(Base, RoleManager):
         return result
 
     security.declareProtected(change_permissions, 'manage_role')
-    def manage_role(self, role_to_manage, permissions=[]):
+    def manage_role(self, role_to_manage, permissions=[]):  # NOQA: E301,E501  # pseudo decorator
         """Change the permissions given to the given role.
         """
         for p in self.ac_inherited_permissions(1):
@@ -130,7 +135,7 @@ class RoleManager(Base, RoleManager):
             p.setRole(role_to_manage, name in permissions)
 
     security.declareProtected(change_permissions, 'manage_acquiredPermissions')
-    def manage_acquiredPermissions(self, permissions=[]):
+    def manage_acquiredPermissions(self, permissions=[]):  # NOQA: E301,E501  # pseudo decorator
         """Change the permissions that acquire.
         """
         for p in self.ac_inherited_permissions(1):
@@ -200,7 +205,7 @@ class RoleManager(Base, RoleManager):
         return d
 
     security.declareProtected(change_permissions, 'manage_permission')
-    def manage_permission(self, permission_to_manage, roles=[], acquire=0):
+    def manage_permission(self, permission_to_manage, roles=[], acquire=0):  # NOQA: E301,E501  # pseudo decorator
         """Change the settings for the given permission.
 
         If optional arg acquire is true, then the roles for the permission
@@ -223,7 +228,7 @@ class RoleManager(Base, RoleManager):
             escape(permission_to_manage))
 
     security.declareProtected(change_permissions, 'permissionsOfRole')
-    def permissionsOfRole(self, role):
+    def permissionsOfRole(self, role):  # NOQA: E301  # pseudo decorator
         """Returns a role to permission mapping.
         """
         r = []
@@ -237,7 +242,7 @@ class RoleManager(Base, RoleManager):
         return r
 
     security.declareProtected(change_permissions, 'rolesOfPermission')
-    def rolesOfPermission(self, permission):
+    def rolesOfPermission(self, permission):  # NOQA: E301  # pseudo decorator
         """Returns a permission to role mapping.
         """
         valid_roles = self.valid_roles()
@@ -257,7 +262,7 @@ class RoleManager(Base, RoleManager):
             "The permission <em>%s</em> is invalid." % escape(permission))
 
     security.declareProtected(change_permissions, 'acquiredRolesAreUsedBy')
-    def acquiredRolesAreUsedBy(self, permission):
+    def acquiredRolesAreUsedBy(self, permission):  # NOQA: E301,E501  # pseudo decorator
         """
         """
         for p in self.ac_inherited_permissions(1):
@@ -330,7 +335,7 @@ class RoleManager(Base, RoleManager):
         return tuple(dict.get(userid, []))
 
     security.declareProtected(change_permissions, 'manage_addLocalRoles')
-    def manage_addLocalRoles(self, userid, roles):
+    def manage_addLocalRoles(self, userid, roles):  # NOQA: E301,E501  # pseudo decorator
         """Set local roles for a user."""
         if not roles:
             raise ValueError('One or more roles must be given!')
@@ -345,7 +350,7 @@ class RoleManager(Base, RoleManager):
         self._p_changed = True
 
     security.declareProtected(change_permissions, 'manage_setLocalRoles')
-    def manage_setLocalRoles(self, userid, roles):
+    def manage_setLocalRoles(self, userid, roles):  # NOQA: E301,E501  # pseudo decorator
         """Set local roles for a user."""
         if not roles:
             raise ValueError('One or more roles must be given!')
@@ -356,7 +361,7 @@ class RoleManager(Base, RoleManager):
         self._p_changed = True
 
     security.declareProtected(change_permissions, 'manage_delLocalRoles')
-    def manage_delLocalRoles(self, userids):
+    def manage_delLocalRoles(self, userids):  # NOQA: E301  # pseudo decorator
         """Remove all local roles for a user."""
         dict = self.__ac_local_roles__
         if dict is None:
@@ -367,7 +372,7 @@ class RoleManager(Base, RoleManager):
         self._p_changed = True
 
     security.declarePrivate('access_debug_info')
-    def access_debug_info(self):
+    def access_debug_info(self):  # NOQA: E301  # pseudo decorator
         """Return debug info.
         """
         clas = class_attrs(self)
@@ -419,7 +424,7 @@ class RoleManager(Base, RoleManager):
         return 1
 
     security.declareProtected(change_permissions, 'userdefined_roles')
-    def userdefined_roles(self):
+    def userdefined_roles(self):  # NOQA: E301  # pseudo decorator
         """Return list of user-defined roles.
         """
         roles = list(self.__ac_roles__)

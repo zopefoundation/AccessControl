@@ -13,12 +13,15 @@
 """Tests of PermissionRole
 """
 
+# Standard Library Imports
 import unittest
 
-from Acquisition import aq_base
+# Zope Imports
 from Acquisition import Explicit
 from Acquisition import Implicit
+from Acquisition import aq_base
 
+# AccessControl internal imports
 from AccessControl.PermissionRole import PermissionRole
 
 

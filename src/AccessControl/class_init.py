@@ -13,9 +13,11 @@
 """Class initialization.
 """
 
+# Standard Library Imports
 import logging
 
-from AccessControl.Permission import ApplicationDefaultPermissions  # BBB
+# AccessControl internal imports
+from AccessControl.Permission import ApplicationDefaultPermissions  # BBB  # NOQA: F401,E501
 
 
 def InitializeClass(self):

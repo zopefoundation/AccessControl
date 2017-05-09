@@ -13,25 +13,29 @@
 """Access control package.
 """
 
-# BBB
-from AccessControl.users import emergency_user
+# flake8: NOQA: E401
+
+# Zope Imports
+from zope.deferredimport import deprecated
+
+# AccessControl internal imports
 from AccessControl.users import UnrestrictedUser as Super
+from AccessControl.users import BasicUser
+from AccessControl.users import NullUnrestrictedUser
+from AccessControl.users import SimpleUser
+from AccessControl.users import SpecialUser
+from AccessControl.users import User
 from AccessControl.users import _remote_user_mode
 from AccessControl.users import absattr
 from AccessControl.users import addr_match
-from AccessControl.users import BasicUser
 from AccessControl.users import domainSpecMatch
+from AccessControl.users import emergency_user
 from AccessControl.users import host_match
 from AccessControl.users import nobody
-from AccessControl.users import NullUnrestrictedUser
 from AccessControl.users import readUserAccessFile
 from AccessControl.users import reqattr
 from AccessControl.users import rolejoin
-from AccessControl.users import SimpleUser
-from AccessControl.users import SpecialUser
 from AccessControl.users import system
-from AccessControl.users import User
-from zope.deferredimport import deprecated
 
 
 deprecated(

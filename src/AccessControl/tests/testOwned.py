@@ -1,12 +1,16 @@
 """Unit tests for AccessControl.Owned
 """
 
+# Standard Library Imports
 import unittest
 
-from Acquisition import aq_inner
-from Acquisition import Implicit
 from persistent import Persistent
 
+# Zope Imports
+from Acquisition import Implicit
+from Acquisition import aq_inner
+
+# AccessControl internal imports
 from AccessControl.owner import Owned
 
 
@@ -32,7 +36,7 @@ class FauxRoot(Implicit):
 
     def unrestrictedTraverse(self, path, default=None):
 
-        if type(path) is type(''):
+        if isinstance(path, str):  # type(path) is type(''):
             path = path.split('/')
 
         if not path[0]:

@@ -13,17 +13,21 @@
 """User folders.
 """
 
+# Standard Library Imports
 from base64 import decodestring
 
-from Acquisition import aq_base
-from Acquisition import aq_parent
-from Acquisition import Implicit
-from Persistence import Persistent
-from Persistence import PersistentMapping
 from zExceptions import BadRequest
 from zExceptions import Unauthorized
+
+# Zope Imports
+from Acquisition import Implicit
+from Acquisition import aq_base
+from Acquisition import aq_parent
+from Persistence import Persistent
+from Persistence import PersistentMapping
 from zope.interface import implementer
 
+# AccessControl internal imports
 from AccessControl import AuthEncoding
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
@@ -34,12 +38,12 @@ from AccessControl.rolemanager import RoleManager
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
+from AccessControl.users import User
 from AccessControl.users import _remote_user_mode
 from AccessControl.users import addr_match
 from AccessControl.users import emergency_user
 from AccessControl.users import host_match
 from AccessControl.users import nobody
-from AccessControl.users import User
 from AccessControl.ZopeSecurityPolicy import _noroles
 
 
@@ -63,22 +67,22 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
     security = ClassSecurityInfo()
 
     security.declareProtected(ManageUsers, 'getUserNames')
-    def getUserNames(self):
+    def getUserNames(self):  # NOQA: E301  # pseudo decorator
         """Return a list of usernames"""
         raise NotImplementedError
 
     security.declareProtected(ManageUsers, 'getUsers')
-    def getUsers(self):
+    def getUsers(self):  # NOQA: E301  # pseudo decorator
         """Return a list of user objects"""
         raise NotImplementedError
 
     security.declareProtected(ManageUsers, 'getUser')
-    def getUser(self, name):
+    def getUser(self, name):  # NOQA: E301  # pseudo decorator
         """Return the named user object or None"""
         raise NotImplementedError
 
     security.declareProtected(ManageUsers, 'getUserById')
-    def getUserById(self, id, default=None):
+    def getUserById(self, id, default=None):  # NOQA: E301  # pseudo decorator
         """Return the user corresponding to the given id.
         """
         # The connection between getting by ID and by name is not a strong
@@ -111,8 +115,9 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
     def identify(self, auth):
         if auth and auth.lower().startswith('basic '):
             try:
-                name, password = decodestring(auth.split(' ')[-1].encode()).decode() \
-                    .split(':', 1)
+                name, password = decodestring(
+                    auth.split(' ')[-1].encode()
+                ).decode().split(':', 1)
             except:
                 raise BadRequest('Invalid authentication token')
             return name, password
@@ -223,7 +228,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
 
     if _remote_user_mode:
 
-        def validate(self, request, auth='', roles=_noroles):
+        def validate(self, request, auth='', roles=_noroles):  # NOQA: F811
             v = request['PUBLISHED']
             a, c, n, v = self._getobcontext(v, request)
             name = request.environ.get('REMOTE_USER', None)
@@ -331,7 +336,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
         return 1
 
     security.declareProtected(ManageUsers, 'user_names')
-    def user_names(self):
+    def user_names(self):  # NOQA: E301  # pseudo decorator
         return self.getUserNames()
 
     def __creatable_by_emergency_user__(self):
@@ -340,8 +345,9 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
     # Domain authentication support. This is a good candidate to
     # become deprecated in future Zope versions.
 
+    # Pseudo decorator
     security.declareProtected(ManageUsers, 'setDomainAuthenticationMode')
-    def setDomainAuthenticationMode(self, domain_auth_mode):
+    def setDomainAuthenticationMode(self, domain_auth_mode):  # NOQA: E301
         """Set the domain-based authentication mode. By default, this
            mode is off due to the high overhead of the operation that
            is incurred for all anonymous accesses. If you have the
