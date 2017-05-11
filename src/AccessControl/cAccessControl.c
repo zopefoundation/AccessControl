@@ -735,6 +735,25 @@ ZopeSecurityPolicy_setup(void) {
 	return 0;
 }
 
+static PyObject*
+convert_name(PyObject *name)
+{
+#ifdef Py_USING_UNICODE
+    if (PyUnicode_Check(name)) {
+        name = PyUnicode_AsEncodedString(name, NULL, NULL);
+    }
+    else
+#endif
+    if (!PyBytes_Check(name)) {
+        PyErr_SetString(PyExc_TypeError, "name must be a string");
+        return NULL;
+    }
+    else {
+        Py_INCREF(name);
+    }
+    return name;
+}
+
 /*
 ** unauthErr
 **
@@ -755,21 +774,28 @@ static void unauthErr(PyObject *name, PyObject *value) {
 static PyObject *
 ZopeSecurityPolicy_getattro(ZopeSecurityPolicy *self, PyObject *name)
 {
+  PyObject *name_as_bytes = NULL;
+
   if (NATIVE_CHECK(name) || PyUnicode_Check(name))  {
-    char *name_s = PyBytes_AS_STRING(name);
-    if (name_s == NULL)
+    if ((name_as_bytes = convert_name(name)) == NULL) {
         return NULL;
+    }
+
+    char *name_s = PyBytes_AS_STRING(name_as_bytes);
 
     if (name_s[0] == '_') {
       if (! strcmp(name_s, "_ownerous")) {
+          Py_DECREF(name_as_bytes);
           return INT_FROM_LONG(ownerous);
       }
       else if (! strcmp(name_s, "_authenticated")) {
+          Py_DECREF(name_as_bytes);
           return INT_FROM_LONG(authenticated);
       }
     }
   }
 
+  Py_XDECREF(name_as_bytes);
   return Py_FindAttr(OBJECT(self), name);
 }
 
@@ -816,7 +842,12 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 	*/ 
 
 	if (NATIVE_CHECK(name) || PyUnicode_Check(name)) {
-	    char *sname = PyBytes_AS_STRING(name);
+        char *sname = NULL;
+        PyObject *name_as_bytes = convert_name(name);
+        if (name_as_bytes != NULL) {
+	        sname = PyBytes_AS_STRING(name_as_bytes);
+        }
+
 	    /* Conversion to string may have failed, e.g. if name is Unicode
 	     * and can't be bashed into the default encoding.  Unclear what
 	     * to do then.  It's arguably conservative to raise Unauthorized
@@ -832,10 +863,13 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
      	            )
      	        )
      	    {
+                Py_XDECREF(name_as_bytes);
                 /* Access control violation */
 		unauthErr(name, value);
 		return NULL;  /* roles is not owned yet */
 	    }
+
+        Py_XDECREF(name_as_bytes);
 	}
 	Py_XINCREF(roles);	/* Convert the borrowed ref to a real one */
 
@@ -1390,56 +1424,75 @@ SecurityManager_dealloc(SecurityManager *self)
 static PyObject *
 SecurityManager_getattro(SecurityManager *self, PyObject *name)
 {
-  if (NATIVE_CHECK(name) || PyUnicode_Check(name))  {
-    char *name_s = PyBytes_AS_STRING(name);
+  PyObject *name_as_bytes = NULL;
 
-    if (name_s == NULL)
+  if (NATIVE_CHECK(name) || PyUnicode_Check(name))  {
+    if ((name_as_bytes = convert_name(name)) == NULL) {
         return NULL;
+    }
+
+    char *name_s = PyBytes_AS_STRING(name_as_bytes);
 
     if (name_s[0] == '_') {
       if (! strcmp(name_s, "_thread_id") && self->thread_id) {
+          Py_DECREF(name_as_bytes);
+
           Py_INCREF(self->thread_id);
           return self->thread_id;
       }
       else if (! strcmp(name_s, "_context") && self->context) {
+          Py_DECREF(name_as_bytes);
+
           Py_INCREF(self->context);
           return self->context;
       }
       else if (! strcmp(name_s, "_policy") && self->policy) {
+          Py_DECREF(name_as_bytes);
+
           Py_INCREF(self->policy);
           return self->policy;
       }
     }
   }
 
+  Py_XDECREF(name_as_bytes);
   return Py_FindAttr(OBJECT(self), name);
 }
 
 static int 
 SecurityManager_setattro(SecurityManager *self, PyObject *name, PyObject *v)
 {
-  if (NATIVE_CHECK(name) || PyUnicode_Check(name)) {
-    char *name_s = PyBytes_AS_STRING(name);
+  PyObject *name_as_bytes = NULL;
 
-    if (name_s == NULL)
+  if (NATIVE_CHECK(name) || PyUnicode_Check(name)) {
+    if ((name_as_bytes = convert_name(name)) == NULL) {
         return -1;
+    }
+
+    char *name_s = PyBytes_AS_STRING(name_as_bytes);
 
     if (name_s[0] == '_')
     {
       if (! strcmp(name_s, "_thread_id"))
         {
+          Py_DECREF(name_as_bytes);
+
           Py_INCREF(v);
           ASSIGN(self->thread_id, v);
           return 0;
         }
       else if (! strcmp(name_s, "_context"))
         {
+          Py_DECREF(name_as_bytes);
+
           Py_INCREF(v);
           ASSIGN(self->context, v);
           return 0;
         }
       else if (! strcmp(name_s, "_policy"))
         {
+          Py_DECREF(name_as_bytes);
+
           Py_INCREF(v);
           ASSIGN(self->policy, v);
           if (self->validate)
@@ -1457,6 +1510,7 @@ SecurityManager_setattro(SecurityManager *self, PyObject *name, PyObject *v)
     }
   }
 
+  Py_XDECREF(name_as_bytes);
   PyErr_SetObject(PyExc_AttributeError, name);
   return -1;
 }
@@ -1593,8 +1647,13 @@ static void PermissionRole_dealloc(PermissionRole *self) {
 
 static PyObject *
 PermissionRole_getattro(PermissionRole *self, PyObject *name) {
+    PyObject  *name_as_bytes = NULL;
     PyObject  *result = NULL;
-    char      *name_s = PyBytes_AS_STRING(name);
+    char *name_s = NULL;
+
+    if ((name_as_bytes = convert_name(name)) != NULL) {
+        name_s = PyBytes_AS_STRING(name_as_bytes);
+    }
 
 	/* see whether we know the attribute */
 	/* we support both the old "_d" (from the Python implementation)
@@ -1613,6 +1672,8 @@ PermissionRole_getattro(PermissionRole *self, PyObject *name) {
 		else if (! strcmp(name_s, "_d"))
 			result = self->__roles__;
 	}
+
+    Py_XDECREF(name_as_bytes);
 
 	if (result) {
 		Py_INCREF(result);
@@ -1957,6 +2018,7 @@ c_rolesForPermissionOn(PyObject *perm, PyObject *object,
 */
 
 static PyObject *permissionName(PyObject *name) {
+    PyObject *name_as_bytes;
 	char namebuff[512];
 	register int len = sizeof(namebuff) - 1;
 	char *c = namebuff;
@@ -1968,10 +2030,12 @@ static PyObject *permissionName(PyObject *name) {
 	c++;
 	len--;
 
-	in = PyBytes_AS_STRING(name);
-        if (in == NULL)
-          return NULL;
-	
+    if ((name_as_bytes = convert_name(name)) == NULL) {
+        return NULL;
+    }
+
+	in = PyBytes_AS_STRING(name_as_bytes);
+
 	while (len && *in) {
 		r = *(in++);
 		if (!isalnum(r)) r='_';
@@ -1989,8 +2053,8 @@ static PyObject *permissionName(PyObject *name) {
 
 	*c = '\0';	/* Saved room in len */
 
+	Py_DECREF(name_as_bytes);
 	return NATIVE_FROM_STRING(namebuff);
-
 }
 
 /* def guarded_getattr(inst, name, default=_marker): */
@@ -2003,12 +2067,15 @@ guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
 
   /* if name[:1] != '_': */
   if (NATIVE_CHECK(name) || PyUnicode_Check(name)) {
-    char *name_s = PyBytes_AS_STRING(name);
-
-    if (name_s == NULL)
+    PyObject *name_as_bytes = convert_name(name);
+    if (name_as_bytes == NULL) {
         return NULL;
+    }
 
-    if (name_s[0] != '_')
+    int starts_with_underscore = PyBytes_AS_STRING(name_as_bytes)[0] == '_';
+    Py_DECREF(name_as_bytes);
+
+    if (!starts_with_underscore)
     {
 
       /*
