@@ -387,13 +387,12 @@ class RoleManager(Base, RoleManager):
         """
         obj = self
         valid = {}
-        dup = valid.has_key
         x = 0
         while x < 100:
             if hasattr(obj, '__ac_roles__'):
                 roles = obj.__ac_roles__
                 for role in roles:
-                    if not dup(role):
+                    if role not in valid:
                         valid[role] = 1
             if getattr(obj, '__parent__', None) is None:
                 break
