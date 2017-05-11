@@ -15,6 +15,7 @@
 
 # BBB
 from AccessControl.users import emergency_user
+from AccessControl.users import UnrestrictedUser
 from AccessControl.users import UnrestrictedUser as Super
 from AccessControl.users import _remote_user_mode
 from AccessControl.users import absattr
