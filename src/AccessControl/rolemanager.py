@@ -386,41 +386,27 @@ class RoleManager(Base, RoleManager):
         """Return list of valid roles.
         """
         obj = self
-        valid = {}
+        valid = set()
         x = 0
         while x < 100:
-            if hasattr(obj, '__ac_roles__'):
-                roles = obj.__ac_roles__
-                for role in roles:
-                    if role not in valid:
-                        valid[role] = 1
+            valid.update(getattr(obj, '__ac_roles__', ()))
             if getattr(obj, '__parent__', None) is None:
                 break
             obj = obj.__parent__
             x = x + 1
-        roles = sorted(valid.keys())
-        return tuple(roles)
+        return tuple(sorted(valid))
 
     def validate_roles(self, roles):
         """Return true if all given roles are valid.
         """
-        valid = self.valid_roles()
-        for role in roles:
-            if role not in valid:
-                return 0
-        return 1
+        return set(roles) <= set(self.valid_roles())
 
     security.declareProtected(change_permissions, 'userdefined_roles')
     def userdefined_roles(self):
         """Return list of user-defined roles.
         """
-        roles = list(self.__ac_roles__)
-        for role in classattr(self.__class__, '__ac_roles__'):
-            try:
-                roles.remove(role)
-            except:
-                pass
-        return tuple(roles)
+        default_roles = classattr(self.__class__, '__ac_roles__')
+        return tuple(set(self.__ac_roles__) - set(default_roles))
 
     def possible_permissions(self):
         d = {}

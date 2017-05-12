@@ -93,3 +93,42 @@ class TestRoleManager(unittest.TestCase):
         root.context1.manage_delLocalRoles(['user1'])
         roles = root.context1.get_local_roles_for_userid('user1')
         self.assertEqual(roles, ())
+
+    def test_valid_roles(self):
+        from AccessControl.rolemanager import RoleManager
+        root, user = _makeRootAndUser()
+
+        # default case, __ac_roles__ not overridden
+        self.assertEqual(set(root.context1.valid_roles()), 
+                         set(RoleManager.__ac_roles__))
+
+        # forcing our own roles
+        root.context1.__ac_roles__ = ('Role2', 'Role1')
+        roles = root.context1.valid_roles()
+        self.assertEqual(roles, ('Role1', 'Role2'))
+       
+    def test_validate_roles(self):
+        from AccessControl.rolemanager import RoleManager
+        root, user = _makeRootAndUser()
+
+        # default case, __ac_roles__ not overridden
+        self.assertTrue(root.context1.validate_roles(RoleManager.__ac_roles__))
+        self.assertFalse(root.context1.validate_roles(('Role1', 'Role2')))
+
+        # forcing our own roles
+        root.context1.__ac_roles__ = ('Role2', 'Role1')
+        self.assertFalse(root.context1.validate_roles(RoleManager.__ac_roles__))
+        self.assertTrue(root.context1.validate_roles(('Role1', 'Role2')))
+
+    def test_userdefined_roles(self):
+        from AccessControl.rolemanager import RoleManager
+        root, user = _makeRootAndUser()
+
+        # default case, __ac_roles__ not overridden
+        self.assertEqual(root.context1.userdefined_roles(), ())
+
+        # forcing our own roles
+        root.context1.__ac_roles__ = ('Role2', 'Role1')
+        self.assertEqual(set(root.context1.userdefined_roles()),
+                         set(('Role1', 'Role2')))
+
