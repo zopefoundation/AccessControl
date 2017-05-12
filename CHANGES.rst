@@ -3,10 +3,12 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.0a6 (unreleased)
+4.0a6 (2017-05-12)
 ------------------
 
-- Sanitize and test `RoleManager` role handling
+- Make the C extension Python 3 compatible.
+
+- Sanitize and test `RoleManager` role handling.
 
 - Drop `Record` dependency, which now does its own security declaration.
 

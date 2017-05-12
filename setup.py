@@ -30,7 +30,7 @@ ext_modules = [
 ]
 
 setup(name='AccessControl',
-      version='4.0a6.dev0',
+      version='4.0a6',
       url='http://pypi.python.org/pypi/AccessControl',
       license='ZPL 2.1',
       description="Security framework for Zope2.",
