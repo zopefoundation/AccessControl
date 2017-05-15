@@ -44,7 +44,7 @@ def _isNotBeingUsedAsAMethod(self):
 
 
 def _string_hash(s):
-    return urlsafe_b64encode(str(s.__hash__()))
+    return urlsafe_b64encode(str(s.__hash__()).encode('ascii')).decode('ascii')
 
 
 @implementer(IRoleManager)
