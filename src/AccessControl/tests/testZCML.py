@@ -152,7 +152,9 @@ class TestSecurity(unittest.TestCase):
 
         ac1 = getattr(Dummy1, '__ac_permissions__')
         ac2 = getattr(Dummy2, '__ac_permissions__')
-        self.assertEqual(ac1, ac2)
+        self.assertEqual(
+            [(perm, set(attr)) for perm, attr in dict(ac1).items()],
+            [(perm, set(attr)) for perm, attr in dict(ac2).items()])
 
         # Now we look at the individual permissions:
 
