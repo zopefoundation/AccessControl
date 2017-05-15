@@ -14,7 +14,6 @@
 """
 
 from base64 import urlsafe_b64encode
-from cgi import escape
 
 from Acquisition import Acquired
 from Acquisition import aq_base
@@ -30,6 +29,11 @@ from AccessControl.Permission import Permission
 from AccessControl.PermissionMapping import RoleManager
 from AccessControl.Permissions import change_permissions
 from AccessControl.SecurityManagement import newSecurityManager
+
+try:
+    from html import escape
+except ImportError:  # PY2
+    from cgi import escape
 
 
 DEFAULTMAXLISTUSERS = 250

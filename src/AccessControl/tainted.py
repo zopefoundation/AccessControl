@@ -18,14 +18,18 @@ value of this string, and raised exceptions in Zope will use the repr()
 conversion.
 """
 
-from cgi import escape
 from functools import total_ordering
 
 import six
 
+try:
+    from html import escape
+except ImportError:  # PY2
+    from cgi import escape
+
 
 @total_ordering
-class TaintedString:
+class TaintedString(object):
 
     def __init__(self, value):
         self._value = value
