@@ -367,20 +367,20 @@ def readUserAccessFile(filename):
         return None
 
     try:
-        f = open(os.path.join(instancehome, filename), 'r')
-        line = f.readline()
-        f.close()
+        with open(os.path.join(instancehome, filename), 'rb') as f:
+            line = f.readline()
     except IOError:
         return None
 
     if line:
-        data = line.strip().split(':')
+        data = line.strip().split(b':')
+        user = data[0].decode('utf-8')
         remote_user_mode = not data[1]
         try:
-            ds = data[2].split(' ')
-        except:
+            ds = data[2].split(b' ')
+        except IndexError:
             ds = []
-        return data[0], data[1], ds, remote_user_mode
+        return (user, data[1], ds, remote_user_mode)
     else:
         return None
 
