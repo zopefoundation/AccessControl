@@ -536,11 +536,7 @@ def _metaclass(name, bases, dict):
     return ob
 
 
-try:
-    valid_inplace_types = list, set
-except NameError:
-    # Python 2.3
-    valid_inplace_types = list
+valid_inplace_types = (list, set)
 
 
 inplace_slots = {
