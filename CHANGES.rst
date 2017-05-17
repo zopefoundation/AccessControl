@@ -3,9 +3,10 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.0a7 (unreleased)
+4.0a7 (2017-05-17)
 ------------------
 
+- Increase Python 3 compatibility.
 
 
 4.0a6 (2017-05-12)

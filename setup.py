@@ -29,8 +29,11 @@ ext_modules = [
                  join('include', 'Acquisition', 'Acquisition.h')]),
 ]
 
+__version__ = '4.0a7'
+
+
 setup(name='AccessControl',
-      version='4.0a7.dev0',
+      version=__version__,
       url='http://pypi.python.org/pypi/AccessControl',
       license='ZPL 2.1',
       description="Security framework for Zope2.",
