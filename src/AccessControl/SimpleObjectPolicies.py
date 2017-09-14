@@ -43,6 +43,7 @@ XXX This descrition doesn't actually match what's done in ZopeGuards
 or in ZopeSecurityPolicy. :(
 '''
 
+from contextlib import contextmanager
 
 from BTrees.IIBTree import IIBTree
 from BTrees.IIBTree import IIBucket
@@ -61,6 +62,7 @@ from BTrees.OOBTree import OOBucket
 from BTrees.OOBTree import OOSet
 
 _noroles = []  # this is imported in various places
+_marker = object()
 
 # ContainerAssertions are used by cAccessControl to check access to
 # attributes of container types, like dict, list, or string.
@@ -126,3 +128,17 @@ for tree_type, has_values in [
     if has_values:
         assert key_type is type(tree.values())
         assert key_type is type(tree.items())
+
+
+@contextmanager
+def override_containers(type_, assertions):
+    """Temporarily override the container assertions."""
+    orig_container = Containers(type_, _marker)
+    ContainerAssertions[type_] = assertions
+    try:
+        yield
+    finally:
+        if orig_container is _marker:
+            del ContainerAssertions[type_]
+        else:
+            ContainerAssertions[type_] = orig_container
