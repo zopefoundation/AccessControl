@@ -6,6 +6,10 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0a8 (unreleased)
 ------------------
 
+- Security fix: In ``str.format``, check the security for attributes that are
+  accessed. (Ported from 2.13).
+
+- Port ``override_container`` context manager here from 2.13.
 
 
 4.0a7 (2017-05-17)

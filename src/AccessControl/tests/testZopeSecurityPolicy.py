@@ -347,6 +347,26 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         v = self.policy.checkPermission(u'View', r_item, o_context)
         self.assert_(v, '_View_Permission should grant access to theowner')
 
+    def testContainersContextManager(self):
+        from AccessControl.SimpleObjectPolicies import override_containers
+        from AccessControl.SimpleObjectPolicies import ContainerAssertions
+        from AccessControl.SimpleObjectPolicies import Containers
+        from types import TracebackType
+        # Surely we have no assertions for this type:
+        self.assertNotIn(TracebackType, ContainerAssertions)
+        with override_containers(TracebackType, 1):
+            self.assertIn(TracebackType, ContainerAssertions)
+            self.assertEqual(Containers(TracebackType), 1)
+            # Override it again.
+            with override_containers(TracebackType, {}):
+                self.assertEqual(Containers(TracebackType), {})
+            # We are outside the nested override, so the first override should
+            # have been restored.
+            self.assertEqual(Containers(TracebackType), 1)
+        # We are outside all overrides, so the type should no longer be in the
+        # assertions.
+        self.assertNotIn(TracebackType, ContainerAssertions)
+
     def testAqNames(self):
         policy = self.policy
         names = {
@@ -356,12 +376,17 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
             'aq_explicit': 1,
             'aq_inner': 1,
         }
-        for name, allowed in names.items():
-            if not allowed:
-                self.assertRaises(Unauthorized, policy.validate,
-                                  '', '', name, '', None)
-            else:
-                policy.validate('', '', name, '', None)
+        from AccessControl.SimpleObjectPolicies import override_containers
+        # By default we allow all access to str, but this may have been
+        # overridden to disallow some access of str.format.  So we temporarily
+        # restore the default of allowing all access.
+        with override_containers(str, 1):
+            for name, allowed in names.items():
+                if not allowed:
+                    self.assertRaises(Unauthorized, policy.validate,
+                                      '', '', name, '', None)
+                else:
+                    policy.validate('', '', name, '', None)
 
     def testProxyRoleScope(self):
         self.a.subobject = ImplictAcqObject()
@@ -394,7 +419,12 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
 
     def testUnicodeName(self):
         policy = self.policy
-        assert policy.validate('', '', u'foo', '', None)
+        from AccessControl.SimpleObjectPolicies import override_containers
+        # By default we allow all access to str, but this may have been
+        # overridden to disallow some access of str.format.  So we temporarily
+        # restore the default of allowing all access.
+        with override_containers(str, 1):
+            assert policy.validate('', '', u'foo', '', None)
 
     if 0:
         # This test purposely generates a log entry.
