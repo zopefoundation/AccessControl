@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.0a8 (unreleased)
+4.0b1 (2017-09-15)
 ------------------
 
 - Security fix: In ``str.format``, check the security for attributes that are
