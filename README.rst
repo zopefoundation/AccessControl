@@ -1,4 +1,4 @@
 Overview
 ========
 
-AccessControl provides a general security framework for use in Zope2.
+AccessControl provides a general security framework for use in Zope.
