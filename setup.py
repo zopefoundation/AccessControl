@@ -12,22 +12,57 @@
 #
 ##############################################################################
 
+from os import environ
 from os.path import join
+from setuptools import Extension
+from setuptools import find_packages
+from setuptools import setup
+import platform
 
-from setuptools import setup, find_packages, Extension
 
 README = open('README.rst').read()
 CHANGES = open('CHANGES.rst').read()
 
-ext_modules = [
-    Extension(
-        name='AccessControl.cAccessControl',
-        include_dirs=['include', 'src'],
-        sources=[join('src', 'AccessControl', 'cAccessControl.c')],
-        depends=[join('include', 'ExtensionClass', 'ExtensionClass.h'),
-                 join('include', 'ExtensionClass', '_compat.h'),
-                 join('include', 'Acquisition', 'Acquisition.h')]),
-]
+# PyPy is not compatible with ExtensionClass C extensions.
+py_impl = getattr(platform, 'python_implementation', lambda: None)
+is_pypy = py_impl() == 'PyPy'
+is_pure = 'PURE_PYTHON' in environ
+
+if is_pypy or is_pure:
+    ext_modules = []
+
+else:
+    ext_modules = [
+        Extension(
+            name='AccessControl.cAccessControl',
+            include_dirs=[
+                'include',
+                'src',
+                ],
+            sources=[join(
+                'src',
+                'AccessControl',
+                'cAccessControl.c',
+                )],
+            depends=[
+                join(
+                    'include',
+                    'ExtensionClass',
+                    'ExtensionClass.h',
+                    ),
+                join(
+                    'include',
+                    'ExtensionClass',
+                    '_compat.h',
+                    ),
+                join(
+                    'include',
+                    'Acquisition',
+                    'Acquisition.h',
+                    ),
+                ]),
+        ]
+
 
 version = '4.0b2.dev0'
 
