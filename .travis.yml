@@ -6,6 +6,11 @@ python:
     - 3.5
     - 3.6
 
+matrix:
+    include:
+        - python: "2.7"
+          env: PURE_PYTHON=1
+
 install:
     - pip install -U setuptools==33.1.1
     - pip install coveralls coverage
