@@ -32,7 +32,7 @@ import string
 # security implementations exist, we can switch between them later.
 try:
     from AccessControl.cAccessControl import _what_not_even_god_should_do
-except ImportError:
+except (ImportError, AttributeError, ):
     _what_not_even_god_should_do = []
 
 from AccessControl.interfaces import ISecurityManager
