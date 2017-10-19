@@ -749,11 +749,15 @@ class GetRolesWithMultiThreadTest(unittest.TestCase):
 
 
 def test_suite():
+    from AccessControl.Implementation import C_EXTENSION
+
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(Python_ZSPTests))
-    suite.addTest(unittest.makeSuite(C_ZSPTests))
+    if C_EXTENSION:
+        suite.addTest(unittest.makeSuite(C_ZSPTests))
     suite.addTest(unittest.makeSuite(Python_SMTests))
-    suite.addTest(unittest.makeSuite(C_SMTests))
+    if C_EXTENSION:
+        suite.addTest(unittest.makeSuite(C_SMTests))
     suite.addTest(DocTestSuite())
     suite.addTest(unittest.makeSuite(GetRolesWithMultiThreadTest))
     return suite
