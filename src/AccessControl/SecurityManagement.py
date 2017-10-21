@@ -42,7 +42,7 @@ def setSecurityManager(manager):
 # AccessControl.Implementation inserts SecurityManager.
 
 try:
-    from thread import get_ident
+    from AccessControl._compat import get_ident
 except ImportError:
     def get_ident():
         return 0

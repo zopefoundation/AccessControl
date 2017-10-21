@@ -23,10 +23,9 @@ from zExceptions import Unauthorized
 from AccessControl.SecurityManagement import SecurityContext
 from AccessControl.userfolder import UserFolder
 
-try:
-    import _thread as thread  # Py3
-except ImportError:
-    import thread
+
+from AccessControl._compat import thread
+
 
 user_roles = ('RoleOfUser',)
 eo_roles = ('RoleOfExecutableOwner',)
