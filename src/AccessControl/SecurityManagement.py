@@ -41,11 +41,7 @@ def setSecurityManager(manager):
 
 # AccessControl.Implementation inserts SecurityManager.
 
-try:
-    from AccessControl._compat import get_ident
-except ImportError:
-    def get_ident():
-        return 0
+from six._thread import get_ident
 
 _managers = {}
 
