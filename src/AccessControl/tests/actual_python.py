@@ -1,6 +1,3 @@
-from six.moves import reduce
-
-
 # The code in this file is executed after being compiled as restricted code,
 # and given a globals() dict with our idea of safe builtins, and the
 # Zope production implementations of the special restricted-Python functions
