@@ -24,7 +24,7 @@ from AccessControl.SecurityManagement import SecurityContext
 from AccessControl.userfolder import UserFolder
 
 
-from six import _thread as thread
+from six.moves import _thread as thread
 
 
 user_roles = ('RoleOfUser',)

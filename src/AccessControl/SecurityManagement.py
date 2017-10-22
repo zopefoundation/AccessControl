@@ -41,7 +41,7 @@ def setSecurityManager(manager):
 
 # AccessControl.Implementation inserts SecurityManager.
 
-from six._thread import get_ident
+from six.moves._thread import get_ident
 
 _managers = {}
 
