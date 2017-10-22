@@ -49,8 +49,8 @@ allow_type(str, rules)
 
 if six.PY2:
     # Same for unicode instead on Python 2:
-    rules = dict([(m, True) for m in dir(unicode) if not m.startswith('_')])
+    rules = dict([(m, True) for m in dir(six.text_type) if not m.startswith('_')])
     rules['format'] = safe_format
-    allow_type(unicode, rules)
+    allow_type(six.text_type, rules)
 
 del six
