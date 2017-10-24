@@ -6,7 +6,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0b2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Python 2 / 3 import improvements.
 
 
 4.0b1 (2017-09-15)

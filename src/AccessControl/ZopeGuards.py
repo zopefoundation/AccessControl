@@ -13,7 +13,6 @@
 
 from __future__ import absolute_import
 
-from functools import reduce
 import math
 import random
 import six
@@ -27,6 +26,7 @@ from RestrictedPython.Guards import guarded_iter_unpack_sequence
 from RestrictedPython.Guards import guarded_unpack_sequence
 from RestrictedPython.Guards import safe_builtins
 from RestrictedPython.Utilities import utility_builtins
+from six.moves import reduce
 from zExceptions import Unauthorized
 
 from AccessControl.SecurityInfo import secureModule
