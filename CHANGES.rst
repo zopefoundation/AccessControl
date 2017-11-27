@@ -8,6 +8,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Python 2 / 3 import improvements.
 
+- add Appveyor configuration to automate building Windows eggs
+
 
 4.0b1 (2017-09-15)
 ------------------
