@@ -2067,6 +2067,7 @@ guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
 {
   PyObject *v=0, *t=0;
   int i;
+  int starts_with_underscore;
 
   /* if name[:1] != '_': */
   if (NATIVE_CHECK(name) || PyUnicode_Check(name)) {
@@ -2075,7 +2076,7 @@ guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
         return NULL;
     }
 
-    int starts_with_underscore = PyBytes_AS_STRING(name_as_bytes)[0] == '_';
+    starts_with_underscore = PyBytes_AS_STRING(name_as_bytes)[0] == '_';
     Py_DECREF(name_as_bytes);
 
     if (!starts_with_underscore)
