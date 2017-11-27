@@ -10,6 +10,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - add Appveyor configuration to automate building Windows eggs
 
+- fix for compilers that only support C89 syntax (e.g. on Windows)
+
 
 4.0b1 (2017-09-15)
 ------------------

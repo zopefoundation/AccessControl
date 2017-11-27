@@ -775,13 +775,14 @@ static PyObject *
 ZopeSecurityPolicy_getattro(ZopeSecurityPolicy *self, PyObject *name)
 {
   PyObject *name_as_bytes = NULL;
+  char *name_s;
 
   if (NATIVE_CHECK(name) || PyUnicode_Check(name))  {
     if ((name_as_bytes = convert_name(name)) == NULL) {
         return NULL;
     }
 
-    char *name_s = PyBytes_AS_STRING(name_as_bytes);
+    name_s = PyBytes_AS_STRING(name_as_bytes);
 
     if (name_s[0] == '_') {
       if (! strcmp(name_s, "_ownerous")) {
@@ -1425,13 +1426,14 @@ static PyObject *
 SecurityManager_getattro(SecurityManager *self, PyObject *name)
 {
   PyObject *name_as_bytes = NULL;
+  char *name_s;
 
   if (NATIVE_CHECK(name) || PyUnicode_Check(name))  {
     if ((name_as_bytes = convert_name(name)) == NULL) {
         return NULL;
     }
 
-    char *name_s = PyBytes_AS_STRING(name_as_bytes);
+    name_s = PyBytes_AS_STRING(name_as_bytes);
 
     if (name_s[0] == '_') {
       if (! strcmp(name_s, "_thread_id") && self->thread_id) {
@@ -1463,13 +1465,14 @@ static int
 SecurityManager_setattro(SecurityManager *self, PyObject *name, PyObject *v)
 {
   PyObject *name_as_bytes = NULL;
+  char *name_s;
 
   if (NATIVE_CHECK(name) || PyUnicode_Check(name)) {
     if ((name_as_bytes = convert_name(name)) == NULL) {
         return -1;
     }
 
-    char *name_s = PyBytes_AS_STRING(name_as_bytes);
+    name_s = PyBytes_AS_STRING(name_as_bytes);
 
     if (name_s[0] == '_')
     {
