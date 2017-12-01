@@ -9,6 +9,8 @@ For changes before verison 3.0, see ``HISTORY.txt``.
 - In ``str.format``, check the security for keys and items that are accessed.
   Part of PloneHotfix20171128.  [maurits]
 
+- set explicit PyPI index, the old ``zc.buildout`` defaults no longer work
+
 
 3.0.13 (2017-02-15)
 -------------------
