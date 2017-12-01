@@ -6,6 +6,9 @@ For changes before verison 3.0, see ``HISTORY.txt``.
 3.0.14 (unreleased)
 -------------------
 
+- In ``str.format``, check the security for keys and items that are accessed.
+  Part of PloneHotfix20171128.  [maurits]
+
 
 3.0.13 (2017-02-15)
 -------------------
@@ -100,4 +103,3 @@ For changes before verison 3.0, see ``HISTORY.txt``.
 - Added decorators for public, private and protected security declarations.
 
 - Update tests to take advantage of automatic test suite discovery.
-
