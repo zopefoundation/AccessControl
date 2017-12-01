@@ -3,6 +3,7 @@
 *.so
 .installed.cfg
 .Python
+.tox/
 bin
 build
 develop-eggs

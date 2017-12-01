@@ -6,6 +6,8 @@ Changelog
 
 - set explicit PyPI index, the old ``zc.buildout`` defaults no longer work
 
+- add ``tox`` testing configuration
+
 
 2.13.15 (2017-02-15)
 --------------------
