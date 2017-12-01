@@ -11,6 +11,8 @@ For changes before verison 3.0, see ``HISTORY.txt``.
 
 - set explicit PyPI index, the old ``zc.buildout`` defaults no longer work
 
+- add ``tox`` testing configuration
+
 
 3.0.13 (2017-02-15)
 -------------------

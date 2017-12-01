@@ -4,6 +4,7 @@
 *.pyo
 *.so
 .Python
+.tox/
 .installed.cfg
 bin
 build
