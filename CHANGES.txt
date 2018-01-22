@@ -4,6 +4,9 @@ Changelog
 2.13.16 (unreleased)
 --------------------
 
+- In ``str.format``, check the security for keys and items that are accessed.
+  Part of PloneHotfix20171128.  [maurits]
+
 - set explicit PyPI index, the old ``zc.buildout`` defaults no longer work
 
 - add ``tox`` testing configuration
