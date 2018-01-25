@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.13.16 (unreleased)
+2.13.16 (2018-01-25)
 --------------------
 
 - In ``str.format``, check the security for keys and items that are accessed.
