@@ -17,7 +17,7 @@ from setuptools import setup, find_packages, Extension
 
 
 setup(name='AccessControl',
-      version='2.13.16',
+      version='2.13.17.dev0',
       url='http://pypi.python.org/pypi/AccessControl',
       license='ZPL 2.1',
       description="Security framework for Zope2.",
