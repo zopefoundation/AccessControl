@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.0b2 (unreleased)
+4.0b2 (2018-01-25)
 ------------------
 
 - Python 2 / 3 import improvements.
