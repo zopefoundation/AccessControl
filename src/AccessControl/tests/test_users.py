@@ -90,8 +90,8 @@ class BasicUserTests(unittest.TestCase):
         target = Context()
         target.__ac_local_roles__ = {'user': ['Other']}
         target.__parent__ = parent
-        self.assertEqual(derived.getRolesInContext(target),
-                         ['Manager', 'Other', 'Another'])
+        self.assertEqual(sorted(derived.getRolesInContext(target)),
+                         ['Another', 'Manager', 'Other'])
 
     def test_getRolesInContext_w_method(self):
         class Context(object):
