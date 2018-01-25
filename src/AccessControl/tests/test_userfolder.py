@@ -59,7 +59,7 @@ class UserFolderTests(unittest.TestCase):
 
     def testGetUser(self):
         uf = self._makeOne()
-        self.failIfEqual(uf.getUser('user1'), None)
+        self.assertNotEqual(uf.getUser('user1'), None)
 
     def testGetBadUser(self):
         uf = self._makeOne()
@@ -67,7 +67,7 @@ class UserFolderTests(unittest.TestCase):
 
     def testGetUserById(self):
         uf = self._makeOne()
-        self.failIfEqual(uf.getUserById('user1'), None)
+        self.assertNotEqual(uf.getUserById('user1'), None)
 
     def testGetBadUserById(self):
         uf = self._makeOne()
@@ -76,13 +76,13 @@ class UserFolderTests(unittest.TestCase):
     def testGetUsers(self):
         uf = self._makeOne()
         users = uf.getUsers()
-        self.failUnless(users)
+        self.assertTrue(users)
         self.assertEqual(users[0].getUserName(), 'user1')
 
     def testGetUserNames(self):
         uf = self._makeOne()
         names = uf.getUserNames()
-        self.failUnless(names)
+        self.assertTrue(names)
         self.assertEqual(names[0], 'user1')
 
     def testIdentify(self):
@@ -94,7 +94,7 @@ class UserFolderTests(unittest.TestCase):
     def testGetRoles(self):
         uf = self._makeOne()
         user = uf.getUser('user1')
-        self.failUnless('role1' in user.getRoles())
+        self.assertTrue('role1' in user.getRoles())
 
     def testMaxListUsers(self):
         # create a folder-ish thing which contains a roleManager,
@@ -145,12 +145,12 @@ class UserFolderTests(unittest.TestCase):
 
         uf = self._makeOne()
         uf.encrypt_passwords = True
-        self.failIf(uf._isPasswordEncrypted(PASSWORD))
+        self.assertFalse(uf._isPasswordEncrypted(PASSWORD))
 
         uf._doAddUser(USER_ID, PASSWORD, [], [])
         user = uf.getUserById(USER_ID)
-        self.failUnless(uf._isPasswordEncrypted(user.__))
-        self.failUnless(pw_validate(user.__, PASSWORD))
+        self.assertTrue(uf._isPasswordEncrypted(user.__))
+        self.assertTrue(pw_validate(user.__, PASSWORD))
 
     def test__doAddUser_with_preencrypted_passwords(self):
         # See collector #1869 && #1926
@@ -166,5 +166,5 @@ class UserFolderTests(unittest.TestCase):
         uf._doAddUser(USER_ID, ENCRYPTED, [], [])
         user = uf.getUserById(USER_ID)
         self.assertEqual(user.__, ENCRYPTED)
-        self.failUnless(uf._isPasswordEncrypted(user.__))
-        self.failUnless(pw_validate(user.__, PASSWORD))
+        self.assertTrue(uf._isPasswordEncrypted(user.__))
+        self.assertTrue(pw_validate(user.__, PASSWORD))

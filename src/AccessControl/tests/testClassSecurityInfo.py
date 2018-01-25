@@ -98,10 +98,10 @@ class ClassSecurityInfoTests(unittest.TestCase):
         self.assertEqual(object.private__roles__, ())
         imPermissionRole = [r for r in object.protected__roles__
                             if not r.endswith('_Permission')]
-        self.failUnless(len(imPermissionRole) == 4)
+        self.assertTrue(len(imPermissionRole) == 4)
 
         for item in ('Manager', 'Role A', 'Role B', 'Role C'):
-            self.failUnless(item in imPermissionRole)
+            self.assertTrue(item in imPermissionRole)
 
         # functions exist, i.e. decorators returned them
         self.assertEqual(object.public_new.__name__, 'public_new')
@@ -113,15 +113,15 @@ class ClassSecurityInfoTests(unittest.TestCase):
         self.assertEqual(object.private_new__roles__, ())
         imPermissionRole = [r for r in object.protected_new__roles__
                             if not r.endswith('_Permission')]
-        self.failUnless(len(imPermissionRole) == 4)
+        self.assertTrue(len(imPermissionRole) == 4)
 
         for item in ('Manager', 'Role A', 'Role B', 'Role C'):
-            self.failUnless(item in imPermissionRole)
+            self.assertTrue(item in imPermissionRole)
 
         # Make sure that a permission defined without accompanying method
         # is still reflected in __ac_permissions__
-        self.assertEquals([t for t in Test.__ac_permissions__ if not t[1]],
-                          [('Make food', (), ('Chef',))])
+        self.assertEqual([t for t in Test.__ac_permissions__ if not t[1]],
+                         [('Make food', (), ('Chef',))])
 
     def test_EnsureProtectedDecoCall(self):
         from AccessControl.class_init import InitializeClass

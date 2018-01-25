@@ -16,6 +16,11 @@ import inspect
 from zExceptions import Forbidden
 from zope.publisher.interfaces.browser import IBrowserRequest
 
+try:
+    from inspect import getfullargspec
+except ImportError:  # Python 2
+    from inspect import getargspec as getfullargspec
+
 
 _default = []
 
@@ -44,7 +49,7 @@ def requestmethod(*methods):
 
     def _methodtest(callable):
         """Only allow callable when request method is %s.""" % methodsstr
-        spec = inspect.getargspec(callable)
+        spec = getfullargspec(callable)
         args, defaults = spec[0], spec[3]
         try:
             r_index = args.index('REQUEST')

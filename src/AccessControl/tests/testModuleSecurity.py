@@ -76,12 +76,12 @@ class ModuleSecurityTests(unittest.TestCase):
         from AccessControl.SecurityInfo import _moduleSecurity as MS
         from AccessControl.ZopeGuards import guarded_import
         MSI('AccessControl.tests.nonesuch').declarePublic('pub')
-        self.failUnless('AccessControl.tests.nonesuch' in MS)
+        self.assertTrue('AccessControl.tests.nonesuch' in MS)
         self.assertRaises(ImportError,
                           guarded_import,
                           'AccessControl.tests.nonesuch',
                           ())
-        self.failUnless('AccessControl.tests.nonesuch' in MS)
+        self.assertTrue('AccessControl.tests.nonesuch' in MS)
 
     def test_level_default(self):
         self.assertAuth('AccessControl.tests.public_module', (),

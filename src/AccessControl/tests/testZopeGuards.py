@@ -195,7 +195,7 @@ class TestDictGuards(GuardTestCase):
     def test_get_default(self):
         from AccessControl.ZopeGuards import get_dict_get
         get = get_dict_get({'foo': 'bar'}, 'get')
-        self.failUnless(get('baz') is None)
+        self.assertTrue(get('baz') is None)
         self.assertEqual(get('baz', 'splat'), 'splat')
 
     def test_get_validates(self):
@@ -207,7 +207,7 @@ class TestDictGuards(GuardTestCase):
             get('foo')
         finally:
             self.setSecurityManager(old)
-        self.assert_(sm.calls)
+        self.assertTrue(sm.calls)
 
     def test_pop_simple(self):
         from AccessControl.ZopeGuards import get_dict_pop
@@ -233,7 +233,7 @@ class TestDictGuards(GuardTestCase):
             pop('foo')
         finally:
             self.setSecurityManager(old)
-        self.assert_(sm.calls)
+        self.assertTrue(sm.calls)
 
     @unittest.skipIf(six.PY3, "iter... is Python 2 only")
     def test_iterkeys_simple(self):
@@ -271,7 +271,7 @@ class TestDictGuards(GuardTestCase):
             next(iterkeys())
         finally:
             self.setSecurityManager(old)
-        self.assert_(sm.calls)
+        self.assertTrue(sm.calls)
 
     @unittest.skipIf(six.PY2, "keys() is only in Python 3 a generator")
     def test_keys_validates(self):
@@ -282,7 +282,7 @@ class TestDictGuards(GuardTestCase):
             next(keys())
         finally:
             self.setSecurityManager(old)
-        self.assert_(sm.calls)
+        self.assertTrue(sm.calls)
 
     @unittest.skipIf(six.PY3, "iter... is Python 2 only")
     def test_itervalues_simple(self):
@@ -320,7 +320,7 @@ class TestDictGuards(GuardTestCase):
             next(itervalues())
         finally:
             self.setSecurityManager(old)
-        self.assert_(sm.calls)
+        self.assertTrue(sm.calls)
 
     @unittest.skipIf(six.PY2, "values() is only in Python 3 a generator")
     def test_values_validates(self):
@@ -331,7 +331,7 @@ class TestDictGuards(GuardTestCase):
             next(values())
         finally:
             self.setSecurityManager(old)
-        self.assert_(sm.calls)
+        self.assertTrue(sm.calls)
 
 
 class TestListGuards(GuardTestCase):
@@ -356,7 +356,7 @@ class TestListGuards(GuardTestCase):
             pop()
         finally:
             self.setSecurityManager(old)
-        self.assert_(sm.calls)
+        self.assertTrue(sm.calls)
 
 
 class TestBuiltinFunctionGuards(GuardTestCase):
@@ -473,7 +473,7 @@ class TestBuiltinFunctionGuards(GuardTestCase):
     def test_any_succeeds(self):
         sm = SecurityManager()  # accepts
         old = self.setSecurityManager(sm)
-        self.assertEquals(guarded_any([True, True, False]), True)
+        self.assertEqual(guarded_any([True, True, False]), True)
         self.setSecurityManager(old)
 
     def test_min_succeeds(self):
@@ -560,21 +560,21 @@ class TestGuardedDictListTypes(unittest.TestCase):
     def testDictCreation(self):
         from AccessControl.ZopeGuards import safe_builtins
         d = safe_builtins['dict']
-        self.assertEquals(d(), {})
-        self.assertEquals(d({1: 2}), {1: 2})
-        self.assertEquals(d(((1, 2),)), {1: 2})
-        self.assertEquals(d(foo=1), {"foo": 1})
-        self.assertEquals(d.fromkeys((1, 2, 3)), {1: None, 2: None, 3: None})
-        self.assertEquals(d.fromkeys((1, 2, 3), 'f'), {1: 'f', 2: 'f', 3: 'f'})
+        self.assertEqual(d(), {})
+        self.assertEqual(d({1: 2}), {1: 2})
+        self.assertEqual(d(((1, 2),)), {1: 2})
+        self.assertEqual(d(foo=1), {"foo": 1})
+        self.assertEqual(d.fromkeys((1, 2, 3)), {1: None, 2: None, 3: None})
+        self.assertEqual(d.fromkeys((1, 2, 3), 'f'), {1: 'f', 2: 'f', 3: 'f'})
 
     def testListCreation(self):
         from AccessControl.ZopeGuards import safe_builtins
         l = safe_builtins['list']
-        self.assertEquals(l(), [])
-        self.assertEquals(l([1, 2, 3]), [1, 2, 3])
+        self.assertEqual(l(), [])
+        self.assertEqual(l([1, 2, 3]), [1, 2, 3])
         x = [3, 2, 1]
-        self.assertEquals(l(x), [3, 2, 1])
-        self.assertEquals(sorted(x), [1, 2, 3])
+        self.assertEqual(l(x), [3, 2, 1])
+        self.assertEqual(sorted(x), [1, 2, 3])
 
 
 class TestRestrictedPythonApply(GuardTestCase):
@@ -900,7 +900,8 @@ printed  # Prevent a warning of RestrictedPython that itis not used.
     # in the same directory as this file.
     def _compile(self, fname):
         fn = os.path.join(_HERE, fname)
-        text = open(fn).read()
+        with open(fn) as f:
+            text = f.read()
         return self._compile_str(text, fn)
 
     # d is a dict, the globals for execution or our safe builtins.

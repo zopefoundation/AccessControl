@@ -123,7 +123,7 @@ class PermissionRoleTests (unittest.TestCase):
 
     def testPermissionRoleSupportsGetattr(self):
         a = PermissionRole('a')
-        self.failUnless(getattr(a, '__roles__') == ('Manager', ))
-        self.failUnless(getattr(a, '_d') == ('Manager', ))
-        self.failUnless(getattr(a, '__name__') == 'a')
-        self.failUnless(getattr(a, '_p') == '_a_Permission')
+        self.assertTrue(getattr(a, '__roles__') == ('Manager', ))
+        self.assertTrue(getattr(a, '_d') == ('Manager', ))
+        self.assertTrue(getattr(a, '__name__') == 'a')
+        self.assertTrue(getattr(a, '_p') == '_a_Permission')

@@ -26,6 +26,13 @@ from AccessControl.userfolder import UserFolder
 
 from six.moves import _thread as thread
 
+try:
+    from sys import getswitchinterval
+    from sys import setswitchinterval
+except ImportError:  # Python 2
+    from sys import getcheckinterval as getswitchinterval
+    from sys import setcheckinterval as setswitchinterval
+
 
 user_roles = ('RoleOfUser',)
 eo_roles = ('RoleOfExecutableOwner',)
@@ -284,32 +291,32 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         r_item = self.a.r_item
         context = self.context
         v = self.policy.checkPermission('View', r_item, context)
-        self.assert_(not v, '_View_Permission should deny access to user')
+        self.assertTrue(not v, '_View_Permission should deny access to user')
         o_context = SecurityContext(self.uf.getUserById('theowner'))
         v = self.policy.checkPermission('View', r_item, o_context)
-        self.assert_(v, '_View_Permission should grant access to theowner')
+        self.assertTrue(v, '_View_Permission should grant access to theowner')
 
     def test_checkPermission_respects_proxy_roles(self):
         r_item = self.a.r_item
         context = self.context
-        self.failIf(self.policy.checkPermission('View', r_item, context))
+        self.assertFalse(self.policy.checkPermission('View', r_item, context))
         o_context = SecurityContext(self.uf.getUserById('joe'))
         # Push an executable with proxy roles on the stack
         eo = OwnedSetuidMethod().__of__(r_item)
         eo._proxy_roles = eo_roles
         context.stack.append(eo)
-        self.failUnless(self.policy.checkPermission('View', r_item, context))
+        self.assertTrue(self.policy.checkPermission('View', r_item, context))
 
     def test_checkPermission_proxy_roles_limit_access(self):
         r_item = self.a.r_item
         context = self.context
-        self.failUnless(self.policy.checkPermission('Foo', r_item, context))
+        self.assertTrue(self.policy.checkPermission('Foo', r_item, context))
         o_context = SecurityContext(self.uf.getUserById('joe'))
         # Push an executable with proxy roles on the stack
         eo = OwnedSetuidMethod().__of__(r_item)
         eo._proxy_roles = sysadmin_roles
         context.stack.append(eo)
-        self.failIf(self.policy.checkPermission('Foo', r_item, context))
+        self.assertFalse(self.policy.checkPermission('Foo', r_item, context))
 
     def test_checkPermission_proxy_role_scope(self):
         self.a.subobject = ImplictAcqObject()
@@ -328,12 +335,12 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         context.stack.append(r_subitem.owned_setuid_m.__of__(r_subitem))
 
         # Out of owner context
-        self.failIf(self.policy.checkPermission('View', r_item, context))
-        self.failIf(self.policy.checkPermission('Kill', r_item, context))
+        self.assertFalse(self.policy.checkPermission('View', r_item, context))
+        self.assertFalse(self.policy.checkPermission('Kill', r_item, context))
 
         # Inside owner context
-        self.failIf(self.policy.checkPermission('View', r_subitem, context))
-        self.failUnless(self.policy.checkPermission('Kill',
+        self.assertFalse(self.policy.checkPermission('View', r_subitem, context))
+        self.assertTrue(self.policy.checkPermission('Kill',
                                                     r_subitem,
                                                     context))
 
@@ -341,10 +348,10 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         r_item = self.a.r_item
         context = self.context
         v = self.policy.checkPermission(u'View', r_item, context)
-        self.assert_(not v, '_View_Permission should deny access to user')
+        self.assertTrue(not v, '_View_Permission should deny access to user')
         o_context = SecurityContext(self.uf.getUserById('theowner'))
         v = self.policy.checkPermission(u'View', r_item, o_context)
-        self.assert_(v, '_View_Permission should grant access to theowner')
+        self.assertTrue(v, '_View_Permission should grant access to theowner')
 
     def testContainersContextManager(self):
         from AccessControl.SimpleObjectPolicies import override_containers
@@ -702,11 +709,11 @@ def test_zsp_gets_right_roles_for_methods():
 class GetRolesWithMultiThreadTest(unittest.TestCase):
 
     def setUp(self):
-        self._original_check_interval = sys.getcheckinterval()
-        sys.setcheckinterval(1)
+        self._original_switch_interval = getswitchinterval()
+        setswitchinterval(1)
 
     def tearDown(self):
-        sys.setcheckinterval(self._original_check_interval)
+        setswitchinterval(self._original_switch_interval)
 
     def testGetRolesWithMultiThread(self):
         from AccessControl.ZopeSecurityPolicy import getRoles

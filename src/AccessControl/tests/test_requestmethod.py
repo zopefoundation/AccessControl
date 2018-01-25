@@ -12,11 +12,9 @@
 ##############################################################################
 
 from AccessControl.requestmethod import requestmethod
+from AccessControl.requestmethod import getfullargspec
 from zope.interface import implementer
 from zope.publisher.interfaces.browser import IBrowserRequest
-import unittest
-import zExceptions
-
 import unittest
 import zExceptions
 
@@ -94,7 +92,7 @@ class RequestMethodDecoratorsTests(unittest.TestCase):
                 *args):
             return bar, baz is mutabledefault, egg is None, REQUEST
         self.assertEqual((['bar', 'baz', 'egg', 'REQUEST'], 'args', None),
-                         inspect.getargspec(foo)[:3])
+                         getfullargspec(foo)[:3])
         self.assertEqual(('spam', True, True, None), foo('spam', egg=None))
         with self.assertRaises(TypeError) as err:
             foo(monty='python')
