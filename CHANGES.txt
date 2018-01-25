@@ -3,6 +3,12 @@ Changelog
 
 For changes before verison 3.0, see ``HISTORY.txt``.
 
+3.0.15 (unreleased)
+-------------------
+
+- Nothing changed yet.
+
+
 3.0.14 (2018-01-25)
 -------------------
 
