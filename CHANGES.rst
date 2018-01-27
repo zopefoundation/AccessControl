@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.0b3 (unreleased)
+4.0b3 (2018-01-27)
 ------------------
 
 - Fix deprecation warnings which have shown up when running the tests.
