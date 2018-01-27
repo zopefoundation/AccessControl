@@ -19,6 +19,7 @@ from AccessControl.ZopeGuards import guarded_any
 from AccessControl.ZopeGuards import guarded_getattr
 
 import doctest
+import gc
 import operator
 import os
 import six
@@ -83,9 +84,11 @@ class TestGuardedGetattr(GuardTestCase):
     def setUp(self):
         self.__sm = SecurityManager()
         self.__old = self.setSecurityManager(self.__sm)
+        gc.disable()
 
     def tearDown(self):
         self.setSecurityManager(self.__old)
+        gc.enable()
 
     def test_miss(self):
         from AccessControl.ZopeGuards import guarded_getattr
