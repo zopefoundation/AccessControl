@@ -571,31 +571,31 @@ class UnrestrictedUserTests(unittest.TestCase):
     def test_allowed__what_not_even_god_should_do(self):
         from AccessControl.PermissionRole import _what_not_even_god_should_do
         unrestricted = self._makeOne()
-        self.failIf(unrestricted.allowed(self, _what_not_even_god_should_do))
+        self.assertFalse(unrestricted.allowed(self, _what_not_even_god_should_do))
 
     def test_allowed_empty(self):
         unrestricted = self._makeOne()
-        self.failUnless(unrestricted.allowed(self, ()))
+        self.assertTrue(unrestricted.allowed(self, ()))
 
     def test_allowed_other(self):
         unrestricted = self._makeOne()
-        self.failUnless(unrestricted.allowed(self, ('Manager',)))
+        self.assertTrue(unrestricted.allowed(self, ('Manager',)))
 
     def test_has_role_empty_no_object(self):
         unrestricted = self._makeOne()
-        self.failUnless(unrestricted.has_role(()))
+        self.assertTrue(unrestricted.has_role(()))
 
     def test_has_role_empty_w_object(self):
         unrestricted = self._makeOne()
-        self.failUnless(unrestricted.has_role((), self))
+        self.assertTrue(unrestricted.has_role((), self))
 
     def test_has_role_other_no_object(self):
         unrestricted = self._makeOne()
-        self.failUnless(unrestricted.has_role(('Manager',)))
+        self.assertTrue(unrestricted.has_role(('Manager',)))
 
     def test_has_role_other_w_object(self):
         unrestricted = self._makeOne()
-        self.failUnless(unrestricted.has_role(('Manager',), self))
+        self.assertTrue(unrestricted.has_role(('Manager',), self))
 
     def test___repr__(self):
         unrestricted = self._makeOne()
@@ -632,23 +632,23 @@ class NullUnrestrictedUserTests(unittest.TestCase):
 
     def test_authenticate(self):
         null = self._makeOne()
-        self.failIf(null.authenticate('password', {}))
+        self.assertFalse(null.authenticate('password', {}))
 
     def test_allowed(self):
         null = self._makeOne()
-        self.failIf(null.allowed(self, ()))
+        self.assertFalse(null.allowed(self, ()))
 
     def test_has_role(self):
         null = self._makeOne()
-        self.failIf(null.has_role('Authenticated'))
+        self.assertFalse(null.has_role('Authenticated'))
 
     def test_has_role_w_object(self):
         null = self._makeOne()
-        self.failIf(null.has_role('Authenticated', self))
+        self.assertFalse(null.has_role('Authenticated', self))
 
     def test_has_permission(self):
         null = self._makeOne()
-        self.failIf(null.has_permission('View', self))
+        self.assertFalse(null.has_permission('View', self))
 
     def test___repr__(self):
         null = self._makeOne()

@@ -13,7 +13,10 @@
 """User folders.
 """
 
-from base64 import decodestring
+try:
+    from base64 import decodebytes
+except ImportError:
+    from base64 import decodestring as decodebytes
 
 from Acquisition import aq_base
 from Acquisition import aq_parent
@@ -111,7 +114,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
     def identify(self, auth):
         if auth and auth.lower().startswith('basic '):
             try:
-                name, password = decodestring(auth.split(' ')[-1].encode()).decode() \
+                name, password = decodebytes(auth.split(' ')[-1].encode()).decode() \
                     .split(':', 1)
             except:
                 raise BadRequest('Invalid authentication token')

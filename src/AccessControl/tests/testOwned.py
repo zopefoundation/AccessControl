@@ -221,21 +221,21 @@ class OwnershipChangeTests(unittest.TestCase):
         previous = self.root.parent._owner
 
         self.root.parent.changeOwnership(nobody)
-        self.assertEquals(self.root.parent._owner, previous)
+        self.assertEqual(self.root.parent._owner, previous)
 
     def test_changeOwnership_same_owner(self):
         previous = self.root.parent._owner
         sameuser = self.uf.getUser('user1').__of__(self.uf)
 
         self.root.parent.changeOwnership(sameuser)
-        self.assertEquals(self.root.parent._owner, previous)
+        self.assertEqual(self.root.parent._owner, previous)
 
     def test_changeOwnership_unownable_owner(self):
         previous = self.root.unownable._owner
         newuser = self.uf.getUser('user1').__of__(self.uf)
 
         self.root.unownable.changeOwnership(newuser)
-        self.assertEquals(self.root.unownable._owner, previous)
+        self.assertEqual(self.root.unownable._owner, previous)
 
     def test_changeOwnership_nonrecursive(self):
         previous_parent_owner = self.root.parent._owner
@@ -244,10 +244,10 @@ class OwnershipChangeTests(unittest.TestCase):
         newuser = self.uf.getUser('user2').__of__(self.uf)
 
         self.root.parent.changeOwnership(newuser)
-        self.assertNotEquals(self.root.parent._owner, previous_parent_owner)
-        self.assertEquals(self.root.parent._owner, (['acl_users'], 'user2'))
-        self.assertEquals(self.root.parent.child._owner, previous_child_owner)
-        self.assertEquals(self.root.parent.child.grandchild._owner,
+        self.assertNotEqual(self.root.parent._owner, previous_parent_owner)
+        self.assertEqual(self.root.parent._owner, (['acl_users'], 'user2'))
+        self.assertEqual(self.root.parent.child._owner, previous_child_owner)
+        self.assertEqual(self.root.parent.child.grandchild._owner,
                           previous_grandchild_owner)
 
     def test_changeOwnership_recursive(self):
@@ -257,15 +257,15 @@ class OwnershipChangeTests(unittest.TestCase):
         newuser = self.uf.getUser('user2').__of__(self.uf)
 
         self.root.parent.changeOwnership(newuser, recursive=True)
-        self.assertNotEquals(self.root.parent._owner, previous_parent_owner)
-        self.assertEquals(self.root.parent._owner, (['acl_users'], 'user2'))
-        self.assertNotEquals(self.root.parent.child._owner,
+        self.assertNotEqual(self.root.parent._owner, previous_parent_owner)
+        self.assertEqual(self.root.parent._owner, (['acl_users'], 'user2'))
+        self.assertNotEqual(self.root.parent.child._owner,
                              previous_child_owner)
-        self.assertEquals(self.root.parent.child._owner,
+        self.assertEqual(self.root.parent.child._owner,
                           (['acl_users'], 'user2'))
-        self.assertNotEquals(self.root.parent.child.grandchild._owner,
+        self.assertNotEqual(self.root.parent.child.grandchild._owner,
                              previous_grandchild_owner)
-        self.assertEquals(self.root.parent.child.grandchild._owner,
+        self.assertEqual(self.root.parent.child.grandchild._owner,
                           (['acl_users'], 'user2'))
 
     def test_changeOwnership_recursive_objectValues_acquisition(self):
@@ -282,7 +282,7 @@ class OwnershipChangeTests(unittest.TestCase):
         self.root.parent.bad = FauxContent()
 
         self.root.parent.bad.changeOwnership(newuser, recursive=True)
-        self.assertEquals(self.root.parent._owner, previous_parent_owner)
-        self.assertEquals(self.root.parent.child._owner, previous_child_owner)
-        self.assertEquals(self.root.parent.child.grandchild._owner,
+        self.assertEqual(self.root.parent._owner, previous_parent_owner)
+        self.assertEqual(self.root.parent.child._owner, previous_child_owner)
+        self.assertEqual(self.root.parent.child.grandchild._owner,
                           previous_grandchild_owner)

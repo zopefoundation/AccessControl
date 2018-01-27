@@ -6,7 +6,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0b3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix deprecation warnings which have shown up when running the tests.
 
 
 4.0b2 (2018-01-25)
