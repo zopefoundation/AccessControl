@@ -29,9 +29,7 @@ except ImportError:  # PY2
 
 
 def should_be_tainted(value):
-    if isinstance(value, TaintedString):
-        return should_be_tainted(value._value)
-    elif isinstance(value, int):
+    if isinstance(value, int):
         return 60 == value
     elif isinstance(value, bytes):
         if six.PY2:

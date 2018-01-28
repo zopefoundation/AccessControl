@@ -29,19 +29,12 @@ class TestFunctions(unittest.TestCase):
 
     def test_should_be_tainted(self):
         from AccessControl.tainted import should_be_tainted
-        from AccessControl.tainted import taint_string
-        from AccessControl.tainted import TaintedString
-        from AccessControl.tainted import TaintedBytes
         self.assertFalse(should_be_tainted('string'))
         self.assertTrue(should_be_tainted('<string'))
         self.assertFalse(should_be_tainted(b'string'))
         self.assertTrue(should_be_tainted(b'<string'))
         self.assertFalse(should_be_tainted(b'string'[0]))
         self.assertTrue(should_be_tainted(b'<string'[0]))
-        self.assertFalse(should_be_tainted(taint_string('string')))
-        self.assertTrue(should_be_tainted(taint_string('<string')))
-        self.assertFalse(should_be_tainted(taint_string(b'string')))
-        self.assertTrue(should_be_tainted(taint_string(b'<string')))
 
 
 class TestTaintedString(unittest.TestCase):
