@@ -18,6 +18,32 @@ import unittest
 import six
 
 
+class TestFunctions(unittest.TestCase):
+
+    def test_taint_string(self):
+        from AccessControl.tainted import taint_string
+        from AccessControl.tainted import TaintedString
+        from AccessControl.tainted import TaintedBytes
+        self.assertIsInstance(taint_string('string'), TaintedString)
+        self.assertIsInstance(taint_string(b'bytes'), TaintedBytes)
+
+    def test_should_be_tainted(self):
+        from AccessControl.tainted import should_be_tainted
+        from AccessControl.tainted import taint_string
+        from AccessControl.tainted import TaintedString
+        from AccessControl.tainted import TaintedBytes
+        self.assertFalse(should_be_tainted('string'))
+        self.assertTrue(should_be_tainted('<string'))
+        self.assertFalse(should_be_tainted(b'string'))
+        self.assertTrue(should_be_tainted(b'<string'))
+        self.assertFalse(should_be_tainted(b'string'[0]))
+        self.assertTrue(should_be_tainted(b'<string'[0]))
+        self.assertFalse(should_be_tainted(taint_string('string')))
+        self.assertTrue(should_be_tainted(taint_string('<string')))
+        self.assertFalse(should_be_tainted(taint_string(b'string')))
+        self.assertTrue(should_be_tainted(taint_string(b'<string')))
+
+
 class TestTaintedString(unittest.TestCase):
 
     def setUp(self):
@@ -34,6 +60,9 @@ class TestTaintedString(unittest.TestCase):
 
     def testRepr(self):
         self.assertEqual(repr(self.tainted), repr(self.quoted))
+
+    def testEqual(self):
+        self.assertTrue(self.tainted, self.unquoted)
 
     def testCmp(self):
         self.assertTrue(self.tainted == self.unquoted)
@@ -61,11 +90,12 @@ class TestTaintedString(unittest.TestCase):
         self.assertFalse(isinstance(self.tainted[1:], self._getClass()))
         self.assertEqual(self.tainted[1:], self.unquoted[1:])
 
+    CONCAT = 'test'
     def testConcat(self):
-        self.assertTrue(isinstance(self.tainted + 'test', self._getClass()))
-        self.assertEqual(self.tainted + 'test', self.unquoted + 'test')
-        self.assertTrue(isinstance('test' + self.tainted, self._getClass()))
-        self.assertEqual('test' + self.tainted, 'test' + self.unquoted)
+        self.assertTrue(isinstance(self.tainted + self.CONCAT, self._getClass()))
+        self.assertEqual(self.tainted + self.CONCAT, self.unquoted + self.CONCAT)
+        self.assertTrue(isinstance(self.CONCAT + self.tainted, self._getClass()))
+        self.assertEqual(self.CONCAT + self.tainted, self.CONCAT + self.unquoted)
 
     def testMultiply(self):
         self.assertTrue(isinstance(2 * self.tainted, self._getClass()))
@@ -157,3 +187,37 @@ class TestTaintedString(unittest.TestCase):
 
     def testQuoted(self):
         self.assertEqual(self.tainted.quoted(), self.quoted)
+
+
+class TestTaintedBytes(TestTaintedString):
+
+    def setUp(self):
+        self.unquoted = b'<test attr="&">'
+        self.quoted = b'&lt;test attr=&quot;&amp;&quot;&gt;'
+        self.tainted = self._getClass()(self.unquoted)
+
+    def _getClass(self):
+        from AccessControl.tainted import TaintedBytes
+        return TaintedBytes
+    
+    def testCmp(self):
+        self.assertTrue(self.tainted == self.unquoted)
+        self.assertTrue(self.tainted < b'a')
+        self.assertTrue(self.tainted > b'.')
+    
+    CONCAT = b'test'
+    
+    def testGetItem(self):
+        self.assertTrue(isinstance(self.tainted[0], self._getClass()))
+        self.assertEqual(self.tainted[0], self._getClass()(b'<'))
+        self.assertFalse(isinstance(self.tainted[-1], self._getClass()))
+        self.assertEqual(self.tainted[-1], 62)
+
+    def testStr(self):
+        self.assertEqual(str(self.tainted), self.unquoted.decode('utf8'))
+
+    def testGetSlice(self):
+        self.assertTrue(isinstance(self.tainted[0:1], self._getClass()))
+        self.assertEqual(self.tainted[0:1], b'<')
+        self.assertFalse(isinstance(self.tainted[1:], self._getClass()))
+        self.assertEqual(self.tainted[1:], self.unquoted[1:])
