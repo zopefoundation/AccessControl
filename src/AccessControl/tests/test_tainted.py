@@ -211,7 +211,7 @@ class TestTaintedBytes(TestTaintedString):
         self.assertTrue(isinstance(self.tainted[0], self._getClass()))
         self.assertEqual(self.tainted[0], self._getClass()(b'<'))
         self.assertFalse(isinstance(self.tainted[-1], self._getClass()))
-        self.assertEqual(self.tainted[-1], 62)
+        self.assertEqual(self.tainted[-1], 62 if six.PY3 else b'>')
 
     def testStr(self):
         self.assertEqual(str(self.tainted), self.unquoted.decode('utf8'))

@@ -34,7 +34,10 @@ def should_be_tainted(value):
     elif isinstance(value, int):
         return 60 == value
     elif isinstance(value, bytes):
-        return 60 in value
+        if six.PY2:
+            return b'<' in value
+        else:
+            return 60 in value
     else:
         return '<' in value
 
