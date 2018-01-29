@@ -30,6 +30,7 @@ except ImportError:  # PY2
 
 def should_be_tainted(value):
     if isinstance(value, int):
+        # ord('<') is 60
         return 60 == value
     elif isinstance(value, bytes):
         if six.PY2:
@@ -193,6 +194,7 @@ class TaintedBytes(TaintedString):
     
     def __init__(self, value):
         if isinstance(value, int):
+            assert six.PY3
             value = bytes([value])
         self._value = value
 
