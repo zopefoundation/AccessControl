@@ -193,10 +193,21 @@ for f in oneOptArgWrappedMethods:
 class TaintedBytes(TaintedString):
     
     def __init__(self, value):
-        if isinstance(value, int):
-            assert six.PY3
+        if isinstance(value, bytes):
+            self._value = value
+        elif isinstance(value, int):
+            if six.PY2:
+                raise ValueError(
+                    "Constructing from a single character as an int "
+                    "is valid only with Python 3."
+                    )
             value = bytes([value])
-        self._value = value
+            self._value = value
+        else:
+            raise ValueError(
+                "Can be constructed only from bytes "
+                "(or a single int with Python3)."
+                )
 
     def quoted(self):
         result = escape(self._value.decode('utf8'), 1)
@@ -204,3 +215,6 @@ class TaintedBytes(TaintedString):
     
     def __str__(self):
         return self._value.decode('utf8')
+    
+    def decode(self, *args):
+        return TaintedString(self._value.decode(*args))

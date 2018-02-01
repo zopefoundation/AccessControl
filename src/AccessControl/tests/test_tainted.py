@@ -55,7 +55,7 @@ class TestTaintedString(unittest.TestCase):
         self.assertEqual(repr(self.tainted), repr(self.quoted))
 
     def testEqual(self):
-        self.assertTrue(self.tainted, self.unquoted)
+        self.assertEqual(self.tainted, self.unquoted)
 
     def testCmp(self):
         self.assertTrue(self.tainted == self.unquoted)
@@ -195,6 +195,7 @@ class TestTaintedBytes(TestTaintedString):
     
     def testCmp(self):
         self.assertTrue(self.tainted == self.unquoted)
+        self.assertEqual(self.tainted, self.unquoted)
         self.assertTrue(self.tainted < b'a')
         self.assertTrue(self.tainted > b'.')
     
@@ -214,3 +215,99 @@ class TestTaintedBytes(TestTaintedString):
         self.assertEqual(self.tainted[0:1], b'<')
         self.assertFalse(isinstance(self.tainted[1:], self._getClass()))
         self.assertEqual(self.tainted[1:], self.unquoted[1:])
+
+    def testInterpolate(self):
+        tainted = self._getClass()(b'<%s>')
+        self.assertTrue(isinstance(tainted % b'foo', self._getClass()))
+        self.assertEqual(tainted % b'foo', b'<foo>')
+        tainted = self._getClass()(b'<%s attr="%s">')
+        self.assertTrue(isinstance(tainted % (b'foo', b'bar'), self._getClass()))
+        self.assertEqual(tainted % (b'foo', b'bar'), b'<foo attr="bar">')
+
+    def testStringMethods(self):
+        simple = "capitalize isalpha isdigit islower isspace istitle isupper" \
+            " lower lstrip rstrip strip swapcase upper".split()
+        returnsTainted = "capitalize lower lstrip rstrip strip swapcase upper"
+        returnsTainted = returnsTainted.split()
+        unquoted = b'\tThis is a test  '
+        tainted = self._getClass()(unquoted)
+        for f in simple:
+            v = getattr(tainted, f)()
+            self.assertEqual(v, getattr(unquoted, f)())
+            if f in returnsTainted:
+                self.assertTrue(isinstance(v, self._getClass()))
+            else:
+                self.assertFalse(isinstance(v, self._getClass()))
+
+        optArg = "lstrip rstrip strip".split()
+        for f in optArg:
+            v = getattr(tainted, f)(b" ")
+            self.assertEqual(v, getattr(unquoted, f)(b" "))
+            self.assertTrue(isinstance(v, self._getClass()))
+
+        justify = "center ljust rjust".split()
+        for f in justify:
+            v = getattr(tainted, f)(30)
+            self.assertEqual(v, getattr(unquoted, f)(30))
+            self.assertTrue(isinstance(v, self._getClass()))
+
+        searches = "find index rfind rindex endswith startswith".split()
+        searchraises = "index rindex".split()
+        for f in searches:
+            v = getattr(tainted, f)(b'test')
+            self.assertEqual(v, getattr(unquoted, f)(b'test'))
+            if f in searchraises:
+                self.assertRaises(ValueError, getattr(tainted, f), b'nada')
+
+        self.assertEqual(tainted.count(b'test', 1, -1),
+                          unquoted.count(b'test', 1, -1))
+
+        self.assertEqual(tainted.decode(), unquoted.decode())
+        from AccessControl.tainted import TaintedString
+        self.assertTrue(isinstance(tainted.decode(), TaintedString))
+
+        self.assertEqual(tainted.expandtabs(10), unquoted.expandtabs(10))
+        self.assertTrue(isinstance(tainted.expandtabs(), self._getClass()))
+
+        self.assertEqual(tainted.replace(b'test', b'spam'),
+                          unquoted.replace(b'test', b'spam'))
+        self.assertTrue(isinstance(tainted.replace(b'test', b'<'),
+                                self._getClass()))
+        self.assertFalse(isinstance(tainted.replace(b'test', b'spam'),
+                               self._getClass()))
+
+        self.assertEqual(tainted.split(), unquoted.split())
+        for part in self._getClass()(b'< < <').split():
+            self.assertTrue(isinstance(part, self._getClass()))
+        for part in tainted.split():
+            self.assertFalse(isinstance(part, self._getClass()))
+
+        multiline = b'test\n<tainted>'
+        lines = self._getClass()(multiline).split()
+        self.assertEqual(lines, multiline.split())
+        self.assertTrue(isinstance(lines[1], self._getClass()))
+        self.assertFalse(isinstance(lines[0], self._getClass()))
+
+        if six.PY3:
+            transtable = bytes(range(256))
+        else:
+            transtable = ''.join(map(chr, range(256)))
+        self.assertEqual(tainted.translate(transtable),
+                          unquoted.translate(transtable))
+        self.assertTrue(isinstance(self._getClass()(b'<').translate(transtable),
+                                self._getClass()))
+        if six.PY2:
+            # Translate no longer supports a second argument
+            self.assertFalse(isinstance(self._getClass()(b'<').translate(transtable,
+                                                                   b'<'),
+                                   self._getClass()))
+
+    def testConstructor(self):
+        from AccessControl.tainted import TaintedBytes
+        if six.PY2:
+            self.assertRaises(ValueError, TaintedBytes, [60])
+        if six.PY3:
+            self.assertEqual(TaintedBytes(60), b'<')
+            self.assertEqual(TaintedBytes(32), b' ')
+        self.assertEqual(TaintedBytes(b'abc'), b'abc')
+        self.assertRaises(ValueError, TaintedBytes, "abc")
