@@ -310,4 +310,4 @@ class TestTaintedBytes(TestTaintedString):
             self.assertEqual(TaintedBytes(60), b'<')
             self.assertEqual(TaintedBytes(32), b' ')
         self.assertEqual(TaintedBytes(b'abc'), b'abc')
-        self.assertRaises(ValueError, TaintedBytes, "abc")
+        self.assertRaises(ValueError, TaintedBytes, u"abc")
