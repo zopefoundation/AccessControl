@@ -410,14 +410,7 @@ SpecialUsers.super = emergency_user
 
 
 def rolejoin(roles, other):
-    dict = {}
-    for role in roles:
-        dict[role] = 1
-    for role in other:
-        dict[role] = 1
-    roles = dict.keys()
-    roles.sort()
-    return roles
+    return sorted(set(roles).union(other))
 
 
 addr_match = re.compile(r'((\d{1,3}\.){1,3}\*)|((\d{1,3}\.){3}\d{1,3})').match
