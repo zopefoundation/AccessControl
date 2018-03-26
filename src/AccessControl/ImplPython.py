@@ -781,12 +781,7 @@ def item_repr(ob):
 
 def simplifyRoles(roles):
     """Sorts and removes duplicates from a role list."""
-    d = {}
-    for r in roles:
-        d[r] = 1
-    lst = d.keys()
-    lst.sort()
-    return lst
+    return sorted(set(roles))
 
 
 def raiseVerbose(msg, accessed, container, name, value, context,
