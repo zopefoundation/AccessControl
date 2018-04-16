@@ -28,6 +28,25 @@ except ImportError:  # PY2
     from cgi import escape
 
 
+def should_be_tainted(value):
+    if isinstance(value, int):
+        # ord('<') is 60
+        return 60 == value
+    elif isinstance(value, bytes):
+        if six.PY2:
+            return b'<' in value
+        else:
+            return 60 in value
+    else:
+        return '<' in value
+
+
+def taint_string(value):
+    if isinstance(value, bytes):
+        return TaintedBytes(value)
+    else:
+        return TaintedString(value)
+
 @total_ordering
 class TaintedString(object):
 
@@ -58,7 +77,7 @@ class TaintedString(object):
 
     def __getitem__(self, index):
         v = self._value[index]
-        if '<' in v:
+        if should_be_tainted(v):
             v = self.__class__(v)
         return v
 
@@ -66,7 +85,7 @@ class TaintedString(object):
         i = max(i, 0)
         j = max(j, 0)
         v = self._value[i:j]
-        if '<' in v:
+        if should_be_tainted(v):
             v = self.__class__(v)
         return v
 
@@ -120,21 +139,21 @@ class TaintedString(object):
 
     def replace(self, *args):
         v = self._value.replace(*args)
-        if '<' in v:
+        if should_be_tainted(v):
             v = self.__class__(v)
         return v
 
     def split(self, *args):
         r = self._value.split(*args)
-        return list(map(lambda v, c=self.__class__: '<' in v and c(v) or v, r))
+        return list(map(lambda v, c=self.__class__: should_be_tainted(v) and c(v) or v, r))
 
     def splitlines(self, *args):
         r = self._value.splitlines(*args)
-        return list(map(lambda v, c=self.__class__: '<' in v and c(v) or v, r))
+        return list(map(lambda v, c=self.__class__: should_be_tainted(v) and c(v) or v, r))
 
     def translate(self, *args):
         v = self._value.translate(*args)
-        if '<' in v:
+        if should_be_tainted(v):
             v = self.__class__(v)
         return v
 
@@ -169,3 +188,33 @@ for f in oneArgWrappedMethods:
 
 for f in oneOptArgWrappedMethods:
     setattr(TaintedString, f, createOneOptArgWrapper(f))
+
+
+class TaintedBytes(TaintedString):
+    
+    def __init__(self, value):
+        if isinstance(value, bytes):
+            self._value = value
+        elif isinstance(value, int):
+            if six.PY2:
+                raise ValueError(
+                    "Constructing from a single character as an int "
+                    "is valid only with Python 3."
+                    )
+            value = bytes([value])
+            self._value = value
+        else:
+            raise ValueError(
+                "Can be constructed only from bytes "
+                "(or a single int with Python3)."
+                )
+
+    def quoted(self):
+        result = escape(self._value.decode('utf8'), 1)
+        return result.encode('utf8')
+    
+    def __str__(self):
+        return self._value.decode('utf8')
+    
+    def decode(self, *args):
+        return TaintedString(self._value.decode(*args))
