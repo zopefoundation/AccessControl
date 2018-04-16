@@ -8,6 +8,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Drop support for Python 3.4.
 
+- Add ``TaintedBytes`` besides ``TaintedString`` in ``AccessControl.tainted``.
+  (#57)
+
 
 4.0b3 (2018-01-27)
 ------------------
