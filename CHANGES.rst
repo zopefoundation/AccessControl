@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.0b4 (unreleased)
+4.0b4 (2018-04-16)
 ------------------
 
 - Drop support for Python 3.4.
