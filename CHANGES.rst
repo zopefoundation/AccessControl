@@ -6,7 +6,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0b5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add icon for Bootstrap ZMI.
 
 
 4.0b4 (2018-04-16)
