@@ -42,6 +42,7 @@ safe_builtins.update(utility_builtins)
 
 # Allow access to unprotected attributes (don't show deprecation warning).
 with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
     try:
         import sets
     except ImportError:
