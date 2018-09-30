@@ -409,8 +409,9 @@ class RoleManager(Base, RoleManager):
     def userdefined_roles(self):
         """Return list of user-defined roles.
         """
-        default_roles = classattr(self.__class__, '__ac_roles__')
-        return tuple(set(self.__ac_roles__) - set(default_roles))
+        default_roles = set(classattr(self.__class__, '__ac_roles__'))
+        return tuple(
+            role for role in self.__ac_roles__ if role not in default_roles)
 
     def possible_permissions(self):
         d = {}

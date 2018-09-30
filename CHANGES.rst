@@ -8,6 +8,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Add icon for Bootstrap ZMI.
 
+- Fix order of roles returned by
+  ``AccessControl.rolemanager.RoleManager.userdefined_roles``.
+
 
 4.0b4 (2018-04-16)
 ------------------

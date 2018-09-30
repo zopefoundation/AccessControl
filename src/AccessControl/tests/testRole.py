@@ -129,6 +129,7 @@ class TestRoleManager(unittest.TestCase):
 
         # forcing our own roles
         root.context1.__ac_roles__ = ('Role2', 'Role1')
-        self.assertEqual(set(root.context1.userdefined_roles()),
-                         set(('Role1', 'Role2')))
-
+        self.assertEqual(
+            ('Role2', 'Role1'),
+            root.context1.userdefined_roles(),
+        )
