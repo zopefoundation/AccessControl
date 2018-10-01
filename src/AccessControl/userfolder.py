@@ -52,7 +52,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
     meta_type = 'User Folder'
     id = 'acl_users'
     title = 'User Folder'
-    zmi_icon = 'far fa-address-book'
+    zmi_icon = 'fa fa-user-friends'
 
     isPrincipiaFolderish = 1
     isAUserFolder = 1
