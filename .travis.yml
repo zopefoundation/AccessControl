@@ -4,7 +4,11 @@ python:
     - 2.7
     - 3.5
     - 3.6
-
+matrix:
+    include:
+        - python: "3.7"
+          dist: xenial
+          sudo: true
 install:
     - pip install six==1.10.0 # force here to avoid conflit with zc.recipe.testrunner
     - pip install -U setuptools==33.1.1
@@ -12,16 +16,13 @@ install:
     - pip install zc.buildout
     - buildout bootstrap
     - buildout
-
 script:
     - coverage run bin/test -v1
 after_success:
     - coverage combine
     - coveralls
-
 notifications:
     email: false
-
 cache:
   pip: true
   directories:
