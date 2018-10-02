@@ -11,6 +11,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 - Fix order of roles returned by
   ``AccessControl.rolemanager.RoleManager.userdefined_roles``.
 
+- Add support for Python 3.7.
 
 4.0b4 (2018-04-16)
 ------------------
