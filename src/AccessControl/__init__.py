@@ -54,3 +54,8 @@ if six.PY2:
     allow_type(six.text_type, rules)
 
 del six
+
+zodbupdate_decode_dict = {
+    'AccessControl.users User name': 'utf-8',
+    'AccessControl.users User __': 'utf-8',
+}
