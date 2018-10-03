@@ -390,8 +390,6 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
                    level=import_default_level):
     if fromlist is None:
         fromlist = ()
-    if '*' in fromlist:
-        raise Unauthorized("'from %s import *' is not allowed")
     if globals is None:
         globals = {}
     if locals is None:
@@ -406,8 +404,6 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
     module = load_module(None, None, mnameparts, validate, globals, locals)
     if module is None:
         raise Unauthorized("import of '%s' is unauthorized" % mname)
-    if fromlist is None:
-        fromlist = ()
     for name in fromlist:
         v = getattr(module, name, None)
         if v is None:
