@@ -67,9 +67,6 @@ class ModuleSecurityTests(unittest.TestCase):
         self.assertAuth('AccessControl.tests.public_module.submodule',
                         ('pub',))
 
-    def test_star_import_not_allowed(self):
-        self.assertUnauth('AccessControl.tests.public_module', ('*',))
-
     def test_public_module_asterisk_not_allowed(self):
         self.assertUnauth('AccessControl.tests.public_module', ('*',))
 
