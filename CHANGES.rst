@@ -13,6 +13,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Add support for Python 3.7.
 
+- Remove duplicate guard against * imports. (#60)
+
 4.0b4 (2018-04-16)
 ------------------
 
