@@ -15,6 +15,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Remove duplicate guard against * imports. (#60)
 
+- Remove leftovers from history support dropped in Zope.
+
+
 4.0b4 (2018-04-16)
 ------------------
 
