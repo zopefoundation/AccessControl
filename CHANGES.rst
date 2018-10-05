@@ -15,6 +15,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Remove duplicate guard against * imports. (#60)
 
+- Add configuration for `zodbupdate`.
+
 - Remove leftovers from history support dropped in Zope.
 
 
