@@ -1,5 +1,4 @@
 from AccessControl.ZopeGuards import guarded_getattr, guarded_getitem
-from collections import Mapping
 
 import string
 import six
@@ -9,6 +8,11 @@ try:
     import _string
 except ImportError:
     pass
+
+if six.PY3:
+    from collections.abc import Mapping
+else:
+    from collections import Mapping
 
 
 def formatter_field_name_split(field_name):
