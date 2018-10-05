@@ -86,7 +86,6 @@ def requestmethod(*methods):
         # Build a facade, with a reference to our locally-scoped _curried
         name = callable.__name__
         facade_globs = dict(_curried=_curried, _default=_default)
-        # exec(_buildFacade(name, spec, callable.__doc__), facade_globs)
         exec(_buildFacade(name, callable, callable.__doc__), facade_globs)
         return facade_globs[name]
 
