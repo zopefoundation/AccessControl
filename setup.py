@@ -81,4 +81,9 @@ setup(name='AccessControl',
       ],
       include_package_data=True,
       zip_safe=False,
+      entry_points={
+        'zodbupdate.decode': [
+            'decodes = AccessControl:zodbupdate_decode_dict',
+        ],
+      },
       )
