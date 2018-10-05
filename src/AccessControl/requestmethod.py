@@ -11,14 +11,16 @@
 #
 ##############################################################################
 
+import six
 from zExceptions import Forbidden
 from zope.publisher.interfaces.browser import IBrowserRequest
 
-try:
+if six.PY3:
     from inspect import getfullargspec
-except ImportError:  # Python 2
+    from inspect import signature
+else:  # Python 2
     from inspect import getargspec as getfullargspec
-from inspect import signature
+    from funcsigs import signature
 
 _default = []
 
