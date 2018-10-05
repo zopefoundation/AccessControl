@@ -1,5 +1,5 @@
 from AccessControl.ZopeGuards import guarded_getattr, guarded_getitem
-from collections import Mapping
+from collections.abc import Mapping
 
 import string
 import six

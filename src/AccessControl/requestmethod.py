@@ -11,8 +11,6 @@
 #
 ##############################################################################
 
-import inspect
-
 from zExceptions import Forbidden
 from zope.publisher.interfaces.browser import IBrowserRequest
 
@@ -20,22 +18,27 @@ try:
     from inspect import getfullargspec
 except ImportError:  # Python 2
     from inspect import getargspec as getfullargspec
-
+from inspect import signature
 
 _default = []
 
 
-def _buildFacade(name, spec, docstring):
+def _buildFacade(name, method, docstring):
     """Build a facade function, matching the decorated method in signature.
 
     Note that defaults are replaced by _default, and _curried will reconstruct
     these to preserve mutable defaults.
 
     """
-    args = inspect.formatargspec(formatvalue=lambda v: '=_default', *spec)
-    callargs = inspect.formatargspec(formatvalue=lambda v: '', *spec)
-    return 'def %s%s:\n    """%s"""\n    return _curried%s' % (
-        name, args, docstring, callargs)
+    sig = signature(method)
+    args = []
+    for v in sig.parameters.values():
+        argstr = str(v)
+        args.append(
+            argstr if '=' not in argstr else '{}=_default'.format(v.name))
+    callargs = ', '.join(sig.parameters.keys())
+    return 'def %s(%s):\n    """%s"""\n    return _curried(%s)' % (
+        name, ', '.join(args), docstring, callargs)
 
 
 def requestmethod(*methods):
@@ -81,7 +84,8 @@ def requestmethod(*methods):
         # Build a facade, with a reference to our locally-scoped _curried
         name = callable.__name__
         facade_globs = dict(_curried=_curried, _default=_default)
-        exec(_buildFacade(name, spec, callable.__doc__), facade_globs)
+        # exec(_buildFacade(name, spec, callable.__doc__), facade_globs)
+        exec(_buildFacade(name, callable, callable.__doc__), facade_globs)
         return facade_globs[name]
 
     return _methodtest
