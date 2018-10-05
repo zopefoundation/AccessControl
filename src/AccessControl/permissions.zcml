@@ -78,11 +78,6 @@
     />
 
   <permission
-    id="zope2.ViewHistory"
-    title="View History"
-    />
-
-  <permission
     id="zope2.ViewManagementScreens"
     title="View management screens"
     />

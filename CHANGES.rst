@@ -17,6 +17,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Add configuration for `zodbupdate`.
 
+- Remove leftovers from history support dropped in Zope.
+
 
 4.0b4 (2018-04-16)
 ------------------
