@@ -25,7 +25,7 @@ else:  # Python 2
 _default = []
 
 
-def _buildFacade(name, method, docstring):
+def buildfacade(name, method, docstring):
     """Build a facade function, matching the decorated method in signature.
 
     Note that defaults are replaced by _default, and _curried will reconstruct
@@ -34,13 +34,14 @@ def _buildFacade(name, method, docstring):
     """
     sig = signature(method)
     args = []
+    callargs = []
     for v in sig.parameters.values():
-        argstr = str(v)
+        parts = str(v).split('=')
         args.append(
-            argstr if '=' not in argstr else '{}=_default'.format(v.name))
-    callargs = ', '.join(sig.parameters.keys())
+            parts[0] if len(parts) == 1 else '{}=_default'.format(parts[0]))
+        callargs.append(parts[0])
     return 'def %s(%s):\n    """%s"""\n    return _curried(%s)' % (
-        name, ', '.join(args), docstring, callargs)
+        name, ', '.join(args), docstring, ', '.join(callargs))
 
 
 def requestmethod(*methods):
@@ -86,7 +87,7 @@ def requestmethod(*methods):
         # Build a facade, with a reference to our locally-scoped _curried
         name = callable.__name__
         facade_globs = dict(_curried=_curried, _default=_default)
-        exec(_buildFacade(name, callable, callable.__doc__), facade_globs)
+        exec(buildfacade(name, callable, callable.__doc__), facade_globs)
         return facade_globs[name]
 
     return _methodtest

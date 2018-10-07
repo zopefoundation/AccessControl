@@ -13,6 +13,7 @@
 
 from AccessControl.requestmethod import requestmethod
 from AccessControl.requestmethod import getfullargspec
+from AccessControl.requestmethod import buildfacade
 from zope.interface import implementer
 from zope.publisher.interfaces.browser import IBrowserRequest
 import unittest
@@ -84,7 +85,6 @@ class RequestMethodDecoratorsTests(unittest.TestCase):
         # variables against callable signatures, the result of the decorator
         # must match the original closely, and keyword parameter defaults must
         # be preserved:
-        import inspect
         mutabledefault = dict()
 
         @requestmethod('POST')
@@ -121,3 +121,16 @@ class RequestMethodDecoratorsTests(unittest.TestCase):
             foo('spam', POST)
         self.assertEqual('Request must be GET, HEAD or PROPFIND',
                          str(err.exception))
+
+    def test_facade_render_correct_args_kwargs(self):
+        """ s. https://github.com/zopefoundation/AccessControl/issues/69
+        """
+        def foo(bar, baz, *args, **kwargs):
+            """foo doc"""
+            return baz
+        got = buildfacade('foo', foo, foo.__doc__)
+        expected = '\n'.join([
+            'def foo(bar, baz, *args, **kwargs):',
+            '    """foo doc"""',
+            '    return _curried(bar, baz, *args, **kwargs)'])
+        self.assertEqual(expected, got)
