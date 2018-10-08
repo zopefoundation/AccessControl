@@ -6,7 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0b6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix deprecation warnings for Python 3 and
+  change visibility of `buildfacade` to public. (#68, #69, #70)
 
 
 4.0b5 (2018-10-05)
