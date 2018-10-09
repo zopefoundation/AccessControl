@@ -6,8 +6,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0b6 (unreleased)
 ------------------
 
-- Fix deprecation warnings for Python 3 and
-  change visibility of `buildfacade` to public. (#68, #69, #70)
+- ``.requestmethod._buildFacade()`` is now ``.requestmethod.buildfacade()``
+  and renders ``*args``, ``**kwargs`` properly (regression introduced in 4.0b5).
+  (`#70 <https://github.com/zopefoundation/AccessControl/pull/70>`_)
 
 
 4.0b5 (2018-10-05)
