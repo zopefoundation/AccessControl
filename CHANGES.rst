@@ -3,6 +3,12 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
+4.0b7 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
 4.0b6 (2018-10-09)
 ------------------
 
