@@ -29,7 +29,7 @@ ext_modules = [
                  join('include', 'Acquisition', 'Acquisition.h')]),
 ]
 
-version = '4.0b5.dev0'
+version = '4.0b7.dev0'
 
 
 setup(name='AccessControl',
@@ -54,6 +54,7 @@ setup(name='AccessControl',
           "Programming Language :: Python :: 3",
           "Programming Language :: Python :: 3.5",
           "Programming Language :: Python :: 3.6",
+          "Programming Language :: Python :: 3.7",
           "Programming Language :: Python :: Implementation :: CPython",
       ],
       ext_modules=ext_modules,
@@ -76,7 +77,13 @@ setup(name='AccessControl',
           'zope.schema',
           'zope.security',
           'zope.testing',
+          'funcsigs;python_version<"3.3"',
       ],
       include_package_data=True,
       zip_safe=False,
+      entry_points={
+        'zodbupdate.decode': [
+            'decodes = AccessControl:zodbupdate_decode_dict',
+        ],
+      },
       )

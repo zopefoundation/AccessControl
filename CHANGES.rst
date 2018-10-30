@@ -3,13 +3,35 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.0b5 (unreleased)
+4.0b7 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
+4.0b6 (2018-10-09)
+------------------
+
+- ``.requestmethod._buildFacade()`` is now ``.requestmethod.buildfacade()``
+  and renders ``*args``, ``**kwargs`` properly (regression introduced in 4.0b5).
+  (`#70 <https://github.com/zopefoundation/AccessControl/pull/70>`_)
+
+
+4.0b5 (2018-10-05)
 ------------------
 
 - Add icon for Bootstrap ZMI.
 
 - Fix order of roles returned by
   ``AccessControl.rolemanager.RoleManager.userdefined_roles``.
+
+- Add support for Python 3.7.
+
+- Remove duplicate guard against * imports. (#60)
+
+- Add configuration for `zodbupdate`.
+
+- Remove leftovers from history support dropped in Zope.
 
 
 4.0b4 (2018-04-16)
