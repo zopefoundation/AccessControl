@@ -36,7 +36,8 @@ _marker = []
 class BasicUser(Implicit):
 
     """Base class for all User objects"""
-
+    zmi_icon = 'fa fa-user'
+    
     # ----------------------------
     # Public User object interface
     # ----------------------------
