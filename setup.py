@@ -34,7 +34,7 @@ version = '4.0b7.dev0'
 
 setup(name='AccessControl',
       version=version,
-      url='http://pypi.python.org/pypi/AccessControl',
+      url='https://github.com/zopefoundation/AccessControl',
       license='ZPL 2.1',
       description="Security framework for Zope2.",
       author='Zope Foundation and Contributors',
