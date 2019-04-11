@@ -17,8 +17,8 @@
 import doctest
 import unittest
 
-from zope.interface import implementer
 from zope.interface import Interface
+from zope.interface import implementer
 from zope.schema import TextLine
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
@@ -65,10 +65,10 @@ class Dummy1(object):
 
 class Dummy2(Dummy1):
     security = ClassSecurityInfo()
-    security.declarePublic('foo')
-    security.declareProtected('View management screens', 'bar')
-    security.declarePrivate('baz')
-    security.declareProtected('View management screens', 'keg')
+    security.declarePublic('foo')  # NOQA: D001
+    security.declareProtected('View management screens', 'bar')  # NOQA: D001
+    security.declarePrivate('baz')  # NOQA: D001
+    security.declareProtected('View management screens', 'keg')  # NOQA: D001
 
 
 class IDummy3(Interface):

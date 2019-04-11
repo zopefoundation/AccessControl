@@ -22,6 +22,7 @@ from functools import total_ordering
 
 import six
 
+
 try:
     from html import escape
 except ImportError:  # PY2
@@ -46,6 +47,7 @@ def taint_string(value):
         return TaintedBytes(value)
     else:
         return TaintedString(value)
+
 
 @total_ordering
 class TaintedString(object):
@@ -120,8 +122,7 @@ class TaintedString(object):
         raise SystemError(
             "A TaintedString cannot be pickled. Code that "
             "caused this TaintedString to be stored should be more careful "
-            "with untrusted data from the REQUEST."
-        )
+            "with untrusted data from the REQUEST.")
 
     def __getattr__(self, a):
         # for string methods support other than those defined below
@@ -145,11 +146,13 @@ class TaintedString(object):
 
     def split(self, *args):
         r = self._value.split(*args)
-        return list(map(lambda v, c=self.__class__: should_be_tainted(v) and c(v) or v, r))
+        return list(map(lambda v, c=self.__class__:
+                        should_be_tainted(v) and c(v) or v, r))
 
     def splitlines(self, *args):
         r = self._value.splitlines(*args)
-        return list(map(lambda v, c=self.__class__: should_be_tainted(v) and c(v) or v, r))
+        return list(map(lambda v, c=self.__class__:
+                        should_be_tainted(v) and c(v) or v, r))
 
     def translate(self, *args):
         v = self._value.translate(*args)
@@ -191,7 +194,7 @@ for f in oneOptArgWrappedMethods:
 
 
 class TaintedBytes(TaintedString):
-    
+
     def __init__(self, value):
         if isinstance(value, bytes):
             self._value = value
@@ -199,22 +202,20 @@ class TaintedBytes(TaintedString):
             if six.PY2:
                 raise ValueError(
                     "Constructing from a single character as an int "
-                    "is valid only with Python 3."
-                    )
+                    "is valid only with Python 3.")
             value = bytes([value])
             self._value = value
         else:
             raise ValueError(
                 "Can be constructed only from bytes "
-                "(or a single int with Python3)."
-                )
+                "(or a single int with Python3).")
 
     def quoted(self):
         result = escape(self._value.decode('utf8'), 1)
         return result.encode('utf8')
-    
+
     def __str__(self):
         return self._value.decode('utf8')
-    
+
     def decode(self, *args):
         return TaintedString(self._value.decode(*args))

@@ -1,7 +1,7 @@
-from zExceptions import Unauthorized
-from persistent import Persistent
-
 import unittest
+
+from persistent import Persistent
+from zExceptions import Unauthorized
 
 
 SliceType = type(slice(0))
@@ -68,25 +68,18 @@ class FormatterTest(unittest.TestCase):
         """Testing fix of http://bugs.python.org/issue13598 issue."""
         from AccessControl.safe_formatter import SafeFormatter
         self.assertEqual(
-            SafeFormatter('{} {}').safe_format('foo', 'bar'),
-            'foo bar'
-        )
-
-        self.assertEqual(
-            SafeFormatter('{0} {1}').safe_format('foo', 'bar'),
-            'foo bar'
-        )
-        self.assertEqual(
-            SafeFormatter('{1} {0}').safe_format('foo', 'bar'),
-            'bar foo'
-        )
+            SafeFormatter('{} {}').safe_format('foo', 'bar'),  # NOQA: P103
+                         'foo bar')
+        self.assertEqual(SafeFormatter('{0} {1}').safe_format('foo', 'bar'),
+                         'foo bar')
+        self.assertEqual(SafeFormatter('{1} {0}').safe_format('foo', 'bar'),
+                         'bar foo')
 
     def test_prevents_bad_string_formatting_attribute(self):
         from AccessControl.safe_formatter import SafeFormatter
         # Accessing basic Python attributes on a basic Python type is fine.
-        self.assertTrue(
-            SafeFormatter('{0.upper}').safe_format('foo').startswith(
-            '<built-in method upper'))
+        formatted = SafeFormatter('{0.upper}').safe_format('foo')
+        self.assertTrue(formatted.startswith('<built-in method upper'))
         # unless the name is protected
         self.assertRaises(Unauthorized,
                           SafeFormatter('{0.__class__}').safe_format, 'foo')
@@ -105,9 +98,8 @@ class FormatterTest(unittest.TestCase):
     def test_prevents_bad_unicode_formatting_attribute(self):
         from AccessControl.safe_formatter import SafeFormatter
         # Accessing basic Python attributes on a basic Python type is fine.
-        self.assertTrue(
-            SafeFormatter(u'{0.upper}').safe_format('foo').startswith(
-            '<built-in method upper'))
+        formatted = SafeFormatter(u'{0.upper}').safe_format('foo')
+        self.assertTrue(formatted.startswith('<built-in method upper'))
         # unless the name is protected
         self.assertRaises(Unauthorized,
                           SafeFormatter(u'{0.__class__}').safe_format, 'foo')

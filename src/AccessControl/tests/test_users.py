@@ -571,7 +571,8 @@ class UnrestrictedUserTests(unittest.TestCase):
     def test_allowed__what_not_even_god_should_do(self):
         from AccessControl.PermissionRole import _what_not_even_god_should_do
         unrestricted = self._makeOne()
-        self.assertFalse(unrestricted.allowed(self, _what_not_even_god_should_do))
+        self.assertFalse(unrestricted.allowed(self,
+                                              _what_not_even_god_should_do))
 
     def test_allowed_empty(self):
         unrestricted = self._makeOne()

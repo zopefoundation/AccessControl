@@ -10,22 +10,21 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-
+# isort:skip_file
 """Python implementation of the access control machinery."""
 
+import os
 from logging import getLogger
+
+from six import string_types
+
 from Acquisition import aq_acquire
 from Acquisition import aq_base
 from Acquisition import aq_inContextOf
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from ExtensionClass import Base
-from six import string_types
 from zope.interface import implementer
-
-import os
-import string
-
 
 # This is used when a permission maps explicitly to no permission.  We
 # try and get this from cAccessControl first to make sure that if both
@@ -39,8 +38,8 @@ from AccessControl.interfaces import ISecurityManager
 from AccessControl.interfaces import ISecurityPolicy
 from AccessControl.Permission import getPermissionIdentifier
 from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.SimpleObjectPolicies import _noroles
 from AccessControl.SimpleObjectPolicies import Containers
+from AccessControl.SimpleObjectPolicies import _noroles
 from AccessControl.unauthorized import Unauthorized
 from AccessControl.ZopeGuards import guarded_getitem  # NOQA
 # AccessControl.ZopeSecurityPolicy
@@ -78,7 +77,7 @@ def rolesForPermissionOn(perm, object, default=_default_roles, n=None):
             if roles is None:
                 if _embed_permission_in_roles:
                     return ('Anonymous', n)
-                return 'Anonymous',
+                return 'Anonymous'
 
             t = type(roles)
             if t is tuple:
@@ -169,7 +168,7 @@ class imPermissionRole(Base):
     def __getitem__(self, i):
         try:
             v = self._v
-        except:
+        except:  # NOQA: flake8: F722
             v = self._v = self.__of__(self._pa)
             del self._pa
 
@@ -178,7 +177,7 @@ class imPermissionRole(Base):
     def __len__(self):
         try:
             v = self._v
-        except:
+        except:  # NOQA: flake8: F722
             v = self._v = self.__of__(self._pa)
             del self._pa
 
@@ -234,7 +233,7 @@ class ZopeSecurityPolicy:
                         container,
                         name,
                         value,
-                        context
+                        context,
                     )
                 raise Unauthorized(name, value)
 
@@ -284,7 +283,7 @@ class ZopeSecurityPolicy:
                                 container,
                                 name,
                                 value,
-                                context
+                                context,
                             )
                         raise Unauthorized(name, value)
                 else:
@@ -330,7 +329,7 @@ class ZopeSecurityPolicy:
                         container,
                         name,
                         value,
-                        context
+                        context,
                     )
                 raise Unauthorized(name, value)
 
@@ -351,8 +350,8 @@ class ZopeSecurityPolicy:
                 "'%r' passed as roles"
                 " during validation of '%s' is not a sequence." % (
                     roles,
-                    name
-                )
+                    name,
+                ),
             )
             raise
 
@@ -375,7 +374,7 @@ class ZopeSecurityPolicy:
                                 container,
                                 name,
                                 value,
-                                context
+                                context,
                             )
                         elif userHasRolesButNotInContext(owner, value, roles):
                             raiseVerbose(
@@ -389,7 +388,7 @@ class ZopeSecurityPolicy:
                                 context,
                                 required_roles=roles,
                                 eo_owner=owner,
-                                eo=eo
+                                eo=eo,
                             )
                         else:
                             raiseVerbose(
@@ -404,7 +403,7 @@ class ZopeSecurityPolicy:
                                 eo_owner=owner,
                                 eo=eo,
                                 eo_owner_roles=getUserRolesInContext(owner,
-                                                                     value)
+                                                                     value),
                             )
                     raise Unauthorized(name, value)
 
@@ -533,7 +532,7 @@ class ZopeSecurityPolicy:
 #
 try:
     max_stack_size = int(os.environ.get('Z_MAX_STACK_SIZE', '100'))
-except:
+except:  # NOQA: flake8: F722
     max_stack_size = 100
 
 
@@ -559,7 +558,7 @@ class SecurityManager:
         'validate': 1,
         'checkPermission': 1,
         'getUser': 1,
-        'calledByExecutable': 1
+        'calledByExecutable': 1,
     }
 
     def __init__(self, thread_id, context):
@@ -572,7 +571,7 @@ class SecurityManager:
                  container=None,
                  name=None,
                  value=None,
-                 roles=_noroles
+                 roles=_noroles,
                  ):
         """Validate access.
 
@@ -606,7 +605,7 @@ class SecurityManager:
                      container=None,
                      name=None,
                      value=None,
-                     md=None
+                     md=None,
                      ):
         """Validate access.
         * THIS EXISTS FOR DTML COMPATIBILITY *
@@ -804,7 +803,7 @@ def raiseVerbose(msg, accessed, container, name, value, context,
     if user is not None:
         try:
             ufolder = '/'.join(aq_parent(aq_inner(user)).getPhysicalPath())
-        except:
+        except:  # NOQA: flake8: F722
             ufolder = '(unknown)'
         info.append('Your user account, %s, exists at %s.' % (
             str(user), ufolder))

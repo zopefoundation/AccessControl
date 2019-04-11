@@ -84,11 +84,16 @@ class TestTaintedString(unittest.TestCase):
         self.assertEqual(self.tainted[1:], self.unquoted[1:])
 
     CONCAT = 'test'
+
     def testConcat(self):
-        self.assertTrue(isinstance(self.tainted + self.CONCAT, self._getClass()))
-        self.assertEqual(self.tainted + self.CONCAT, self.unquoted + self.CONCAT)
-        self.assertTrue(isinstance(self.CONCAT + self.tainted, self._getClass()))
-        self.assertEqual(self.CONCAT + self.tainted, self.CONCAT + self.unquoted)
+        self.assertTrue(isinstance(self.tainted + self.CONCAT,
+                        self._getClass()))
+        self.assertEqual(self.tainted + self.CONCAT,
+                         self.unquoted + self.CONCAT)
+        self.assertTrue(isinstance(self.CONCAT + self.tainted,
+                                   self._getClass()))
+        self.assertEqual(self.CONCAT + self.tainted,
+                         self.CONCAT + self.unquoted)
 
     def testMultiply(self):
         self.assertTrue(isinstance(2 * self.tainted, self._getClass()))
@@ -140,7 +145,7 @@ class TestTaintedString(unittest.TestCase):
                 self.assertRaises(ValueError, getattr(tainted, f), 'nada')
 
         self.assertEqual(tainted.count('test', 1, -1),
-                          unquoted.count('test', 1, -1))
+                         unquoted.count('test', 1, -1))
 
         self.assertEqual(tainted.encode(), unquoted.encode())
         self.assertTrue(isinstance(tainted.encode(), self._getClass()))
@@ -149,11 +154,11 @@ class TestTaintedString(unittest.TestCase):
         self.assertTrue(isinstance(tainted.expandtabs(), self._getClass()))
 
         self.assertEqual(tainted.replace('test', 'spam'),
-                          unquoted.replace('test', 'spam'))
+                         unquoted.replace('test', 'spam'))
         self.assertTrue(isinstance(tainted.replace('test', '<'),
-                                self._getClass()))
+                                   self._getClass()))
         self.assertFalse(isinstance(tainted.replace('test', 'spam'),
-                               self._getClass()))
+                                    self._getClass()))
 
         self.assertEqual(tainted.split(), unquoted.split())
         for part in self._getClass()('< < <').split():
@@ -169,14 +174,14 @@ class TestTaintedString(unittest.TestCase):
 
         transtable = ''.join(map(chr, range(256)))
         self.assertEqual(tainted.translate(transtable),
-                          unquoted.translate(transtable))
+                         unquoted.translate(transtable))
         self.assertTrue(isinstance(self._getClass()('<').translate(transtable),
-                                self._getClass()))
+                                   self._getClass()))
         if six.PY2:
             # Translate no longer supports a second argument
-            self.assertFalse(isinstance(self._getClass()('<').translate(transtable,
-                                                                   '<'),
-                                   self._getClass()))
+            kls = self._getClass()('<')
+            self.assertFalse(isinstance(kls.translate(transtable, '<'),
+                                        self._getClass()))
 
     def testQuoted(self):
         self.assertEqual(self.tainted.quoted(), self.quoted)
@@ -192,15 +197,15 @@ class TestTaintedBytes(TestTaintedString):
     def _getClass(self):
         from AccessControl.tainted import TaintedBytes
         return TaintedBytes
-    
+
     def testCmp(self):
         self.assertTrue(self.tainted == self.unquoted)
         self.assertEqual(self.tainted, self.unquoted)
         self.assertTrue(self.tainted < b'a')
         self.assertTrue(self.tainted > b'.')
-    
+
     CONCAT = b'test'
-    
+
     def testGetItem(self):
         self.assertTrue(isinstance(self.tainted[0], self._getClass()))
         self.assertEqual(self.tainted[0], self._getClass()(b'<'))
@@ -221,7 +226,8 @@ class TestTaintedBytes(TestTaintedString):
         self.assertTrue(isinstance(tainted % b'foo', self._getClass()))
         self.assertEqual(tainted % b'foo', b'<foo>')
         tainted = self._getClass()(b'<%s attr="%s">')
-        self.assertTrue(isinstance(tainted % (b'foo', b'bar'), self._getClass()))
+        self.assertTrue(isinstance(tainted % (b'foo', b'bar'),
+                                   self._getClass()))
         self.assertEqual(tainted % (b'foo', b'bar'), b'<foo attr="bar">')
 
     def testStringMethods(self):
@@ -260,7 +266,7 @@ class TestTaintedBytes(TestTaintedString):
                 self.assertRaises(ValueError, getattr(tainted, f), b'nada')
 
         self.assertEqual(tainted.count(b'test', 1, -1),
-                          unquoted.count(b'test', 1, -1))
+                         unquoted.count(b'test', 1, -1))
 
         self.assertEqual(tainted.decode(), unquoted.decode())
         from AccessControl.tainted import TaintedString
@@ -270,11 +276,11 @@ class TestTaintedBytes(TestTaintedString):
         self.assertTrue(isinstance(tainted.expandtabs(), self._getClass()))
 
         self.assertEqual(tainted.replace(b'test', b'spam'),
-                          unquoted.replace(b'test', b'spam'))
+                         unquoted.replace(b'test', b'spam'))
         self.assertTrue(isinstance(tainted.replace(b'test', b'<'),
-                                self._getClass()))
+                                   self._getClass()))
         self.assertFalse(isinstance(tainted.replace(b'test', b'spam'),
-                               self._getClass()))
+                                    self._getClass()))
 
         self.assertEqual(tainted.split(), unquoted.split())
         for part in self._getClass()(b'< < <').split():
@@ -293,14 +299,15 @@ class TestTaintedBytes(TestTaintedString):
         else:
             transtable = ''.join(map(chr, range(256)))
         self.assertEqual(tainted.translate(transtable),
-                          unquoted.translate(transtable))
-        self.assertTrue(isinstance(self._getClass()(b'<').translate(transtable),
-                                self._getClass()))
+                         unquoted.translate(transtable))
+        kls = self._getClass()(b'<')
+        self.assertTrue(isinstance(kls.translate(transtable),
+                                   self._getClass()))
         if six.PY2:
             # Translate no longer supports a second argument
-            self.assertFalse(isinstance(self._getClass()(b'<').translate(transtable,
-                                                                   b'<'),
-                                   self._getClass()))
+            kls = self._getClass()(b'<')
+            self.assertFalse(isinstance(kls.translate(transtable, b'<'),
+                                        self._getClass()))
 
     def testConstructor(self):
         from AccessControl.tainted import TaintedBytes

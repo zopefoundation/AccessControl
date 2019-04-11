@@ -38,8 +38,8 @@
 
 """
 
-from logging import getLogger
 import sys
+from logging import getLogger
 
 from Acquisition import Implicit
 from Persistence import Persistent
@@ -83,48 +83,57 @@ class SecurityInfo(Implicit):
             self.names[name] = access
 
     declarePublic__roles__ = ACCESS_PRIVATE
+
     def declarePublic(self, name, *names):
         """Declare names to be publicly accessible."""
         self._setaccess((name,) + names, ACCESS_PUBLIC)
 
     declarePrivate__roles__ = ACCESS_PRIVATE
+
     def declarePrivate(self, name, *names):
         """Declare names to be inaccessible to restricted code."""
         self._setaccess((name,) + names, ACCESS_PRIVATE)
 
     declareProtected__roles__ = ACCESS_PRIVATE
+
     def declareProtected(self, permission_name, name, *names):
         """Declare names to be associated with a permission."""
         self._setaccess((name,) + names, permission_name)
 
     declareObjectPublic__roles__ = ACCESS_PRIVATE
+
     def declareObjectPublic(self):
         """Declare the object to be publicly accessible."""
         self._setaccess(('',), ACCESS_PUBLIC)
 
     declareObjectPrivate__roles__ = ACCESS_PRIVATE
+
     def declareObjectPrivate(self):
         """Declare the object to be inaccessible to restricted code."""
         self._setaccess(('',), ACCESS_PRIVATE)
 
     declareObjectProtected__roles__ = ACCESS_PRIVATE
+
     def declareObjectProtected(self, permission_name):
         """Declare the object to be associated with a permission."""
         self._setaccess(('',), permission_name)
 
     public__roles__ = ACCESS_PRIVATE
+
     def public(self, func):
         """Decorate a function to be publicly accessible."""
-        self.declarePublic(func.__name__)
+        self.declarePublic(func.__name__)  # NOQA: D001
         return func
 
     private__roles__ = ACCESS_PRIVATE
+
     def private(self, func):
         """Decorate a function to be inaccessible to restricted code."""
-        self.declarePrivate(func.__name__)
+        self.declarePrivate(func.__name__)  # NOQA: D001
         return func
 
     protected__roles__ = ACCESS_PRIVATE
+
     def protected(self, permission_name):
         """Return a decorator to associate a function with a permission."""
         # the decorator returned is remembered in a set and will
@@ -133,7 +142,7 @@ class SecurityInfo(Implicit):
         key = "'%s':%s" % (permission_name, id(lambda x: x))
 
         def decor(func):
-            self.declareProtected(permission_name, func.__name__)
+            self.declareProtected(permission_name, func.__name__)  # NOQA: D001
             self._unused_protected_decorators.remove(key)
             return func
         # make sure our key algo creates unique-enough keys
@@ -143,6 +152,7 @@ class SecurityInfo(Implicit):
         return decor
 
     setPermissionDefault__roles__ = ACCESS_PRIVATE
+
     def setPermissionDefault(self, permission_name, roles):
         """Declare default roles for a permission"""
         rdict = {}
@@ -155,6 +165,7 @@ class SecurityInfo(Implicit):
         self.roles[permission_name] = rdict
 
     setDefaultAccess__roles__ = ACCESS_PRIVATE
+
     def setDefaultAccess(self, access):
         """Declare default attribute access policy.
 
@@ -178,6 +189,7 @@ class ClassSecurityInfo(SecurityInfo):
     __roles__ = ACCESS_PRIVATE
 
     apply__roles__ = ACCESS_PRIVATE
+
     def apply(self, classobj):
         """Apply security information to the given class object."""
 
@@ -289,7 +301,7 @@ def ModuleSecurityInfo(module_name=None):
             modname = module_name[dot + 1:]
             pmodsec = ModuleSecurityInfo(module_name[:dot])
             if modname not in pmodsec.names:
-                pmodsec.declarePublic(modname)
+                pmodsec.declarePublic(modname)  # NOQA: D001
     return _ModuleSecurityInfo(module_name)
 
 
@@ -306,6 +318,7 @@ class _ModuleSecurityInfo(SecurityInfo):
             _moduleSecurity[module_name] = self
 
     __call____roles__ = ACCESS_PRIVATE
+
     def __call__(self, name, value):
         """Callback for __allow_access_to_unprotected_subobjects__ hook."""
         access = self.names.get(name, _marker)
@@ -315,6 +328,7 @@ class _ModuleSecurityInfo(SecurityInfo):
         return getattr(self, 'access', 0)
 
     apply__roles__ = ACCESS_PRIVATE
+
     def apply(self, dict):
         """Apply security information to the given module dict."""
 
@@ -328,16 +342,19 @@ class _ModuleSecurityInfo(SecurityInfo):
                      'security declarations' % dict['__name__'])
 
     declareProtected__roles__ = ACCESS_PRIVATE
+
     def declareProtected(self, permission_name, *names):
         """Cannot declare module names protected."""
         pass
 
     declareObjectProtected__roles__ = ACCESS_PRIVATE
+
     def declareObjectProtected(self, permission_name):
         """Cannot declare module protected."""
         pass
 
     setDefaultRoles__roles__ = ACCESS_PRIVATE
+
     def setDefaultRoles(self, permission_name, roles):
         """Cannot set default roles for permissions in a module."""
         pass

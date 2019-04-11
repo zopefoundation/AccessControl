@@ -47,7 +47,7 @@ class Owned(Base):
     security = ClassSecurityInfo()
     security.setPermissionDefault(take_ownership, ('Owner', ))
 
-    security.declareProtected(view_management_screens, 'owner_info')
+    @security.protected(view_management_screens)
     def owner_info(self):
         """Get ownership info for display
         """
@@ -61,11 +61,11 @@ class Owned(Base):
             'id': owner[1],
             'explicit': hasattr(self, '_owner'),
             'userCanChangeOwnershipType':
-            getSecurityManager().checkPermission('Take ownership', self)
+            getSecurityManager().checkPermission('Take ownership', self),
         }
         return d
 
-    security.declarePrivate('getOwner')
+    @security.private
     def getOwner(self, info=0,
                  aq_get=aq_get,
                  UnownableOwner=UnownableOwner,
@@ -101,7 +101,7 @@ class Owned(Base):
                 user = SU.nobody
         return user
 
-    security.declarePrivate('getOwnerTuple')
+    @security.private
     def getOwnerTuple(self):
         """Return a tuple, (userdb_path, user_id) for the owner.
 
@@ -111,7 +111,7 @@ class Owned(Base):
         """
         return aq_get(self, '_owner', None, 1)
 
-    security.declarePrivate('getWrappedOwner')
+    @security.private
     def getWrappedOwner(self):
         """Get the owner, modestly wrapped in the user folder.
 
@@ -141,7 +141,7 @@ class Owned(Base):
 
         return user.__of__(udb)
 
-    security.declarePrivate('changeOwnership')
+    @security.private
     def changeOwnership(self, user, recursive=0):
         """Change the ownership to the given user.
 
@@ -201,9 +201,9 @@ class Owned(Base):
         else:
             _owner = None
 
-        if (_owner is None and
-                (getattr(self, '__parent__', None) is None or
-                 not hasattr(self, 'getPhysicalRoot'))):
+        if _owner is None and \
+           (getattr(self, '__parent__', None) is None or  # NOQA: W504
+                not hasattr(self, 'getPhysicalRoot')):
             # This is a special case. An object is
             # being added to an object that hasn't
             # been added to the object hierarchy yet.

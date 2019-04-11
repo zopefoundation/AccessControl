@@ -26,7 +26,7 @@ class ClassDirective(metaconfigure.ClassDirective):
         self.__context.action(
             discriminator=('five:protectName', self.__class, name),
             callable=protectName,
-            args=(self.__class, name, permission_id)
+            args=(self.__class, name, permission_id),
         )
 
     def __protectSetAttributes(self, names, permission_id):
@@ -34,7 +34,7 @@ class ClassDirective(metaconfigure.ClassDirective):
             "The set_attribute option of the <require /> directive "
             "is not supported in Zope 2. "
             "Ignored for %s" % str(self.__class),
-            stacklevel=3
+            stacklevel=3,
         )
 
     def __protectSetSchema(self, schema, permission):
@@ -42,7 +42,7 @@ class ClassDirective(metaconfigure.ClassDirective):
             "The set_schema option of the <require /> directive "
             "is not supported in Zope 2. "
             "Ignored for %s" % str(self.__class),
-            stacklevel=3
+            stacklevel=3,
         )
 
     def __mimic(self, _context, class_):
@@ -50,12 +50,12 @@ class ClassDirective(metaconfigure.ClassDirective):
             "The like_class option of the <require /> directive "
             "is not supported in Zope 2. "
             "Ignored for %s" % str(self.__class),
-            stacklevel=3
+            stacklevel=3,
         )
 
     def __call__(self):
         return self.__context.action(
             discriminator=None,
             callable=InitializeClass,
-            args=(self.__class,)
+            args=(self.__class,),
         )

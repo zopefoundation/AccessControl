@@ -11,6 +11,7 @@
 #
 ##############################################################################
 import unittest
+
 from AccessControl.ZopeGuards import import_default_level
 
 
@@ -18,9 +19,10 @@ class ModuleSecurityTests(unittest.TestCase):
 
     def setUp(self):
         from AccessControl import ModuleSecurityInfo as MSI
-        MSI('AccessControl.tests.mixed_module').declarePublic('pub')
-        MSI('AccessControl.tests.public_module').declarePublic('pub')
-        MSI('AccessControl.tests.public_module.submodule').declarePublic('pub')
+        mod = 'AccessControl.tests'
+        MSI('%s.mixed_module' % mod).declarePublic('pub')  # NOQA: D001
+        MSI('%s.public_module' % mod).declarePublic('pub')  # NOQA: D001
+        MSI('%s.public_module.submodule' % mod).declarePublic('pub')  # NOQA
 
     def tearDown(self):
         import sys
@@ -75,7 +77,7 @@ class ModuleSecurityTests(unittest.TestCase):
         from AccessControl import ModuleSecurityInfo as MSI
         from AccessControl.SecurityInfo import _moduleSecurity as MS
         from AccessControl.ZopeGuards import guarded_import
-        MSI('AccessControl.tests.nonesuch').declarePublic('pub')
+        MSI('AccessControl.tests.nonesuch').declarePublic('pub')  # NOQA: D001
         self.assertTrue('AccessControl.tests.nonesuch' in MS)
         self.assertRaises(ImportError,
                           guarded_import,

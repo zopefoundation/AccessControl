@@ -15,9 +15,9 @@
 
 import unittest
 
-from Acquisition import aq_base
 from Acquisition import Explicit
 from Acquisition import Implicit
+from Acquisition import aq_base
 
 from AccessControl.PermissionRole import PermissionRole
 
@@ -94,7 +94,7 @@ class PermissionRoleTests (unittest.TestCase):
         app.c.o = RestrictiveObject()
         o = app.c.o
         assertPRoles(o, ViewPermission, ('Manager', ))
-        assertPRoles(o, EditThingsPermission, ('Manager', 'Owner', ))
+        assertPRoles(o, EditThingsPermission, ('Manager', 'Owner'))
         assertPRoles(o, DeletePermission, ())
 
     def testPermissive(self, explicit=0):
@@ -108,7 +108,7 @@ class PermissionRoleTests (unittest.TestCase):
         assertPRoles(o, ViewPermission, ('Anonymous', ))
         assertPRoles(o, EditThingsPermission, ('Anonymous',
                                                'Manager',
-                                               'Owner', ))
+                                               'Owner'))
         assertPRoles(o, DeletePermission, ('Manager', ))
 
     def testExplicit(self):
@@ -118,7 +118,7 @@ class PermissionRoleTests (unittest.TestCase):
     def testAppDefaults(self):
         o = AppRoot()
         assertPRoles(o, ViewPermission, ('Anonymous', ))
-        assertPRoles(o, EditThingsPermission, ('Manager', 'Owner', ))
+        assertPRoles(o, EditThingsPermission, ('Manager', 'Owner'))
         assertPRoles(o, DeletePermission, ('Manager', ))
 
     def testPermissionRoleSupportsGetattr(self):

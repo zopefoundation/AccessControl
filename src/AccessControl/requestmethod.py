@@ -12,8 +12,10 @@
 ##############################################################################
 
 import six
+
 from zExceptions import Forbidden
 from zope.publisher.interfaces.browser import IBrowserRequest
+
 
 if six.PY3:
     from inspect import getfullargspec
@@ -38,7 +40,8 @@ def buildfacade(name, method, docstring):
     for v in sig.parameters.values():
         parts = str(v).split('=')
         args.append(
-            parts[0] if len(parts) == 1 else '{}=_default'.format(parts[0]))
+            parts[0] if len(parts) == 1 else
+            '{}=_default'.format(parts[0]))  # NOQA: 43
         callargs.append(parts[0])
     return 'def %s(%s):\n    """%s"""\n    return _curried(%s)' % (
         name, ', '.join(args), docstring, ', '.join(callargs))

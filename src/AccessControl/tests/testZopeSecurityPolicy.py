@@ -11,9 +11,11 @@
 #
 ##############################################################################
 
-from doctest import DocTestSuite
 import sys
 import unittest
+from doctest import DocTestSuite
+
+from six.moves import _thread as thread
 
 from Acquisition import Explicit
 from Acquisition import Implicit
@@ -23,8 +25,6 @@ from zExceptions import Unauthorized
 from AccessControl.SecurityManagement import SecurityContext
 from AccessControl.userfolder import UserFolder
 
-
-from six.moves import _thread as thread
 
 try:
     from sys import getswitchinterval
@@ -300,7 +300,6 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         r_item = self.a.r_item
         context = self.context
         self.assertFalse(self.policy.checkPermission('View', r_item, context))
-        o_context = SecurityContext(self.uf.getUserById('joe'))
         # Push an executable with proxy roles on the stack
         eo = OwnedSetuidMethod().__of__(r_item)
         eo._proxy_roles = eo_roles
@@ -311,7 +310,6 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         r_item = self.a.r_item
         context = self.context
         self.assertTrue(self.policy.checkPermission('Foo', r_item, context))
-        o_context = SecurityContext(self.uf.getUserById('joe'))
         # Push an executable with proxy roles on the stack
         eo = OwnedSetuidMethod().__of__(r_item)
         eo._proxy_roles = sysadmin_roles
@@ -339,7 +337,9 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         self.assertFalse(self.policy.checkPermission('Kill', r_item, context))
 
         # Inside owner context
-        self.assertFalse(self.policy.checkPermission('View', r_subitem, context))
+        self.assertFalse(self.policy.checkPermission('View',
+                                                     r_subitem,
+                                                     context))
         self.assertTrue(self.policy.checkPermission('Kill',
                                                     r_subitem,
                                                     context))

@@ -61,6 +61,7 @@ from BTrees.OOBTree import OOBTree
 from BTrees.OOBTree import OOBucket
 from BTrees.OOBTree import OOSet
 
+
 _noroles = []  # this is imported in various places
 _marker = object()
 
@@ -120,14 +121,14 @@ for tree_type, has_values in [
     (IISet, 0),
 ]:
     tree = tree_type()
-    key_type = type(tree.keys())
+    keys = tree.keys()
 
-    if key_type is not list:  # lists have their own declarations
-        allow_type(key_type)
+    if not isinstance(keys, list):  # lists have their own declarations
+        allow_type(type(keys))
 
     if has_values:
-        assert key_type is type(tree.values())
-        assert key_type is type(tree.items())
+        assert isinstance(keys, type(tree.values()))
+        assert isinstance(keys, type(tree.items()))
 
 
 @contextmanager

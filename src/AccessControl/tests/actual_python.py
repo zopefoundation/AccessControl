@@ -116,7 +116,7 @@ f6()
 
 
 def f7():
-    d = apply(dict, [((1, 2), (3, 4))])  # {1: 2, 3: 4}
+    d = apply(dict, [((1, 2), (3, 4))])  # NOQA: F821 {1: 2, 3: 4}
     methods = [('keys', 'k'),
                ('items', 'i'),
                ('values', 'v')]
@@ -179,22 +179,22 @@ f8()
 #     ['DateTime', '_print_', 'reorder', 'same_type', 'test']
 # So do something to touch them.
 def f9():
-    d = DateTime()
+    d = DateTime()  # NOQA: F821
     print(d)  # this one provoked _print_
 
     # Funky.  This probably isn't an intended use of reorder, but I'm
     # not sure why it exists.
-    assert reorder('edcbaxyz', 'abcdef', 'c') == zip('abde', 'abde')
+    assert reorder('edcbaxyz', 'abcdef', 'c') == zip('abde', 'abde')  # NOQA
 
-    assert test(0, 'a', 0, 'b', 1, 'c', 0, 'd') == 'c'
-    assert test(0, 'a', 0, 'b', 0, 'c', 0, 'd', 'e') == 'e'
+    assert test(0, 'a', 0, 'b', 1, 'c', 0, 'd') == 'c'  # NOQA: F821
+    assert test(0, 'a', 0, 'b', 0, 'c', 0, 'd', 'e') == 'e'  # NOQA: F821
     # Unclear that the next one is *intended* to return None (it falls off
     # the end of test's implementation without explicitly returning anything).
-    assert test(0, 'a', 0, 'b', 0, 'c', 0, 'd') is None
+    assert test(0, 'a', 0, 'b', 0, 'c', 0, 'd') is None  # NOQA: F821
 
-    assert same_type(3, 2, 1), 'expected same type'
-    assert not same_type(3, 2, 'a'), 'expected not same type'
-    return printed
+    assert same_type(3, 2, 1), 'expected same type'  # NOQA: F821
+    assert not same_type(3, 2, 'a'), 'expected not same type'  # NOQA: F821
+    return printed  # NOQA: F821
 
 
 f9()

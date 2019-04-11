@@ -3,8 +3,8 @@
 
 import unittest
 
-from Acquisition import aq_inner
 from Acquisition import Implicit
+from Acquisition import aq_inner
 from persistent import Persistent
 
 from AccessControl.owner import Owned
@@ -32,7 +32,7 @@ class FauxRoot(Implicit):
 
     def unrestrictedTraverse(self, path, default=None):
 
-        if type(path) is type(''):
+        if isinstance(path, str):
             path = path.split('/')
 
         if not path[0]:
@@ -248,7 +248,7 @@ class OwnershipChangeTests(unittest.TestCase):
         self.assertEqual(self.root.parent._owner, (['acl_users'], 'user2'))
         self.assertEqual(self.root.parent.child._owner, previous_child_owner)
         self.assertEqual(self.root.parent.child.grandchild._owner,
-                          previous_grandchild_owner)
+                         previous_grandchild_owner)
 
     def test_changeOwnership_recursive(self):
         previous_parent_owner = self.root.parent._owner
@@ -260,13 +260,13 @@ class OwnershipChangeTests(unittest.TestCase):
         self.assertNotEqual(self.root.parent._owner, previous_parent_owner)
         self.assertEqual(self.root.parent._owner, (['acl_users'], 'user2'))
         self.assertNotEqual(self.root.parent.child._owner,
-                             previous_child_owner)
+                            previous_child_owner)
         self.assertEqual(self.root.parent.child._owner,
-                          (['acl_users'], 'user2'))
+                         (['acl_users'], 'user2'))
         self.assertNotEqual(self.root.parent.child.grandchild._owner,
-                             previous_grandchild_owner)
+                            previous_grandchild_owner)
         self.assertEqual(self.root.parent.child.grandchild._owner,
-                          (['acl_users'], 'user2'))
+                         (['acl_users'], 'user2'))
 
     def test_changeOwnership_recursive_objectValues_acquisition(self):
         # See https://bugs.launchpad.net/bugs/143403
@@ -285,4 +285,4 @@ class OwnershipChangeTests(unittest.TestCase):
         self.assertEqual(self.root.parent._owner, previous_parent_owner)
         self.assertEqual(self.root.parent.child._owner, previous_child_owner)
         self.assertEqual(self.root.parent.child.grandchild._owner,
-                          previous_grandchild_owner)
+                         previous_grandchild_owner)

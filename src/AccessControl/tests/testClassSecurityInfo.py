@@ -58,18 +58,21 @@ class ClassSecurityInfoTests(unittest.TestCase):
             security.setPermissionDefault('Make food', ('Chef', ))
             security.setPermissionDefault(
                 'Test permission',
-                ('Manager', 'Role A', 'Role B', 'Role C')
+                ('Manager', 'Role A', 'Role B', 'Role C'),
             )
 
-            security.declarePublic('public')
+            security.declarePublic('public')  # NOQA: D001
+
             def public(self, REQUEST=None):
                 """ """
 
-            security.declarePrivate('private')
+            security.declarePrivate('private')  # NOQA: D001
+
             def private(self, REQUEST=None):
                 """ """
 
-            security.declareProtected('Test permission', 'protected')
+            security.declareProtected('Test permission', 'protected')   # NOQA
+
             def protected(self, REQUEST=None):
                 """ """
 
@@ -138,11 +141,13 @@ class ClassSecurityInfoTests(unittest.TestCase):
 
             # security not used as a decorator, so does not protect
             security.protected('Test permission 1')
+
             def unprotected1(self, REQUEST=None):
                 """ """
 
             # see above
             security.protected('Test permission 2')
+
             def unprotected2(self, REQUEST=None):
                 """ """
 

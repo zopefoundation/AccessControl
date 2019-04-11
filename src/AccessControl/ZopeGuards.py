@@ -15,9 +15,11 @@ from __future__ import absolute_import
 
 import math
 import random
-import six
 import string
 import warnings
+
+import six
+from six.moves import reduce
 
 import RestrictedPython
 from RestrictedPython.Eval import RestrictionCapableEval
@@ -26,7 +28,6 @@ from RestrictedPython.Guards import guarded_iter_unpack_sequence
 from RestrictedPython.Guards import guarded_unpack_sequence
 from RestrictedPython.Guards import safe_builtins
 from RestrictedPython.Utilities import utility_builtins
-from six.moves import reduce
 from zExceptions import Unauthorized
 
 from AccessControl.SecurityInfo import secureModule
@@ -242,6 +243,7 @@ def guarded_next(iterator):
         guard(ob, ob)
     return ob
 
+
 safe_builtins['next'] = guarded_next
 
 
@@ -306,7 +308,7 @@ def guard(container, value, index=None):
 
 
 def guarded_filter(f, seq, skip_unauthorized=0):
-    if type(seq) is type(''):
+    if isinstance(seq, str):
         return filter(f, seq)
 
     if f is None:
@@ -634,16 +636,15 @@ def protected_inplacevar(op, var, expr):
     If the var has an inplace slot, then disallow the operation
     unless the var is a list.
     """
-    if (hasattr(var, inplace_slots[op]) and
-            not isinstance(var, valid_inplace_types)):
+    if hasattr(var, inplace_slots[op]) and \
+       not isinstance(var, valid_inplace_types):
         try:
             cls = var.__class__
         except AttributeError:
             cls = type(var)
         raise TypeError(
             "Augmented assignment to %s objects is not allowed"
-            " in untrusted code" % cls.__name__
-        )
+            " in untrusted code" % cls.__name__)
     return inplace_ops[op](var, expr)
 
 

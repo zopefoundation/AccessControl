@@ -15,13 +15,14 @@
 """
 
 import six
+
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.component.zcml import utility
 from zope.configuration.config import GroupingContextDecorator
 from zope.configuration.interfaces import IConfigurationContext
-from zope.interface import implementer
 from zope.interface import Interface
+from zope.interface import implementer
 from zope.interface import provider
 from zope.schema import ASCIILine
 from zope.security.checker import CheckerPublic
@@ -74,8 +75,9 @@ def checkPermission(permission, object, interaction=None):
     checkPermission is guaranteed to return True if permission is
     CheckerPublic or None.
     """
-    if (permission in ('zope.Public', 'zope2.Public') or
-            permission is None or permission is CheckerPublic):
+    if permission in ('zope.Public', 'zope2.Public') or \
+       permission is None or \
+       permission is CheckerPublic:
         return True
 
     if isinstance(permission, six.string_types):
@@ -144,14 +146,14 @@ def protectName(klass, name, permission_id, override_existing_protection=True):
         # Sometimes, we already get a processed permission id, which
         # can mean that 'zope.Public' has been interchanged for the
         # CheckerPublic object
-        security.declarePublic(name)
+        security.declarePublic(name)  # NOQA: D001
     elif permission_id == CheckerPrivateId:
-        security.declarePrivate(name)
+        security.declarePrivate(name)  # NOQA: D001
     else:
         permission = getUtility(IPermission, name=permission_id)
         # Zope 2 uses string, not unicode yet
         perm = str(permission.title)
-        security.declareProtected(perm, name)
+        security.declareProtected(perm, name)  # NOQA: D001
 
 
 def protectClass(klass, permission_id):

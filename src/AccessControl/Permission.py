@@ -13,9 +13,9 @@
 """Permissions
 """
 
-from Acquisition import aq_base
-
 import re
+
+from Acquisition import aq_base
 
 
 _NOT_ALLOWED_CHARS = re.compile(r'[^a-zA-Z0-9_]')

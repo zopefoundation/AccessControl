@@ -17,9 +17,8 @@ import os
 import re
 import socket
 
-from Acquisition import aq_inContextOf
-from Acquisition import aq_parent
 from Acquisition import Implicit
+from Acquisition import aq_inContextOf
 from Persistence import Persistent
 from zope.interface import implementer
 
@@ -29,6 +28,7 @@ from AccessControl.interfaces import IUser
 from AccessControl.PermissionRole import _what_not_even_god_should_do
 from AccessControl.PermissionRole import rolesForPermissionOn
 
+
 _marker = []
 
 
@@ -37,7 +37,7 @@ class BasicUser(Implicit):
 
     """Base class for all User objects"""
     zmi_icon = 'fa fa-user'
-    
+
     # ----------------------------
     # Public User object interface
     # ----------------------------
@@ -59,7 +59,7 @@ class BasicUser(Implicit):
             'roles',
             'domains',
             '_getPassword',
-            'authenticate'
+            'authenticate',
         )
         if name in deny_names:
             return 0

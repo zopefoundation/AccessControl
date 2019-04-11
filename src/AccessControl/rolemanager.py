@@ -24,11 +24,11 @@ from zope.interface import implementer
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
 from AccessControl.interfaces import IRoleManager
-from AccessControl.Permission import getPermissions
 from AccessControl.Permission import Permission
+from AccessControl.Permission import getPermissions
 from AccessControl.PermissionMapping import RoleManager
 from AccessControl.Permissions import change_permissions
-from AccessControl.SecurityManagement import newSecurityManager
+
 
 try:
     from html import escape
@@ -60,7 +60,7 @@ class RoleManager(Base, RoleManager):
     __ac_roles__ = ('Manager', 'Owner', 'Anonymous', 'Authenticated')
     __ac_local_roles__ = None
 
-    security.declareProtected(change_permissions, 'ac_inherited_permissions')
+    @security.protected(change_permissions)
     def ac_inherited_permissions(self, all=0):
         # Get all permissions not defined in ourself that are inherited
         # This will be a sequence of tuples with a name as the first item and
@@ -83,7 +83,7 @@ class RoleManager(Base, RoleManager):
 
         return tuple(sorted(r))
 
-    security.declareProtected(change_permissions, 'permission_settings')
+    @security.protected(change_permissions)
     def permission_settings(self, permission=None):
         """Return user-role permission settings.
 
@@ -111,19 +111,19 @@ class RoleManager(Base, RoleManager):
                 'acquire': isinstance(roles, list) and 'CHECKED' or '',
                 'roles': tuple(map(
                     lambda ir, roles=roles, valid=valid, ip=ip:
-                    {
-                       'name': "permission_%srole_%s" % (_string_hash(permission_name), _string_hash(valid[ir])),
-                       'checked': (valid[ir] in roles) and 'CHECKED' or '',
-                    },
-                    indexes
-                ))
+                    {'name': "permission_%srole_%s" % (
+                             _string_hash(permission_name),
+                             _string_hash(valid[ir])),
+                     'checked': (valid[ir] in roles) and 'CHECKED' or ''},
+                    indexes,
+                )),
             }
 
             ip = ip + 1
             result.append(d)
         return result
 
-    security.declareProtected(change_permissions, 'manage_role')
+    @security.protected(change_permissions)
     def manage_role(self, role_to_manage, permissions=[]):
         """Change the permissions given to the given role.
         """
@@ -132,7 +132,7 @@ class RoleManager(Base, RoleManager):
             p = Permission(name, value, self)
             p.setRole(role_to_manage, name in permissions)
 
-    security.declareProtected(change_permissions, 'manage_acquiredPermissions')
+    @security.protected(change_permissions)
     def manage_acquiredPermissions(self, permissions=[]):
         """Change the permissions that acquire.
         """
@@ -200,7 +200,7 @@ class RoleManager(Base, RoleManager):
 
         return d
 
-    security.declareProtected(change_permissions, 'manage_permission')
+    @security.protected(change_permissions)
     def manage_permission(self, permission_to_manage, roles=[], acquire=0):
         """Change the settings for the given permission.
 
@@ -223,7 +223,7 @@ class RoleManager(Base, RoleManager):
             "The permission <em>%s</em> is invalid." %
             escape(permission_to_manage))
 
-    security.declareProtected(change_permissions, 'permissionsOfRole')
+    @security.protected(change_permissions)
     def permissionsOfRole(self, role):
         """Returns a role to permission mapping.
         """
@@ -237,7 +237,7 @@ class RoleManager(Base, RoleManager):
                       })
         return r
 
-    security.declareProtected(change_permissions, 'rolesOfPermission')
+    @security.protected(change_permissions)
     def rolesOfPermission(self, permission):
         """Returns a permission to role mapping.
         """
@@ -257,7 +257,7 @@ class RoleManager(Base, RoleManager):
         raise ValueError(
             "The permission <em>%s</em> is invalid." % escape(permission))
 
-    security.declareProtected(change_permissions, 'acquiredRolesAreUsedBy')
+    @security.protected(change_permissions)
     def acquiredRolesAreUsedBy(self, permission):
         """
         """
@@ -327,7 +327,7 @@ class RoleManager(Base, RoleManager):
         rolemap = self.__ac_local_roles__ or {}
         return tuple(rolemap.get(userid, []))
 
-    security.declareProtected(change_permissions, 'manage_addLocalRoles')
+    @security.protected(change_permissions)
     def manage_addLocalRoles(self, userid, roles):
         """Set local roles for a user."""
         if not roles:
@@ -342,7 +342,7 @@ class RoleManager(Base, RoleManager):
         rolemap[userid] = local_roles
         self._p_changed = True
 
-    security.declareProtected(change_permissions, 'manage_setLocalRoles')
+    @security.protected(change_permissions)
     def manage_setLocalRoles(self, userid, roles):
         """Set local roles for a user."""
         if not roles:
@@ -353,7 +353,7 @@ class RoleManager(Base, RoleManager):
         rolemap[userid] = roles
         self._p_changed = True
 
-    security.declareProtected(change_permissions, 'manage_delLocalRoles')
+    @security.protected(change_permissions)
     def manage_delLocalRoles(self, userids):
         """Remove all local roles for a user."""
         rolemap = self.__ac_local_roles__
@@ -364,7 +364,7 @@ class RoleManager(Base, RoleManager):
                 del rolemap[userid]
         self._p_changed = True
 
-    security.declarePrivate('access_debug_info')
+    @security.private
     def access_debug_info(self):
         """Return debug info.
         """
@@ -405,7 +405,7 @@ class RoleManager(Base, RoleManager):
         """
         return set(roles) <= set(self.valid_roles())
 
-    security.declareProtected(change_permissions, 'userdefined_roles')
+    @security.protected(change_permissions)
     def userdefined_roles(self):
         """Return list of user-defined roles.
         """

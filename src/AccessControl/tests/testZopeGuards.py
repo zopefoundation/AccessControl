@@ -14,17 +14,19 @@
 """Test Zope Guards
 """
 
-from AccessControl.ZopeGuards import guarded_all
-from AccessControl.ZopeGuards import guarded_any
-from AccessControl.ZopeGuards import guarded_getattr
-
 import doctest
 import gc
 import operator
 import os
-import six
 import sys
 import unittest
+
+import six
+
+from AccessControl.ZopeGuards import guarded_all
+from AccessControl.ZopeGuards import guarded_any
+from AccessControl.ZopeGuards import guarded_getattr
+
 
 try:
     __file__
@@ -244,7 +246,7 @@ class TestDictGuards(GuardTestCase):
         d = {
             'foo': 1,
             'bar': 2,
-            'baz': 3
+            'baz': 3,
         }
         iterkeys = get_iter(d, 'iterkeys')
         keys = d.keys()
@@ -293,7 +295,7 @@ class TestDictGuards(GuardTestCase):
         d = {
             'foo': 1,
             'bar': 2,
-            'baz': 3
+            'baz': 3,
         }
         itervalues = get_iter(d, 'itervalues')
         values = d.values()
@@ -452,7 +454,7 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         sm = SecurityManager()  # accepts
         old = self.setSecurityManager(sm)
         self.assertEqual(guarded_zip([1, 2, 3],
-                                     [3, 2, 1]
+                                     [3, 2, 1],
                                      ),
                          [(1, 3), (2, 2), (3, 1)])
         self.assertEqual(guarded_zip([1, 2, 3], [1]), [(1, 1)])
@@ -572,12 +574,12 @@ class TestGuardedDictListTypes(unittest.TestCase):
 
     def testListCreation(self):
         from AccessControl.ZopeGuards import safe_builtins
-        l = safe_builtins['list']
-        self.assertEqual(l(), [])
-        self.assertEqual(l([1, 2, 3]), [1, 2, 3])
+        safe_l = safe_builtins['list']
+        self.assertEqual(safe_l(), [])
+        self.assertEqual(safe_l([1, 2, 3]), [1, 2, 3])
         x = [3, 2, 1]
-        self.assertEqual(l(x), [3, 2, 1])
-        self.assertEqual(sorted(x), [1, 2, 3])
+        self.assertEqual(safe_l(x), [3, 2, 1])
+        self.assertEqual(sorted(safe_l(x)), [1, 2, 3])
 
 
 class TestRestrictedPythonApply(GuardTestCase):
@@ -704,8 +706,8 @@ class TestActualPython(GuardTestCase):
 
             class ProtectedBase(Base):
                 security = ClassSecurityInfo()
-                security.declarePrivate('private_method')
 
+                @security.private
                 def private_method(self):
                     return 'private_method called'
 

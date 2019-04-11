@@ -125,13 +125,13 @@ class UserFolderTests(unittest.TestCase):
         assert len(tinyFolderUnder.user_names()) == 10
 
         try:
-            list = tinyFolderOver.get_valid_userids()
+            tinyFolderOver.get_valid_userids()
             assert 0, "Did not raise overflow error"
         except OverflowError:
             pass
 
         try:
-            list = tinyFolderUnder.get_valid_userids()
+            tinyFolderUnder.get_valid_userids()
             pass
         except OverflowError:
             assert 0, "Raised overflow error erroneously"

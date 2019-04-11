@@ -27,6 +27,7 @@ from AccessControl.owner import UnownableOwner
 from AccessControl.Permission import getPermissionIdentifier
 from AccessControl.requestmethod import requestmethod
 
+
 try:
     from html import escape
 except ImportError:  # PY2
@@ -83,8 +84,7 @@ class RoleManager:
                 raise ValueError(
                     """Attempted to map a permission to a permission, %s,
                     that is not valid. This should never happen. (Waaa).
-                    """ % escape(p)
-                )
+                    """ % escape(p))
             setPermissionMapping(name, wrapper, p)
 
         self._permissionMapper = wrapper
@@ -92,8 +92,7 @@ class RoleManager:
         if REQUEST is not None:
             return self.manage_access(
                 REQUEST,
-                manage_tabs_message='The permission mapping has been updated'
-            )
+                manage_tabs_message='The permission mapping has been updated')
 
     def _isBeingUsedAsAMethod(self, REQUEST=None, wannaBe=0):
         try:

@@ -12,15 +12,18 @@
 ##############################################################################
 
 
+import six
+
 # This has to happen early so things get initialized properly
 from AccessControl.Implementation import setImplementation
+from AccessControl.safe_formatter import safe_format
 from AccessControl.SecurityInfo import ACCESS_NONE
 from AccessControl.SecurityInfo import ACCESS_PRIVATE
 from AccessControl.SecurityInfo import ACCESS_PUBLIC
-from AccessControl.SecurityInfo import allow_class
-from AccessControl.SecurityInfo import allow_module
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
+from AccessControl.SecurityInfo import allow_class
+from AccessControl.SecurityInfo import allow_module
 from AccessControl.SecurityInfo import secureModule
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import setSecurityPolicy
@@ -28,18 +31,16 @@ from AccessControl.SimpleObjectPolicies import allow_type
 from AccessControl.unauthorized import Unauthorized
 from AccessControl.ZopeGuards import full_write_guard
 from AccessControl.ZopeGuards import safe_builtins
-from AccessControl.safe_formatter import safe_format
 
-import six
 
-ModuleSecurityInfo('AccessControl').declarePublic('getSecurityManager')
+ModuleSecurityInfo('AccessControl').declarePublic('getSecurityManager')  # NOQA
 
 # allow imports of utility_builtins
 
 for name in ('string', 'math', 'random', 'sets'):
     ModuleSecurityInfo(name).setDefaultAccess('allow')
 
-ModuleSecurityInfo('DateTime').declarePublic('DateTime')
+ModuleSecurityInfo('DateTime').declarePublic('DateTime')  # NOQA: D001
 
 # We want to allow all methods on string type except "format".
 # That one needs special handling to avoid access to attributes.
@@ -49,7 +50,8 @@ allow_type(str, rules)
 
 if six.PY2:
     # Same for unicode instead on Python 2:
-    rules = dict([(m, True) for m in dir(six.text_type) if not m.startswith('_')])
+    rules = dict([(m, True) for m in dir(six.text_type) if
+                  not m.startswith('_')])
     rules['format'] = safe_format
     allow_type(six.text_type, rules)
 

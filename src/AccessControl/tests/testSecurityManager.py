@@ -126,7 +126,6 @@ class SecurityManagerTestBase:
         context = DummyContext()
         mgr = self._makeOne(_THREAD_ID, context)
         original_policy = mgr._policy
-        new_policy = mgr._policy = DummyPolicy()
         top = object()
         context.stack.append(top)
         mgr.removeContext(top)
@@ -167,8 +166,6 @@ class SecurityManagerTestBase:
         self.assertTrue(new_policy.CHECK_PERMISSION_ARGS[2] is context)
 
     def test_validate_without_roles_delegates_to_policy(self):
-        from AccessControl.SimpleObjectPolicies import _noroles
-
         context = DummyContext()
         ACCESSED = object()
         CONTAINER = object()
@@ -192,8 +189,6 @@ class SecurityManagerTestBase:
         self.assertTrue(new_policy.VALIDATE_ARGS[4] is context)
 
     def test_validate_with_roles_delegates_to_policy(self):
-        from AccessControl.SimpleObjectPolicies import _noroles
-
         context = DummyContext()
         ACCESSED = object()
         CONTAINER = object()
@@ -220,8 +215,6 @@ class SecurityManagerTestBase:
         self.assertEqual(new_policy.VALIDATE_ARGS[5], ROLES)
 
     def test_DTMLValidate_delegates_to_policy_validate(self):
-        from AccessControl.SimpleObjectPolicies import _noroles
-
         context = DummyContext()
         ACCESSED = object()
         CONTAINER = object()

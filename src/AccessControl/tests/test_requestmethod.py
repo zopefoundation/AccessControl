@@ -11,13 +11,15 @@
 #
 ##############################################################################
 
-from AccessControl.requestmethod import requestmethod
-from AccessControl.requestmethod import getfullargspec
-from AccessControl.requestmethod import buildfacade
+import unittest
+
+import zExceptions
 from zope.interface import implementer
 from zope.publisher.interfaces.browser import IBrowserRequest
-import unittest
-import zExceptions
+
+from AccessControl.requestmethod import buildfacade
+from AccessControl.requestmethod import getfullargspec
+from AccessControl.requestmethod import requestmethod
 
 
 @implementer(IBrowserRequest)

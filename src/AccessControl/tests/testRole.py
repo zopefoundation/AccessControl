@@ -99,14 +99,14 @@ class TestRoleManager(unittest.TestCase):
         root, user = _makeRootAndUser()
 
         # default case, __ac_roles__ not overridden
-        self.assertEqual(set(root.context1.valid_roles()), 
+        self.assertEqual(set(root.context1.valid_roles()),
                          set(RoleManager.__ac_roles__))
 
         # forcing our own roles
         root.context1.__ac_roles__ = ('Role2', 'Role1')
         roles = root.context1.valid_roles()
         self.assertEqual(roles, ('Role1', 'Role2'))
-       
+
     def test_validate_roles(self):
         from AccessControl.rolemanager import RoleManager
         root, user = _makeRootAndUser()
@@ -117,11 +117,11 @@ class TestRoleManager(unittest.TestCase):
 
         # forcing our own roles
         root.context1.__ac_roles__ = ('Role2', 'Role1')
-        self.assertFalse(root.context1.validate_roles(RoleManager.__ac_roles__))
-        self.assertTrue(root.context1.validate_roles(('Role1', 'Role2')))
+        validator = root.context1.validate_roles
+        self.assertFalse(validator(RoleManager.__ac_roles__))
+        self.assertTrue(validator(('Role1', 'Role2')))
 
     def test_userdefined_roles(self):
-        from AccessControl.rolemanager import RoleManager
         root, user = _makeRootAndUser()
 
         # default case, __ac_roles__ not overridden

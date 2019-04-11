@@ -13,6 +13,9 @@
 """Security management
 """
 from __future__ import absolute_import
+
+from six.moves._thread import get_ident
+
 from AccessControl import SpecialUsers
 
 
@@ -25,9 +28,9 @@ def getSecurityManager():
         nobody = getattr(SpecialUsers, 'nobody', None)
         if nobody is None:
             # Initialize SpecialUsers by importing User.py.
-            from AccessControl import User
+            from AccessControl import User  # NOQA: F401
             nobody = SpecialUsers.nobody
-        manager = SecurityManager(thread_id, SecurityContext(nobody))
+        manager = SecurityManager(thread_id, SecurityContext(nobody))  # NOQA
         _managers[thread_id] = manager
 
     return manager
@@ -41,7 +44,6 @@ def setSecurityManager(manager):
 
 # AccessControl.Implementation inserts SecurityManager.
 
-from six.moves._thread import get_ident
 
 _managers = {}
 
@@ -50,7 +52,7 @@ def newSecurityManager(request, user):
     """Set up a new security context for a request for a user
     """
     thread_id = get_ident()
-    _managers[thread_id] = SecurityManager(
+    _managers[thread_id] = SecurityManager(  # NOQA: F821
         thread_id,
         SecurityContext(user),
     )
@@ -69,7 +71,7 @@ def setSecurityPolicy(aSecurityPolicy):
     This method should only be caused by system startup code. It should
     never, for example, be called during a web request.
     """
-    SecurityManager.setSecurityPolicy(aSecurityPolicy)
+    SecurityManager.setSecurityPolicy(aSecurityPolicy)  # NOQA: F821
 
 
 class SecurityContext:

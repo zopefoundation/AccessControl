@@ -15,7 +15,7 @@
 
 import logging
 
-from AccessControl.Permission import ApplicationDefaultPermissions  # BBB
+from AccessControl.Permission import ApplicationDefaultPermissions  # NOQA
 
 
 def InitializeClass(self):
@@ -78,8 +78,9 @@ def InitializeClass(self):
                 pr = PermissionRole(pname)
             for mname in mnames:
                 setattr(self, mname + '__roles__', pr)
-                if (mname and mname not in ('context', 'request') and
-                        not hasattr(self, mname)):
+                if mname and \
+                   mname not in ('context', 'request') and \
+                   not hasattr(self, mname):
                     # don't complain about context or request, as they are
                     # frequently not available as class attributes
                     logging.getLogger("Init").warning(

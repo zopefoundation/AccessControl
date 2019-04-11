@@ -13,9 +13,10 @@
 """AccessControl interfaces.
 """
 
-from AccessControl.SimpleObjectPolicies import _noroles
 from zope.interface import Attribute
 from zope.interface import Interface
+
+from AccessControl.SimpleObjectPolicies import _noroles
 
 
 class IOwned(Interface):

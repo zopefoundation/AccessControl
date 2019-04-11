@@ -18,9 +18,9 @@ try:
 except ImportError:
     from base64 import decodestring as decodebytes
 
+from Acquisition import Implicit
 from Acquisition import aq_base
 from Acquisition import aq_parent
-from Acquisition import Implicit
 from Persistence import Persistent
 from Persistence import PersistentMapping
 from zExceptions import BadRequest
@@ -37,12 +37,12 @@ from AccessControl.rolemanager import RoleManager
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
+from AccessControl.users import User
 from AccessControl.users import _remote_user_mode
 from AccessControl.users import addr_match
 from AccessControl.users import emergency_user
 from AccessControl.users import host_match
 from AccessControl.users import nobody
-from AccessControl.users import User
 from AccessControl.ZopeSecurityPolicy import _noroles
 
 
@@ -66,22 +66,22 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
 
     security = ClassSecurityInfo()
 
-    security.declareProtected(ManageUsers, 'getUserNames')
+    @security.protected(ManageUsers)
     def getUserNames(self):
         """Return a list of usernames"""
         raise NotImplementedError
 
-    security.declareProtected(ManageUsers, 'getUsers')
+    @security.protected(ManageUsers)
     def getUsers(self):
         """Return a list of user objects"""
         raise NotImplementedError
 
-    security.declareProtected(ManageUsers, 'getUser')
+    @security.protected(ManageUsers)
     def getUser(self, name):
         """Return the named user object or None"""
         raise NotImplementedError
 
-    security.declareProtected(ManageUsers, 'getUserById')
+    @security.protected(ManageUsers)
     def getUserById(self, id, default=None):
         """Return the user corresponding to the given id.
         """
@@ -115,8 +115,8 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
     def identify(self, auth):
         if auth and auth.lower().startswith('basic '):
             try:
-                name, password = decodebytes(auth.split(' ')[-1].encode()).decode() \
-                    .split(':', 1)
+                name, password = decodebytes(auth.split(' ')[-1].encode()) \
+                    .decode().split(':', 1)
             except:
                 raise BadRequest('Invalid authentication token')
             return name, password
@@ -204,8 +204,8 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
         elif user is None:
             # either we didn't find the username, or the user's password
             # was incorrect.  try to authorize and return the anonymous user.
-            if (self._isTop() and
-                    self.authorize(self._nobody, a, c, n, v, roles)):
+            if self._isTop() and \
+               self.authorize(self._nobody, a, c, n, v, roles):
                 return self._nobody.__of__(self)
             else:
                 # anonymous can't authorize or we're not top-level user folder
@@ -217,8 +217,8 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
             if self.authorize(user, a, c, n, v, roles):
                 return user.__of__(self)
             # That didn't work.  Try to authorize the anonymous user.
-            elif (self._isTop() and
-                  self.authorize(self._nobody, a, c, n, v, roles)):
+            elif self._isTop() and \
+                    self.authorize(self._nobody, a, c, n, v, roles):
                 return self._nobody.__of__(self)
             else:
                 # we can't authorize the user, and we either can't authorize
@@ -227,7 +227,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
 
     if _remote_user_mode:
 
-        def validate(self, request, auth='', roles=_noroles):
+        def validate(self, request, auth='', roles=_noroles):  # NOQA: F811
             v = request['PUBLISHED']
             a, c, n, v = self._getobcontext(v, request)
             name = request.environ.get('REMOTE_USER', None)
@@ -334,7 +334,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
                 return 0
         return 1
 
-    security.declareProtected(ManageUsers, 'user_names')
+    @security.protected(ManageUsers)
     def user_names(self):
         return self.getUserNames()
 
@@ -344,7 +344,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
     # Domain authentication support. This is a good candidate to
     # become deprecated in future Zope versions.
 
-    security.declareProtected(ManageUsers, 'setDomainAuthenticationMode')
+    @security.protected(ManageUsers)
     def setDomainAuthenticationMode(self, domain_auth_mode):
         """Set the domain-based authentication mode. By default, this
            mode is off due to the high overhead of the operation that
@@ -415,8 +415,8 @@ class UserFolder(BasicUserFolder):
     def _doChangeUser(self, name, password, roles, domains, **kw):
         user = self.data[name]
         if password is not None:
-            if (self.encrypt_passwords and
-                    not self._isPasswordEncrypted(password)):
+            if self.encrypt_passwords and \
+               not self._isPasswordEncrypted(password):
                 password = self._encryptPassword(password)
             user.__ = password
         user.roles = roles

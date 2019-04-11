@@ -14,7 +14,10 @@
 
 from os.path import join
 
-from setuptools import setup, find_packages, Extension
+from setuptools import Extension
+from setuptools import find_packages
+from setuptools import setup
+
 
 README = open('README.rst').read()
 CHANGES = open('CHANGES.rst').read()
@@ -36,9 +39,9 @@ setup(name='AccessControl',
       version=version,
       url='https://github.com/zopefoundation/AccessControl',
       project_urls={
-        'Issue Tracker': ('https://github.com/zopefoundation'
-                          '/AccessControl/issues'),
-        'Sources': 'https://github.com/zopefoundation/AccessControl/issues',
+          'Issue Tracker': ('https://github.com/zopefoundation'
+                            '/AccessControl/issues'),
+          'Sources': 'https://github.com/zopefoundation/AccessControl/issues',
       },
       license='ZPL 2.1',
       description='Security framework for Zope2.',
@@ -92,8 +95,8 @@ setup(name='AccessControl',
       include_package_data=True,
       zip_safe=False,
       entry_points={
-        'zodbupdate.decode': [
-            'decodes = AccessControl:zodbupdate_decode_dict',
-        ],
+          'zodbupdate.decode': [
+              'decodes = AccessControl:zodbupdate_decode_dict',
+          ],
       },
       )

@@ -13,18 +13,19 @@
 """Access control support
 """
 
+from zope.deferredimport import deprecated
+
 # BBB
+from AccessControl.rolemanager import DEFAULTMAXLISTUSERS
 from AccessControl.rolemanager import _isBeingUsedAsAMethod
 from AccessControl.rolemanager import _isNotBeingUsedAsAMethod
 from AccessControl.rolemanager import class_attrs
 from AccessControl.rolemanager import class_dict
 from AccessControl.rolemanager import classattr
-from AccessControl.rolemanager import DEFAULTMAXLISTUSERS
 from AccessControl.rolemanager import gather_permissions
 from AccessControl.rolemanager import instance_attrs
 from AccessControl.rolemanager import instance_dict
 from AccessControl.rolemanager import reqattr
-from zope.deferredimport import deprecated
 
 
 deprecated(

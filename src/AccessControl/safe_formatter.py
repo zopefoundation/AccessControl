@@ -1,7 +1,10 @@
-from AccessControl.ZopeGuards import guarded_getattr, guarded_getitem
-
 import string
+
 import six
+
+from AccessControl.ZopeGuards import guarded_getattr
+from AccessControl.ZopeGuards import guarded_getitem
+
 
 try:
     # Python 3
