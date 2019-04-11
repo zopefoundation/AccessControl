@@ -373,6 +373,7 @@ class UserFolder(BasicUserFolder):
     users and binding them to a collection of roles."""
 
     meta_type = 'User Folder'
+    zmi_show_add_dialog = False
     id = 'acl_users'
     title = 'User Folder'
 
