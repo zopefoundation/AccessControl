@@ -5,27 +5,59 @@ environment:
       secure: y/k8TP312tLRATkXU5dq+g==
 
   matrix:
-    - python: 27
-    - python: 27-x64
-    - python: 35
-    - python: 35-x64
-    - python: 36
-    - python: 36-x64
-    - python: 37
-    - python: 37-x64
+    - PROFILE: py27
+      PYTHON_VERSION: "2.7"
+      TOXENV: "py27"
+    - PROFILE: py35
+      PYTHON_VERSION: "3.5"
+      TOXENV: "py35"
+    - PROFILE: py36
+      PYTHON_VERSION: "3.6"
+      TOXENV: "py36"
+    - PROFILE: py37
+      PYTHON_VERSION: "3.7"
+      TOXENV: "py37"
+    - PROFILE: py38
+      PYTHON_VERSION: "3.8"
+      TOXENV: "py38"
+
+
+cache:
+  - '%LOCALAPPDATA%\pip\Cache'
+
+version: '{branch}.{build}'
 
 install:
-  - "SET PATH=C:\\Python%PYTHON%;c:\\Python%PYTHON%\\scripts;%PATH%"
-  - echo "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64 > "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat"
-  - pip install -e .
+  - "python.exe -m pip install tox"
 
-build_script:
-  - pip install wheel
-  - python -W ignore setup.py -q bdist_wheel
+build: off
 
 test_script:
-  - python setup.py test -q
+  - "tox.exe"
 
+#
+#  matrix:
+#    - python: 27
+#    - python: 27-x64
+#    - python: 35
+#    - python: 35-x64
+#    - python: 36
+#    - python: 36-x64
+#    - python: 37
+#    - python: 37-x64
+#
+#install:
+#  - "SET PATH=C:\\Python%PYTHON%;c:\\Python%PYTHON%\\scripts;%PATH%"
+#  - echo "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64 > "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat"
+#  - pip install -e .
+#
+#build_script:
+#  - pip install wheel
+#  - python -W ignore setup.py -q bdist_wheel
+#
+#test_script:
+#  - python setup.py test -q
+#
 artifacts:
   - path: 'dist\*.whl'
     name: wheel
