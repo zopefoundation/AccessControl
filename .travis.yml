@@ -1,27 +1,37 @@
 language: python
-sudo: false
-python:
-    - 2.7
-    - 3.5
-    - 3.6
+
 matrix:
     include:
+        - python: "3.6"
+          env: TOXENV=lint
+        - python: "3.6"
+          env: TOXENV=coverage
+          after_success:
+              - coverage combine
+              - coveralls
+        - python: "2.7"
+          env: TOXENV=py27
+        - python: "3.5"
+          env: TOXENV=py35
+        - python: "3.6"
+          env: TOXENV=py36
         - python: "3.7"
+          env: TOXENV=py37
           dist: xenial
-          sudo: true
+        - python: "3.8-dev"
+          env: TOXENV=py38
+          dist: xenial
+
 install:
-    - pip install six==1.10.0 # force here to avoid conflit with zc.recipe.testrunner
-    - pip install coveralls coverage
-    - pip install zc.buildout
-    - buildout bootstrap
-    - buildout
+    - travis_retry pip install -U pip setuptools
+    - travis_retry pip install -U tox coveralls coverage
+
 script:
-    - coverage run bin/test -v1
-after_success:
-    - coverage combine
-    - coveralls
+    - travis_retry tox
+
 notifications:
     email: false
+
 cache:
   pip: true
   directories:
