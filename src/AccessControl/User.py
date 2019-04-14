@@ -36,8 +36,9 @@ from AccessControl.users import system
 
 
 deprecated(
-    "User folders are no longer part of AccessControl, please depend "
-    "on Zope2 and import from OFS.userfolder or use the new minimal "
+    "The standard Zope user folder implementation has moved to "
+    "OFS.userfolder.  Please depend on Zope2 and import from "
+    "OFS.userfolder or use the new minimal "
     "user folder classes from AccessControl.userfolder.",
     BasicUserFolder='OFS.userfolder:BasicUserFolder',
     manage_addUserFolder='OFS.userfolder:manage_addUserFolder',

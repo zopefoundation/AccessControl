@@ -17,7 +17,8 @@ from zope.deferredimport import deprecated
 
 
 deprecated(
-    "Please import from DocumentTemplate.security",
+    "Please import from DocumentTemplate.security. This backward "
+    "compatibility shim will be removed in AccessControl version 5.",
     DTMLSecurityAPI='DocumentTemplate.security:DTMLSecurityAPI',
     RestrictedDTML='DocumentTemplate.security:RestrictedDTML',
 )

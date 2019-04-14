@@ -29,8 +29,10 @@ from AccessControl.rolemanager import reqattr
 
 
 deprecated(
-    "RoleManager is no longer part of AccessControl, please "
+    "RoleManager has moved to OFS.role. Please "
     "depend on Zope and import from OFS.role or use the new minimal "
-    "RoleManager class from AccessControl.rolemanager.",
+    "RoleManager class from AccessControl.rolemanager. "
+    "This backward compatibility shim will be removed in AccessControl "
+    "version 5.",
     RoleManager='OFS.role:RoleManager',
 )

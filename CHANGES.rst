@@ -6,6 +6,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0b7 (unreleased)
 ------------------
 
+- clarify deprecation waring for several BB shims
+  (`#32 <https://github.com/zopefoundation/AccessControl/issues/32>`_)
+
 - add test to prove that a user folder flag cannot be acquired elsewhere
   (`#7 <https://github.com/zopefoundation/AccessControl/issues/7>`_)
 

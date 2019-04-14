@@ -68,7 +68,9 @@ webdav_unlock_items = 'WebDAV Unlock items'
 new_loc = 'DocumentTemplate.permissions'
 
 deprecated(
-    "Please import from %s" % new_loc,
+    "This permission has moved to %s, please import from there. "
+    "This backward compatibility shim will be removed in AccessControl "
+    "version 5." % new_loc,
     change_dtml_documents='%s:change_dtml_documents' % new_loc,
     change_dtml_methods='%s:change_dtml_methods' % new_loc,
 )

@@ -25,7 +25,8 @@ from AccessControl.owner import ownerInfo
 
 
 deprecated(
-    "Owned is no longer part of AccessControl, please "
+    "The Owned class has moved to OFS.owner. This compatibility "
+    "shim will be removed in AccessControl version 5. Please "
     "depend on Zope2 and import from OFS.owner or use the "
     "new minimal Owned class from AccessControl.owner.",
     Owned='OFS.owner:Owned',
