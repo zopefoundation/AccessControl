@@ -87,7 +87,15 @@ class UserFolderTests(unittest.TestCase):
 
     def testIdentify(self):
         uf = self._makeOne()
-        name, password = uf.identify(self._makeBasicAuthToken())
+        authtoken = self._makeBasicAuthToken()
+
+        # Test with an unencoded value
+        name, password = uf.identify(authtoken)
+        self.assertEqual(name, 'user1')
+        self.assertEqual(password, 'secret')
+
+        # Test with a binary string
+        name, password = uf.identify(authtoken.encode('UTF-8'))
         self.assertEqual(name, 'user1')
         self.assertEqual(password, 'secret')
 

@@ -6,6 +6,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0b7 (unreleased)
 ------------------
 
+- tighten basic auth string handling in ``BasicUserFolder.identify``
+  (`#56 <https://github.com/zopefoundation/AccessControl/issues/56>`_)
+
 - Prevent the Zope 4 ZMI from showing an add dialog for the user folder
   (`#82 <https://github.com/zopefoundation/AccessControl/issues/82>`_)
 

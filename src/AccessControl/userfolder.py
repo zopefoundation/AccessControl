@@ -18,6 +18,8 @@ try:
 except ImportError:
     from base64 import decodestring as decodebytes
 
+import six
+
 from Acquisition import Implicit
 from Acquisition import aq_base
 from Acquisition import aq_parent
@@ -113,9 +115,12 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
         raise NotImplementedError
 
     def identify(self, auth):
-        if auth and auth.lower().startswith('basic '):
+        if isinstance(auth, six.text_type):
+            auth = auth.encode('UTF-8')
+
+        if auth and auth.lower().startswith(b'basic '):
             try:
-                name, password = decodebytes(auth.split(' ')[-1].encode()) \
+                name, password = decodebytes(auth.split(b' ')[-1]) \
                     .decode().split(':', 1)
             except:
                 raise BadRequest('Invalid authentication token')
