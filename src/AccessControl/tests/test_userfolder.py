@@ -176,3 +176,21 @@ class UserFolderTests(unittest.TestCase):
         self.assertEqual(user.__, ENCRYPTED)
         self.assertTrue(uf._isPasswordEncrypted(user.__))
         self.assertTrue(pw_validate(user.__, PASSWORD))
+
+    def test_acquisition_influences_encryption(self):
+        from Acquisition import Implicit
+
+        class ImplicitContainer(Implicit):
+            pass
+
+        uf = self._makeOne()
+        fake_parent = ImplicitContainer()
+        wrapped_uf = uf.__of__(fake_parent)
+
+        # Make sure that acquisition works for this fixture
+        setattr(fake_parent, 'testflag', True)
+        self.assertTrue(wrapped_uf.testflag)
+
+        # The real test. Can we influence the ``encrypt_passwords`` flag?
+        setattr(fake_parent, 'encrypt_passwords', False)
+        self.assertTrue(wrapped_uf.encrypt_passwords)

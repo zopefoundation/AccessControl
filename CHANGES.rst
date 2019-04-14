@@ -6,6 +6,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0b7 (unreleased)
 ------------------
 
+- add test to prove that a user folder flag cannot be acquired elsewhere
+  (`#7 <https://github.com/zopefoundation/AccessControl/issues/7>`_)
+
 - tighten basic auth string handling in ``BasicUserFolder.identify``
   (`#56 <https://github.com/zopefoundation/AccessControl/issues/56>`_)
 
