@@ -41,7 +41,7 @@ setup(name='AccessControl',
       project_urls={
           'Issue Tracker': ('https://github.com/zopefoundation'
                             '/AccessControl/issues'),
-          'Sources': 'https://github.com/zopefoundation/AccessControl/issues',
+          'Sources': 'https://github.com/zopefoundation/AccessControl',
       },
       license='ZPL 2.1',
       description='Security framework for Zope2.',
