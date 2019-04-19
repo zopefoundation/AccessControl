@@ -6,6 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.0b8 (unreleased)
 ------------------
 
+- Restore simple access to bytes methods in Python 3
+  (`#83 <https://github.com/zopefoundation/AccessControl/issues/83>`_)
 
 4.0b7 (2019-04-13)
 ------------------
