@@ -3,138 +3,63 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.0b8 (unreleased)
-------------------
+4.0 (unreleased)
+----------------
+
+Changes since 3.0.12:
+
+- Add support for Python 3.5, 3.6, 3.7 and 3.8.
 
 - Restore simple access to bytes methods in Python 3
   (`#83 <https://github.com/zopefoundation/AccessControl/issues/83>`_)
 
-4.0b7 (2019-04-13)
-------------------
-
-- clarify deprecation waring for several BB shims
+- Clarify deprecation warnings for several BBB shims.
   (`#32 <https://github.com/zopefoundation/AccessControl/issues/32>`_)
 
-- add test to prove that a user folder flag cannot be acquired elsewhere
+- Add a test to prove that a user folder flag cannot be acquired elsewhere.
   (`#7 <https://github.com/zopefoundation/AccessControl/issues/7>`_)
 
-- tighten basic auth string handling in ``BasicUserFolder.identify``
+- Tighten basic auth string handling in ``BasicUserFolder.identify``
   (`#56 <https://github.com/zopefoundation/AccessControl/issues/56>`_)
 
-- Prevent the Zope 4 ZMI from showing an add dialog for the user folder
+- Prevent the Zope 4 ZMI from showing an add dialog for the user folder.
   (`#82 <https://github.com/zopefoundation/AccessControl/issues/82>`_)
-
-- Add support for Python 3.8
-
-
-4.0b6 (2018-10-09)
-------------------
-
-- ``.requestmethod._buildFacade()`` is now ``.requestmethod.buildfacade()``
-  and renders ``*args``, ``**kwargs`` properly (regression introduced in 4.0b5).
-  (`#70 <https://github.com/zopefoundation/AccessControl/pull/70>`_)
-
-
-4.0b5 (2018-10-05)
-------------------
-
-- Add icon for Bootstrap ZMI.
 
 - Fix order of roles returned by
   ``AccessControl.rolemanager.RoleManager.userdefined_roles``.
 
-- Add support for Python 3.7.
-
-- Remove duplicate guard against * imports. (#60)
-
 - Add configuration for `zodbupdate`.
 
-- Remove leftovers from history support dropped in Zope.
-
-
-4.0b4 (2018-04-16)
-------------------
-
-- Drop support for Python 3.4.
-
 - Add ``TaintedBytes`` besides ``TaintedString`` in ``AccessControl.tainted``.
-  (#57)
-
-
-4.0b3 (2018-01-27)
-------------------
-
-- Fix deprecation warnings which have shown up when running the tests.
-
-
-4.0b2 (2018-01-25)
-------------------
-
-- Python 2 / 3 import improvements.
-
-- add Appveyor configuration to automate building Windows eggs
-
-- fix for compilers that only support C89 syntax (e.g. on Windows)
-
-
-4.0b1 (2017-09-15)
-------------------
+  (`#57 <https://github.com/zopefoundation/AccessControl/issues/57>`_)
 
 - Security fix: In ``str.format``, check the security for attributes that are
   accessed. (Ported from 2.13).
 
 - Port ``override_container`` context manager here from 2.13.
 
+- Add AppVeyor configuration to automate building Windows eggs.
 
-4.0a7 (2017-05-17)
-------------------
-
-- Increase Python 3 compatibility.
-
-
-4.0a6 (2017-05-12)
-------------------
-
-- Make the C extension Python 3 compatible.
+- Fix for compilers that only support C89 syntax (e.g. on Windows).
 
 - Sanitize and test `RoleManager` role handling.
 
-- Drop `Record` dependency, which now does its own security declaration.
-
-
-4.0a5 (2017-05-05)
-------------------
-
-- Add support for Python 3.4 up to 3.6. (only Python implementation)
-
 - Depend on RestrictedPython >= 4.0.
-
-
-4.0a4 (2017-02-01)
-------------------
-
-- Use `@implementer` class decorator.
-
-- Remove ``AccessControl.Permission.name_trans`` to ease Python 3 migration.
-  Use ``AccessControl.Permission.getPermissionIdentifier()`` instead.
-
-4.0a3 (2016-08-05)
-------------------
-
-- Extract ``.AuthEncoding`` to its own package for reuse.
-
-4.0a2 (2016-08-01)
-------------------
-
-- Declare missing dependency on BTrees.
-
-4.0a1 (2016-07-21)
-------------------
-
-- Modernised C code in preparation of porting to Python 3.
 
 - #16: Fixed permission handling by avoiding column and row numbers as
   identifiers for permissions and roles.
+
+- Extract ``.AuthEncoding`` to its own package for reuse.
+
+- Declare missing dependency on BTrees.
+
+- Drop `Record` dependency, which now does its own security declaration.
+
+- Remove leftovers from history support dropped in Zope.
+
+- Remove duplicate guard against * imports.
+  (`#60 <https://github.com/zopefoundation/AccessControl/issues/60>`_)
+
 
 3.0.12 (2015-12-21)
 -------------------
