@@ -26,7 +26,7 @@ build_script:
 
 test_script:
   - buildout
-  - bin/test
+  - bin\test.exe
 
 artifacts:
   - path: 'dist\*.whl'
