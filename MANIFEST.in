@@ -3,11 +3,7 @@ include *.rst
 include .coveragerc
 include tox.ini
 
-recursive-include include *
-recursive-include src/AccessControl *
 recursive-include docs *.rst
-
-global-exclude *.dll
-global-exclude *.pyc
-global-exclude *.pyo
-global-exclude *.so
+recursive-include include *.h
+recursive-include src *.h
+recursive-include src *.zcml
