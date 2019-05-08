@@ -144,6 +144,23 @@ class TestGuardedGetattr(GuardTestCase):
         finally:
             ContainerAssertions[_dict] = old
 
+    def test_simple_object_policies(self):
+        '''
+        Test that we are able to access attributes of simple types (here:
+        unicode and bytes)
+        '''
+        from AccessControl.ZopeGuards import guarded_getattr
+        orig_value = self.__sm.reject
+        self.__sm.reject = True
+        try:
+            items = [b'a ', u'a ']
+            for item in items:
+                self.assertEqual(guarded_getattr(item, 'strip')(),
+                                 item.strip())
+        finally:
+            self.__sm.reject = orig_value
+        self.assertEqual(len(self.__sm.calls), 0)
+
 
 class TestGuardedHasattr(GuardTestCase):
 
