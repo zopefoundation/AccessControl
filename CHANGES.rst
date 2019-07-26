@@ -6,7 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- PY3: allow iteration over the result of ``dict.{keys,values,items}``
+  (`#89 <https://github.com/zopefoundation/AccessControl/issues/89>`_).
 
 
 4.0 (2019-05-08)

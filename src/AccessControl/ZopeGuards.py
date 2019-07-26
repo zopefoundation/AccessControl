@@ -34,6 +34,7 @@ from AccessControl.SecurityInfo import secureModule
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SimpleObjectPolicies import ContainerAssertions
 from AccessControl.SimpleObjectPolicies import Containers
+from AccessControl.SimpleObjectPolicies import allow_type
 
 
 _marker = []  # Create a new marker object.
@@ -194,6 +195,13 @@ def _check_dict_access(name, value):
 
 
 ContainerAssertions[type({})] = _check_dict_access
+
+
+if six.PY3:
+    # Allow iteration over the result of `dict.{keys, values, items}`
+    d = {}
+    for attr in ("keys", "values", "items"):
+        allow_type(type(getattr(d, attr)()))
 
 
 _list_white_list = {

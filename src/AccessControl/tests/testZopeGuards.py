@@ -355,6 +355,14 @@ class TestDictGuards(GuardTestCase):
             self.setSecurityManager(old)
         self.assertTrue(sm.calls)
 
+    def test_kvi_iteration(self):
+        from AccessControl.ZopeGuards import SafeIter
+        d = dict(a=1, b=2)
+        for attr in ("keys", "values", "items"):
+            v = getattr(d, attr)()
+            si = SafeIter(v)
+            self.assertEqual(next(si), next(iter(v)))
+
 
 class TestListGuards(GuardTestCase):
 
