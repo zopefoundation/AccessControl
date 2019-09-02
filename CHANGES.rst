@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.1 (unreleased)
+4.1 (2019-09-02)
 ----------------
 
 - Python 3: Allow iteration over the result of ``dict.{keys,values,items}``
