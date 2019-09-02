@@ -6,7 +6,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.1 (unreleased)
 ----------------
 
-- PY3: allow iteration over the result of ``dict.{keys,values,items}``
+- Python 3: Allow iteration over the result of ``dict.{keys,values,items}``
   (`#89 <https://github.com/zopefoundation/AccessControl/issues/89>`_).
 
 
