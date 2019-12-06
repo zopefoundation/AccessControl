@@ -3,16 +3,10 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.3 (unreleased)
+4.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
-
-4.2 (2019-11-22)
-----------------
-
-- add a check if object is present ```if not db``
+- Add a check if database is present in ``.owner.ownerInfo``.
   (`#91 <https://github.com/zopefoundation/AccessControl/issues/91>`_).
 
 
