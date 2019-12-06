@@ -6,7 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add a check if database is present in ``.owner.ownerInfo``.
+  (`#91 <https://github.com/zopefoundation/AccessControl/issues/91>`_).
 
 
 4.1 (2019-09-02)
