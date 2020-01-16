@@ -20,6 +20,7 @@ from AccessControl.users import BasicUser
 from AccessControl.users import NullUnrestrictedUser
 from AccessControl.users import SimpleUser
 from AccessControl.users import SpecialUser
+from AccessControl.users import UnrestrictedUser # noqa
 from AccessControl.users import UnrestrictedUser as Super
 from AccessControl.users import User
 from AccessControl.users import _remote_user_mode
