@@ -264,7 +264,7 @@ def ownerInfo(user, getattr=getattr):
     if uid is None:
         return uid
     db = aq_parent(aq_inner(user))
-    if not db:
+    if db is None:
         return None
     path = [absattr(db.id)]
     root = db.getPhysicalRoot()
