@@ -6,6 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.2 (unreleased)
 ----------------
 
+- Add missing permission ``Manage WebDAV Locks``
+
 - Fix regression for BBB import of ```users.UnrestrictedUser``
   (`#94 <https://github.com/zopefoundation/AccessControl/issues/94>`_)
 
