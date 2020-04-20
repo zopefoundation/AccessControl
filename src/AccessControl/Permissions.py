@@ -64,6 +64,7 @@ view = 'View'
 view_management_screens = 'View management screens'
 webdav_access = 'WebDAV access'
 webdav_lock_items = 'WebDAV Lock items'
+webdav_manage_locks = 'Manage WebDAV Locks'
 webdav_unlock_items = 'WebDAV Unlock items'
 new_loc = 'DocumentTemplate.permissions'
 

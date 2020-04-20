@@ -23,6 +23,7 @@ eggs
 pip-selfcheck.json
 pyvenv.cfg
 /.python-version
+/default.profraw
 /*.egg-info
 /.eggs/
 /.Python
