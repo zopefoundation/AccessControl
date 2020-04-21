@@ -3,7 +3,11 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.2 (unreleased)
+4.3 (unreleased)
+----------------
+
+
+4.2 (2020-04-20)
 ----------------
 
 - Add missing permission ``Manage WebDAV Locks``
