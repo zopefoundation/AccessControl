@@ -2,7 +2,7 @@ language: python
 dist: xenial
 
 jobs:
-    include:
+    - include:
         - name: "lint"
           python: "3.6"
           env: TOXENV=lint
@@ -18,7 +18,7 @@ jobs:
           env: TOXENV=py38
         - python: "3.9-dev"
           env: TOXENV=py39
-   allow_failures:
+   - allow_failures:
         - python: "3.9-dev"
 
 install:
