@@ -2,7 +2,8 @@ language: python
 
 matrix:
     include:
-        - python: "3.6"
+        - name: "lint"
+          python: "3.6"
           env: TOXENV=lint
         - python: "2.7"
           env: TOXENV=py27
