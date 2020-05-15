@@ -69,7 +69,7 @@ class FormatterTest(unittest.TestCase):
         from AccessControl.safe_formatter import SafeFormatter
         self.assertEqual(
             SafeFormatter('{} {}').safe_format('foo', 'bar'),  # NOQA: P103
-                         'foo bar')
+            'foo bar')
         self.assertEqual(SafeFormatter('{0} {1}').safe_format('foo', 'bar'),
                          'foo bar')
         self.assertEqual(SafeFormatter('{1} {0}').safe_format('foo', 'bar'),
