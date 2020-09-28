@@ -13,16 +13,18 @@
 """Access control package.
 """
 
+from __future__ import absolute_import
+
 import os
 import re
 import socket
 
 from Acquisition import Implicit
 from Acquisition import aq_inContextOf
+from AuthEncoding import AuthEncoding
 from Persistence import Persistent
 from zope.interface import implementer
 
-from AccessControl import AuthEncoding
 from AccessControl import SpecialUsers
 from AccessControl.interfaces import IUser
 from AccessControl.PermissionRole import _what_not_even_god_should_do

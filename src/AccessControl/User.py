@@ -13,24 +13,40 @@
 """Access control package.
 """
 
-# BBB
-from AccessControl.users import BasicUser
-from AccessControl.users import NullUnrestrictedUser
-from AccessControl.users import SimpleUser
-from AccessControl.users import SpecialUser
-from AccessControl.users import UnrestrictedUser as Super
-from AccessControl.users import User
-from AccessControl.users import _remote_user_mode
-from AccessControl.users import absattr
-from AccessControl.users import addr_match
-from AccessControl.users import domainSpecMatch
-from AccessControl.users import emergency_user
-from AccessControl.users import host_match
-from AccessControl.users import nobody
-from AccessControl.users import readUserAccessFile
-from AccessControl.users import reqattr
-from AccessControl.users import rolejoin
-from AccessControl.users import system
+from zope.deferredimport import deprecated
 
 
-from AccessControl.users import UnrestrictedUser # noqa isort:skip
+deprecated(
+    "The functionality of AccessControl.User has moved to"
+    " AccessControl.users. Please import from there."
+    " This backward compatibility shim will be removed in AccessControl"
+    " version 6.",
+    BasicUser='AccessControl.users:BasicUser',
+    NullUnrestrictedUser='AccessControl.users:NullUnrestrictedUser',
+    SimpleUser='AccessControl.users:SimpleUser',
+    SpecialUser='AccessControl.users:SpecialUser',
+    Super='AccessControl.users:UnrestrictedUser',
+    UnrestrictedUser='AccessControl.users:UnrestrictedUser',
+    User='AccessControl.users:User',
+    _remote_user_mode='AccessControl.users:_remote_user_mode',
+    absattr='AccessControl.users:absattr',
+    addr_match='AccessControl.users:addr_match',
+    domainSpecMatch='AccessControl.users:domainSpecMatch',
+    emergency_user='AccessControl.users:emergency_user',
+    host_match='AccessControl.users:host_match',
+    nobody='AccessControl.users:nobody',
+    readUserAccessFile='AccessControl.users:readUserAccessFile',
+    reqattr='AccessControl.users:reqattr',
+    rolejoin='AccessControl.users:rolejoin',
+    system='AccessControl.users:system',
+)
+
+deprecated(
+    "The standard Zope user folder implementation has moved to "
+    "OFS.userfolder.  Please depend on Zope2 and import from "
+    "OFS.userfolder or use the new minimal "
+    "user folder classes from AccessControl.userfolder.",
+    BasicUserFolder='OFS.userfolder:BasicUserFolder',
+    manage_addUserFolder='OFS.userfolder:manage_addUserFolder',
+    UserFolder='OFS.userfolder:UserFolder',
+)

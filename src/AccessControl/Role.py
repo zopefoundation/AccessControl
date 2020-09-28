@@ -13,14 +13,31 @@
 """Access control support
 """
 
-# BBB
-from AccessControl.rolemanager import DEFAULTMAXLISTUSERS
-from AccessControl.rolemanager import _isBeingUsedAsAMethod
-from AccessControl.rolemanager import _isNotBeingUsedAsAMethod
-from AccessControl.rolemanager import class_attrs
-from AccessControl.rolemanager import class_dict
-from AccessControl.rolemanager import classattr
-from AccessControl.rolemanager import gather_permissions
-from AccessControl.rolemanager import instance_attrs
-from AccessControl.rolemanager import instance_dict
-from AccessControl.rolemanager import reqattr
+from zope.deferredimport import deprecated
+
+
+deprecated(
+    "The functionality of AccessControl.Role has moved to"
+    " AccessControl.rolemanager. Please import from there."
+    " This backward compatibility shim will be removed in AccessControl"
+    " version 6.",
+    DEFAULTMAXLISTUSERS='AccessControl.rolemanager:DEFAULTMAXLISTUSERS',
+    _isBeingUsedAsAMethod='AccessControl.rolemanager:_isBeingUsedAsAMethod',
+    _isNotBeingUsedAsAMethod='AccessControl.rolemanager:_isNotBeingUsedAsAMethod',  # noqa
+    class_attrs='AccessControl.rolemanager:class_attrs',
+    class_dict='AccessControl.rolemanager:class_dict',
+    classattr='AccessControl.rolemanager:classattr',
+    gather_permissions='AccessControl.rolemanager:gather_permissions',
+    instance_attrs='AccessControl.rolemanager:instance_attrs',
+    instance_dict='AccessControl.rolemanager:instance_dict',
+    reqattr='AccessControl.rolemanager:reqattr',
+)
+
+deprecated(
+    "RoleManager has moved to OFS.role. Please "
+    "depend on Zope and import from OFS.role or use the new minimal "
+    "RoleManager class from AccessControl.rolemanager. "
+    "This backward compatibility shim will be removed in AccessControl "
+    "version 5.",
+    RoleManager='OFS.role:RoleManager',
+)

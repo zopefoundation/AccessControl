@@ -13,10 +13,26 @@
 """Support for owned objects
 """
 
-# BBB
-from AccessControl.owner import EditUnowned
-from AccessControl.owner import EmergencyUserCannotOwn
-from AccessControl.owner import UnownableOwner
-from AccessControl.owner import absattr
-from AccessControl.owner import ownableFilter
-from AccessControl.owner import ownerInfo
+from zope.deferredimport import deprecated
+
+
+deprecated(
+    "The functionality of AccessControl.Owned has moved to"
+    " AccessControl.owner. Please import from there."
+    " This backward compatibility shim will be removed in AccessControl"
+    " version 6.",
+    EditUnowned='AccessControl.owner:EditUnowned',
+    EmergencyUserCannotOwn='AccessControl.owner:EmergencyUserCannotOwn',
+    UnownableOwner='AccessControl.owner:UnownableOwner',
+    absattr='AccessControl.owner:absattr',
+    ownableFilter='AccessControl.owner:ownableFilter',
+    ownerInfo='AccessControl.owner:ownerInfo',
+)
+
+deprecated(
+    "The Owned class has moved to OFS.owner. This compatibility "
+    "shim will be removed in AccessControl version 5. Please "
+    "depend on Zope2 and import from OFS.owner or use the "
+    "new minimal Owned class from AccessControl.owner.",
+    Owned='OFS.owner:Owned',
+)

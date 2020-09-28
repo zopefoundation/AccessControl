@@ -7,11 +7,16 @@ For changes before version 3.0, see ``HISTORY.rst``.
 ----------------
 
 - Remove deprecated classes and functions in
-  (`#32 <https://github.com/zopefoundation/AccessControl/issues/32>`_):
+  (see `#32 <https://github.com/zopefoundation/AccessControl/issues/32>`_):
 
   + ``AccessControl/DTML.py``
   + ``AccessControl/Owned.py``
   + ``AccessControl/Permissions.py``
+
+- Add deprecation warnings for BBB imports in:
+
+  + ``AccessControl/AuthEncoding.py``
+  + ``AccessControl/Owned.py``
   + ``AccessControl/Role.py``
   + ``AccessControl/User.py``
 
