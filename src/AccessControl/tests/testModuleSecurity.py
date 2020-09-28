@@ -38,6 +38,7 @@ class ModuleSecurityTests(unittest.TestCase):
 
     def assertUnauth(self, module, fromlist, level=import_default_level):
         from zExceptions import Unauthorized
+
         from AccessControl.ZopeGuards import guarded_import
         self.assertRaises(Unauthorized, guarded_import, module,
                           fromlist=fromlist, level=level)

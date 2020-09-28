@@ -77,6 +77,7 @@ class FormatterTest(unittest.TestCase):
 
     def test_prevents_bad_string_formatting_attribute(self):
         from AccessControl.safe_formatter import SafeFormatter
+
         # Accessing basic Python attributes on a basic Python type is fine.
         formatted = SafeFormatter('{0.upper}').safe_format('foo')
         self.assertTrue(formatted.startswith('<built-in method upper'))
@@ -97,6 +98,7 @@ class FormatterTest(unittest.TestCase):
 
     def test_prevents_bad_unicode_formatting_attribute(self):
         from AccessControl.safe_formatter import SafeFormatter
+
         # Accessing basic Python attributes on a basic Python type is fine.
         formatted = SafeFormatter(u'{0.upper}').safe_format('foo')
         self.assertTrue(formatted.startswith('<built-in method upper'))
@@ -117,6 +119,7 @@ class FormatterTest(unittest.TestCase):
 
     def test_prevents_bad_string_formatting_item(self):
         from AccessControl.safe_formatter import SafeFormatter
+
         # Accessing basic Python types in a basic Python dict is fine.
         foo = {'bar': 'Can you see me?'}
         self.assertEqual(SafeFormatter('{0[bar]}').safe_format(foo),
@@ -135,6 +138,7 @@ class FormatterTest(unittest.TestCase):
 
     def test_prevents_bad_unicode_formatting_item(self):
         from AccessControl.safe_formatter import SafeFormatter
+
         # Accessing basic Python types in a basic Python dict is fine.
         foo = {'bar': 'Can you see me?'}
         self.assertEqual(SafeFormatter(u'{0[bar]}').safe_format(foo),
@@ -152,9 +156,11 @@ class FormatterTest(unittest.TestCase):
                           folder)
 
     def test_prevents_bad_string_formatting_key(self):
+        from persistent.list import PersistentList
+
         from AccessControl.safe_formatter import SafeFormatter
         from AccessControl.ZopeGuards import guarded_getitem
-        from persistent.list import PersistentList
+
         # Accessing basic Python types in a basic Python list is fine.
         foo = list(['bar'])
         self.assertEqual(SafeFormatter('{0[0]}').safe_format(foo),
@@ -184,6 +190,7 @@ class FormatterTest(unittest.TestCase):
 
     def test_prevents_bad_unicode_formatting_key(self):
         from AccessControl.safe_formatter import SafeFormatter
+
         # Accessing basic Python types in a basic Python list is fine.
         foo = list(['bar'])
         self.assertEqual(SafeFormatter('{0[0]}').safe_format(foo),

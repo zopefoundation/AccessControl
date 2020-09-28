@@ -29,6 +29,7 @@ class UserFolderTests(unittest.TestCase):
 
     def tearDown(self):
         import transaction
+
         from AccessControl.SecurityManagement import noSecurityManager
         noSecurityManager()
         transaction.abort()
@@ -53,8 +54,9 @@ class UserFolderTests(unittest.TestCase):
         newSecurityManager(None, user)
 
     def test_class_conforms_to_IStandardUserFolder(self):
-        from AccessControl.interfaces import IStandardUserFolder
         from zope.interface.verify import verifyClass
+
+        from AccessControl.interfaces import IStandardUserFolder
         verifyClass(IStandardUserFolder, self._getTargetClass())
 
     def testGetUser(self):

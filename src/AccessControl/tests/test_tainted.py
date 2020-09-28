@@ -21,9 +21,9 @@ import six
 class TestFunctions(unittest.TestCase):
 
     def test_taint_string(self):
-        from AccessControl.tainted import taint_string
-        from AccessControl.tainted import TaintedString
         from AccessControl.tainted import TaintedBytes
+        from AccessControl.tainted import TaintedString
+        from AccessControl.tainted import taint_string
         self.assertIsInstance(taint_string('string'), TaintedString)
         self.assertIsInstance(taint_string(b'bytes'), TaintedBytes)
 

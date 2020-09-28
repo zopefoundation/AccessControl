@@ -2,9 +2,10 @@ import unittest
 
 
 def _makeRootAndUser():
-    from AccessControl.rolemanager import RoleManager
-    from Acquisition import Implicit
     from Acquisition import Explicit
+    from Acquisition import Implicit
+
+    from AccessControl.rolemanager import RoleManager
 
     class DummyContext(Implicit, RoleManager):
         __roles__ = ('Manager',)
@@ -46,9 +47,10 @@ class TestRoleManager(unittest.TestCase):
         noSecurityManager()
 
     def test_interfaces(self):
+        from zope.interface.verify import verifyClass
+
         from AccessControl.interfaces import IRoleManager
         from AccessControl.rolemanager import RoleManager
-        from zope.interface.verify import verifyClass
 
         verifyClass(IRoleManager, RoleManager)
 
