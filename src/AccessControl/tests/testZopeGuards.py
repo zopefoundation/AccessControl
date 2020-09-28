@@ -64,8 +64,8 @@ class SecurityManager:
 class GuardTestCase(unittest.TestCase):
 
     def setSecurityManager(self, manager):
-        from AccessControl.SecurityManagement import get_ident
         from AccessControl.SecurityManagement import _managers
+        from AccessControl.SecurityManagement import get_ident
         key = get_ident()
         old = _managers.get(key)
         if manager is None:
@@ -123,8 +123,8 @@ class TestGuardedGetattr(GuardTestCase):
 
     def test_attr_handler_table(self):
         from AccessControl import Unauthorized
-        from AccessControl.ZopeGuards import guarded_getattr
         from AccessControl.SimpleObjectPolicies import ContainerAssertions
+        from AccessControl.ZopeGuards import guarded_getattr
         d = {}
         _dict = type(d)
         old = ContainerAssertions.get(_dict)
@@ -679,8 +679,8 @@ class TestActualPython(GuardTestCase):
         del self._wrapped_dicts
 
     def _initPolicyAndManager(self, manager=None):
-        from AccessControl.SecurityManagement import get_ident
         from AccessControl.SecurityManagement import _managers
+        from AccessControl.SecurityManagement import get_ident
         from AccessControl.SecurityManagement import newSecurityManager
         from AccessControl.SecurityManager import setSecurityPolicy
         from AccessControl.ZopeSecurityPolicy import ZopeSecurityPolicy
@@ -722,9 +722,10 @@ class TestActualPython(GuardTestCase):
             setSecurityPolicy(self._old_policy)
 
     def _getProtectedBaseClass(self):
+        from ExtensionClass import Base
+
         from AccessControl.class_init import InitializeClass
         from AccessControl.SecurityInfo import ClassSecurityInfo
-        from ExtensionClass import Base
 
         global _ProtectedBase
         if _ProtectedBase is None:
@@ -914,7 +915,9 @@ printed  # Prevent a warning of RestrictedPython that itis not used.
 
     def _compile_str(self, text, name):
         from RestrictedPython import compile_restricted
-        from AccessControl.ZopeGuards import get_safe_globals, guarded_getattr
+
+        from AccessControl.ZopeGuards import get_safe_globals
+        from AccessControl.ZopeGuards import guarded_getattr
 
         code = compile_restricted(text, name, 'exec')
 

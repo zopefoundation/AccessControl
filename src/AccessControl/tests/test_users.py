@@ -25,8 +25,9 @@ class BasicUserTests(unittest.TestCase):
         return self._getTargetClass()(name, password, roles, domains)
 
     def test_interfaces(self):
-        from AccessControl.interfaces import IUser
         from zope.interface.verify import verifyClass
+
+        from AccessControl.interfaces import IUser
 
         verifyClass(IUser, self._getTargetClass())
 
@@ -493,8 +494,9 @@ class SimpleUserTests(unittest.TestCase):
         return self._getTargetClass()(name, password, roles, domains)
 
     def test_interfaces(self):
-        from AccessControl.interfaces import IUser
         from zope.interface.verify import verifyClass
+
+        from AccessControl.interfaces import IUser
 
         verifyClass(IUser, self._getTargetClass())
 
@@ -532,8 +534,9 @@ class SpecialUserTests(unittest.TestCase):
         return self._getTargetClass()(name, password, roles, domains)
 
     def test_interfaces(self):
-        from AccessControl.interfaces import IUser
         from zope.interface.verify import verifyClass
+
+        from AccessControl.interfaces import IUser
 
         verifyClass(IUser, self._getTargetClass())
 
@@ -563,8 +566,9 @@ class UnrestrictedUserTests(unittest.TestCase):
         return self._getTargetClass()(name, password, roles, domains)
 
     def test_interfaces(self):
-        from AccessControl.interfaces import IUser
         from zope.interface.verify import verifyClass
+
+        from AccessControl.interfaces import IUser
 
         verifyClass(IUser, self._getTargetClass())
 
@@ -614,8 +618,9 @@ class NullUnrestrictedUserTests(unittest.TestCase):
         return self._getTargetClass()()
 
     def test_interfaces(self):
-        from AccessControl.interfaces import IUser
         from zope.interface.verify import verifyClass
+
+        from AccessControl.interfaces import IUser
 
         verifyClass(IUser, self._getTargetClass())
 

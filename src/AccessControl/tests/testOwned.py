@@ -82,8 +82,9 @@ class OwnedTests(unittest.TestCase):
         return Dummy(*args, **kw)
 
     def test_interfaces(self):
-        from AccessControl.interfaces import IOwned
         from zope.interface.verify import verifyClass
+
+        from AccessControl.interfaces import IOwned
 
         verifyClass(IOwned, Owned)
 

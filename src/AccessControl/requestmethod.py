@@ -22,6 +22,7 @@ if six.PY3:
     from inspect import signature
 else:  # Python 2
     from inspect import getargspec as getfullargspec
+
     from funcsigs import signature
 
 _default = []
