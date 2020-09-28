@@ -13,8 +13,6 @@
 """Access control package.
 """
 
-from zope.deferredimport import deprecated
-
 # BBB
 from AccessControl.users import BasicUser
 from AccessControl.users import NullUnrestrictedUser
@@ -36,14 +34,3 @@ from AccessControl.users import system
 
 
 from AccessControl.users import UnrestrictedUser # noqa isort:skip
-
-
-deprecated(
-    "The standard Zope user folder implementation has moved to "
-    "OFS.userfolder.  Please depend on Zope2 and import from "
-    "OFS.userfolder or use the new minimal "
-    "user folder classes from AccessControl.userfolder.",
-    BasicUserFolder='OFS.userfolder:BasicUserFolder',
-    manage_addUserFolder='OFS.userfolder:manage_addUserFolder',
-    UserFolder='OFS.userfolder:UserFolder',
-)

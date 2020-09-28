@@ -3,8 +3,17 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.3 (unreleased)
+5.0 (unreleased)
 ----------------
+
+- Remove deprecated classes and functions in
+  (`#32 <https://github.com/zopefoundation/AccessControl/issues/32>`_):
+
+  + ``AccessControl/DTML.py``
+  + ``AccessControl/Owned.py``
+  + ``AccessControl/Permissions.py``
+  + ``AccessControl/Role.py``
+  + ``AccessControl/User.py``
 
 
 4.2 (2020-04-20)
