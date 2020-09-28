@@ -6,6 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.3 (unreleased)
 ----------------
 
+- Add support for Python 3.9.
+
 - Add deprecation warnings for BBB imports in:
 
   + ``AccessControl/AuthEncoding.py``
