@@ -15,14 +15,19 @@
 
 from zope.deferredimport import deprecated
 
-# BBB
-from AccessControl.owner import EditUnowned
-from AccessControl.owner import EmergencyUserCannotOwn
-from AccessControl.owner import UnownableOwner
-from AccessControl.owner import absattr
-from AccessControl.owner import ownableFilter
-from AccessControl.owner import ownerInfo
 
+deprecated(
+    "The functionality of AccessControl.Owned has moved to"
+    " AccessControl.owner. Please import from there."
+    " This backward compatibility shim will be removed in AccessControl"
+    " version 6.",
+    EditUnowned='AccessControl.owner:EditUnowned',
+    EmergencyUserCannotOwn='AccessControl.owner:EmergencyUserCannotOwn',
+    UnownableOwner='AccessControl.owner:UnownableOwner',
+    absattr='AccessControl.owner:absattr',
+    ownableFilter='AccessControl.owner:ownableFilter',
+    ownerInfo='AccessControl.owner:ownerInfo',
+)
 
 deprecated(
     "The Owned class has moved to OFS.owner. This compatibility "
