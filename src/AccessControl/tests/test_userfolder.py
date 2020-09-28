@@ -148,7 +148,7 @@ class UserFolderTests(unittest.TestCase):
 
     def test__doAddUser_with_not_yet_encrypted_passwords(self):
         # See collector #1869 && #1926
-        from AccessControl.AuthEncoding import pw_validate
+        from AuthEncoding.AuthEncoding import pw_validate
 
         USER_ID = 'not_yet_encrypted'
         PASSWORD = 'password'
@@ -164,7 +164,7 @@ class UserFolderTests(unittest.TestCase):
 
     def test__doAddUser_with_preencrypted_passwords(self):
         # See collector #1869 && #1926
-        from AccessControl.AuthEncoding import pw_validate
+        from AuthEncoding.AuthEncoding import pw_validate
 
         USER_ID = 'already_encrypted'
         PASSWORD = 'password'

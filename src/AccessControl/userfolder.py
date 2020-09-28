@@ -23,13 +23,13 @@ import six
 from Acquisition import Implicit
 from Acquisition import aq_base
 from Acquisition import aq_parent
+from AuthEncoding import AuthEncoding
 from Persistence import Persistent
 from Persistence import PersistentMapping
 from zExceptions import BadRequest
 from zExceptions import Unauthorized
 from zope.interface import implementer
 
-from AccessControl import AuthEncoding
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
 from AccessControl.interfaces import IStandardUserFolder

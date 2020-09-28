@@ -6,6 +6,13 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.3 (unreleased)
 ----------------
 
+- Add deprecation warnings for BBB imports in:
+
+  + ``AccessControl/AuthEncoding.py``
+  + ``AccessControl/Owned.py``
+  + ``AccessControl/Role.py``
+  + ``AccessControl/User.py``
+
 
 4.2 (2020-04-20)
 ----------------
