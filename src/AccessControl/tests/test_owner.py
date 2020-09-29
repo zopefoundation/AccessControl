@@ -1,4 +1,4 @@
-"""Unit tests for AccessControl.Owned
+"""Unit tests for AccessControl.owner
 """
 
 import unittest
