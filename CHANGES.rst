@@ -3,10 +3,17 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.3 (unreleased)
+5.0 (unreleased)
 ----------------
 
 - Add support for Python 3.9.
+
+- Remove deprecated classes and functions in
+  (see `#32 <https://github.com/zopefoundation/AccessControl/issues/32>`_):
+
+  + ``AccessControl/DTML.py``
+  + ``AccessControl/Owned.py``
+  + ``AccessControl/Permissions.py``
 
 - Add deprecation warnings for BBB imports in:
 
