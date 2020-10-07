@@ -6,6 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 5.0 (unreleased)
 ----------------
 
+- Add support for Python 3.9.
+
 - Remove deprecated classes and functions in
   (see `#32 <https://github.com/zopefoundation/AccessControl/issues/32>`_):
 
@@ -20,6 +22,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
   + ``AccessControl/Owned.py``
   + ``AccessControl/Role.py``
   + ``AccessControl/User.py``
+
+- Although this version might run on Zope 4, it is no longer supported because
+  of the dropped deprecation warnings.
 
 
 4.2 (2020-04-20)
