@@ -642,7 +642,7 @@ def protected_inplacevar(op, var, expr):
     """Do an inplace operation
 
     If the var has an inplace slot, then disallow the operation
-    unless the var is a list.
+    unless the var an instance of ``valid_inplace_types``.
     """
     if hasattr(var, inplace_slots[op]) and \
        not isinstance(var, valid_inplace_types):
