@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-5.0 (unreleased)
+5.0 (2020-10-07)
 ----------------
 
 - Add support for Python 3.9.
