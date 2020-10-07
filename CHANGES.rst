@@ -11,6 +11,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
   + ``AccessControl/DTML.py``
   + ``AccessControl/Owned.py``
+  + ``AccessControl/Role.py``
   + ``AccessControl/Permissions.py``
 
 - Add deprecation warnings for BBB imports in:

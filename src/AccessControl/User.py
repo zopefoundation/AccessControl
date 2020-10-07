@@ -42,10 +42,12 @@ deprecated(
 )
 
 deprecated(
-    "The standard Zope user folder implementation has moved to "
-    "OFS.userfolder.  Please depend on Zope2 and import from "
-    "OFS.userfolder or use the new minimal "
-    "user folder classes from AccessControl.userfolder.",
+    "The standard Zope user folder implementation has moved to"
+    " OFS.userfolder.  Please depend on Zope and import from "
+    " OFS.userfolder or use the new minimal "
+    " user folder classes from AccessControl.userfolder."
+    " This backward compatibility shim will be removed in AccessControl"
+    " version 6.",
     BasicUserFolder='OFS.userfolder:BasicUserFolder',
     manage_addUserFolder='OFS.userfolder:manage_addUserFolder',
     UserFolder='OFS.userfolder:UserFolder',
