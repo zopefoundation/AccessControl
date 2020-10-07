@@ -28,11 +28,3 @@ deprecated(
     ownableFilter='AccessControl.owner:ownableFilter',
     ownerInfo='AccessControl.owner:ownerInfo',
 )
-
-deprecated(
-    "The Owned class has moved to OFS.owner. This compatibility "
-    "shim will be removed in AccessControl version 5. Please "
-    "depend on Zope2 and import from OFS.owner or use the "
-    "new minimal Owned class from AccessControl.owner.",
-    Owned='OFS.owner:Owned',
-)
