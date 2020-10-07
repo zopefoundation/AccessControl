@@ -23,6 +23,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
   + ``AccessControl/Role.py``
   + ``AccessControl/User.py``
 
+- Although this version might run on Zope 4, it is no longer supported because
+  of the dropped deprecation warnings.
+
 
 4.2 (2020-04-20)
 ----------------
