@@ -52,7 +52,7 @@ def _string_hash(s):
 
 
 @implementer(IRoleManager)
-class RoleManager(Base, RoleManager):
+class RoleManager(RoleManager, Base):
     """An object that has configurable permissions"""
     permissionMappingPossibleValues = Acquired
     security = ClassSecurityInfo()

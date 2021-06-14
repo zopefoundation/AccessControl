@@ -73,7 +73,7 @@ def setImplementation(name):
 
 
 # start with the default, mostly because we need something for the tests
-_default_implementation = 'C'
+_default_implementation = 'PYTHON'
 _implementation_name = None
 _implementation_set = 0
 
