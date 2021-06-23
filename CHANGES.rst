@@ -6,7 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 5.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Automatically fall back to the Python implementation when the
+  C optimization is unavailable
 
 
 5.0 (2020-10-07)

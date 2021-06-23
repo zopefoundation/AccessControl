@@ -26,6 +26,8 @@ module was introduced.
 """
 from __future__ import absolute_import
 
+from logging import getLogger
+
 
 def getImplementationName():
     """Return the name of the implementation currently being used."""
@@ -49,11 +51,18 @@ def setImplementation(name):
     name = name.upper()
     if name == _implementation_name:
         return
+    impl = None
     if name == "C":
-        from AccessControl import ImplC as impl
-    elif name == "PYTHON":
+        try:
+            from AccessControl import ImplC as impl
+        except ImportError:  # fall back to "PYTHON"
+            getLogger(__name__).warn(
+                "C implementation not available -- faling back to Python",
+                exc_info=True)
+            name = "PYTHON"
+    if name == "PYTHON":
         from AccessControl import ImplPython as impl
-    else:
+    if impl is None:
         raise ValueError("unknown policy implementation: %r" % name)
 
     _implementation_name = name
