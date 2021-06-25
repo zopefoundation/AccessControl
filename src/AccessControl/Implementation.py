@@ -82,7 +82,10 @@ def setImplementation(name):
 
 
 # start with the default, mostly because we need something for the tests
-_default_implementation = 'PYTHON'
+from ExtensionClass import Base, BasePy
+
+# use `PYTHON` if `ExtensionClass` does
+_default_implementation = 'PYTHON' if Base is BasePy else 'C'
 _implementation_name = None
 _implementation_set = 0
 
