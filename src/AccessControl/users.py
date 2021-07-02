@@ -324,7 +324,7 @@ class NullUnrestrictedUser(SpecialUser):
 
        Note that when no emergency user is installed, this object that
        exists in its place is more of an anti-superuser since you cannot
-       login as this user and it has no priveleges at all."""
+       login as this user and it has no privileges at all."""
 
     __null_user__ = 1
 
