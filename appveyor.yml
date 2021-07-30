@@ -33,16 +33,14 @@ install:
   - ps: if (-not (Test-Path $env:PYTHON)) { throw "No $env:PYTHON" }
   - echo "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64 > "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat"
   - python -m pip install -U pip
-  - pip install -U "setuptools<52" zc.buildout zope.testrunner
-  - pip install -e .
+  - pip install -U setuptools wheel zope.testrunner
+  - pip install -U -e .[test]
 
 build_script:
-  - pip install wheel
   - python -W ignore setup.py -q bdist_wheel
 
 test_script:
-   - buildout
-   - bin\test.exe
+   - zope-testrunner --test-path=src
 
 artifacts:
   - path: 'dist\*.whl'
