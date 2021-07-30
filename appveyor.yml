@@ -1,36 +1,50 @@
+# Currently the builds use @dataflake's Appveyor account.  The PyPI token belongs
+# to zope.wheelbuilder, which is managed by @mgedmin and @dataflake.
+
 environment:
   global:
-    TWINE_USERNAME: zope.wheelbuilder
+    TWINE_USERNAME: __token__
     TWINE_PASSWORD:
-      secure: y/k8TP312tLRATkXU5dq+g==
+      secure: vSlDBj79vziJOA5k3z16r1OSr/7Jq6uCf23VKErSsXWb2dGJMUxR6GQ6tRs53GfiyxBQdpdfOA5QuVS4G4W3rVLwD/YXCidpidwBF3pKk4J2Nnk88HpZID6lQOV713DA/kkEuoO97Ty1BRYeaca9bA0P0KmRYU7Iy30p4xBUnmNKYnfilH0/waASYEDwpkrl49DiUh1+bMQjE5LKIBeaF0LLquzHGYETQf4BgpywUIV/8dQnc0vL/RXCa6PrWOxg/8S6ponIYyJ32Y4OoprZ1Q==
 
   matrix:
     - python: 27
     - python: 27-x64
+    - python: 35
+    - python: 35-x64
     - python: 36
     - python: 36-x64
     - python: 37
     - python: 37-x64
+    - python: 38
+    - python: 38-x64
 
 install:
+  - "SET PYTHONVERSION=%PYTHON%"
   - "SET PATH=C:\\Python%PYTHON%;c:\\Python%PYTHON%\\scripts;%PATH%"
+  - ps: |
+      $env:PYTHON = "C:\\Python${env:PYTHON}"
+      if (-not (Test-Path $env:PYTHON)) {
+        curl -o install_python.ps1 https://raw.githubusercontent.com/matthew-brett/multibuild/11a389d78892cf90addac8f69433d5e22bfa422a/install_python.ps1
+        .\install_python.ps1
+      }
+  - ps: if (-not (Test-Path $env:PYTHON)) { throw "No $env:PYTHON" }
   - echo "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64 > "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\vcvars64.bat"
-  - pip install zc.buildout zope.testrunner
-  - pip install -e .
+  - python -m pip install -U pip
+  - pip install -U setuptools wheel zope.testrunner
+  - pip install -U -e .[test]
 
 build_script:
-  - pip install wheel
   - python -W ignore setup.py -q bdist_wheel
 
 test_script:
-   - buildout
-   - bin\test.exe
+   - zope-testrunner --test-path=src
 
 artifacts:
   - path: 'dist\*.whl'
     name: wheel
 
 deploy_script:
-  - ps: if ($env:APPVEYOR_REPO_TAG -eq $TRUE) { pip install twine; twine upload dist\*.whl }
+  - ps: if ($env:APPVEYOR_REPO_TAG -eq $TRUE) { pip install twine; twine upload --skip-existing dist\*.whl }
 
 deploy: on
