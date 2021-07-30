@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-4.3 (unreleased)
+4.3 (2021-07-30)
 ----------------
 
 - Fix a remote code execution issue by preventing access to
