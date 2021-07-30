@@ -3,8 +3,10 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-5.2 (unreleased)
+5.2 (2021-07-30)
 ----------------
+
+- Fix Appveyor configuration so tests can run and wheels build.
 
 
 5.1 (2021-07-30)
