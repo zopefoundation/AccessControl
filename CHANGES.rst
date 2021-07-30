@@ -3,8 +3,13 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
+5.2 (unreleased)
+----------------
+
+
 5.1 (2021-07-30)
 ----------------
+NOTE: This release has been yanked from PyPI due to wheel build issues.
 
 - Fix a remote code execution issue by preventing access to
   ``string.Formatter`` from restricted code.
