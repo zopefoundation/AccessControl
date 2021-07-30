@@ -3,10 +3,13 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-5.1 (unreleased)
+5.1 (2021-07-30)
 ----------------
 
 - Provide ``AccessControl.get_safe_globals`` to facilitate safe use.
+
+- Fix a remote code execution issue by preventing access to
+  ``string.Formatter`` from restricted code.
 
 
 5.0 (2020-10-07)

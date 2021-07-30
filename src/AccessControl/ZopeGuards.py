@@ -30,6 +30,7 @@ from RestrictedPython.Guards import safe_builtins
 from RestrictedPython.Utilities import utility_builtins
 from zExceptions import Unauthorized
 
+from AccessControl.SecurityInfo import ModuleSecurityInfo
 from AccessControl.SecurityInfo import secureModule
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SimpleObjectPolicies import ContainerAssertions
@@ -56,6 +57,13 @@ with warnings.catch_warnings():
 string.__allow_access_to_unprotected_subobjects__ = 1
 math.__allow_access_to_unprotected_subobjects__ = 1
 random.__allow_access_to_unprotected_subobjects__ = 1
+
+# Mark some unprotected module attributes as private, these should not be
+# used in untrusted Python code such as Scripts (Python)
+string_modsec = ModuleSecurityInfo('string')
+for name in ('Formatter', 'Template'):
+    string_modsec.declarePrivate(name)  # NOQA: D001
+secureModule('string')
 
 # AccessControl.Implementation inserts these names into this module as
 # module globals:  aq_validate, guarded_getattr

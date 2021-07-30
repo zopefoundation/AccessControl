@@ -278,6 +278,19 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         c.attr = PublicMethod()
         self.assertPolicyAllows(c, 'attr')
 
+    def testAccessToStringModule(self):
+        # The string module is available to restricted code and its members are
+        # explicitly allowed via a
+        # ``__allow_access_to_unprotected_subobjects__`` declaration. However,
+        # a few classes are exempted and declared private, they can indirectly
+        # provide uncontrolled access to system libraries from within
+        # restricted code.
+        import string
+
+        self.assertPolicyAllows(string, 'printable')
+        self.assertPolicyDenies(string, 'Formatter')
+        self.assertPolicyDenies(string, 'Template')
+
     def testUnicodeAttributeLookups(self):
         item = self.item
         r_item = self.a.r_item
