@@ -67,6 +67,7 @@ def initialize(impl):
     global guarded_getattr
     guarded_getattr = impl.guarded_getattr
     safe_builtins['getattr'] = guarded_getattr
+    _safe_globals['_getattr_'] = guarded_getattr
 
 
 def guarded_hasattr(object, name):
