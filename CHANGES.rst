@@ -6,7 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 5.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fix a remote code execution issue by preventing access to
+  ``string.Formatter`` from restricted code.
 
 
 5.0 (2020-10-07)
