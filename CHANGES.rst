@@ -6,6 +6,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.4 (unreleased)
 ----------------
 
+- Provide ``AccessControl.get_safe_globals`` to facilitate safe use.
+
+
 
 4.3 (2021-07-30)
 ----------------
