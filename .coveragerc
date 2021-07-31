@@ -1,6 +1,27 @@
 [run]
-branch = True
 source = AccessControl
+# New in 5.0; required for the GHA coveralls submission.
+relative_files = True
+branch = true
+
+[paths]
+source =
+    src/
+    .tox/*/lib/python*/site-packages/
+    .tox/pypy*/site-packages/
 
 [report]
-precision = 3
+show_missing = true
+precision = 2
+exclude_lines =
+    except ImportError:
+    if __name__ == '__main__':
+    pragma: no cover
+    pragma: nocover
+    raise AssertionError
+    raise NotImplementedError
+    raise unittest.Skip
+    self.fail\(
+
+[html]
+directory = parts/htmlcov
