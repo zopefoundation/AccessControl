@@ -3,7 +3,6 @@ include *.txt
 include buildout.cfg
 include tox.ini
 include appveyor.yml
-include .coveragerc
 
 recursive-include src *.py
 include *.sh
