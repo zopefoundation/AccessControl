@@ -3,8 +3,19 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
+5.3 (unreleased)
+----------------
+
+
+5.2 (2021-07-30)
+----------------
+
+- Fix Appveyor configuration so tests can run and wheels build.
+
+
 5.1 (2021-07-30)
 ----------------
+NOTE: This release has been yanked from PyPI due to wheel build issues.
 
 - Provide ``AccessControl.get_safe_globals`` to facilitate safe use.
 

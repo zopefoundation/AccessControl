@@ -32,7 +32,7 @@ ext_modules = [
                  join('include', 'Acquisition', 'Acquisition.h')]),
 ]
 
-version = '5.1'
+version = '5.3.dev0'
 
 
 setup(name='AccessControl',
@@ -94,6 +94,9 @@ setup(name='AccessControl',
       python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*',
       include_package_data=True,
       zip_safe=False,
+      extras_require={
+          'test': ['zope.testrunner'],
+      },
       entry_points={
           'zodbupdate.decode': [
               'decodes = AccessControl:zodbupdate_decode_dict',
