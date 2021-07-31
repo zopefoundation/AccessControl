@@ -1,6 +1,0 @@
-[run]
-branch = True
-source = AccessControl
-
-[report]
-precision = 3
