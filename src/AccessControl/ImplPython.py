@@ -76,8 +76,8 @@ def rolesForPermissionOn(perm, object, default=_default_roles, n=None):
             roles = getattr(object, n)
             if roles is None:
                 if _embed_permission_in_roles:
-                    return ('Anonymous', n)
-                return 'Anonymous'
+                    return (('Anonymous',), n)
+                return ('Anonymous',)
 
             t = type(roles)
             if t is tuple:

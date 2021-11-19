@@ -8,6 +8,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Provide ``AccessControl.get_safe_globals`` to facilitate safe use.
 
+- Use ``AC_PURE_PYTHON`` as switch to enable python implementation as default.
+  This should not be used except for tests and debugging.
 
 
 5.2 (2021-07-30)
