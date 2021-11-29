@@ -12,6 +12,7 @@
 ##############################################################################
 
 import sys
+import os
 import unittest
 from doctest import DocTestSuite
 
@@ -775,9 +776,10 @@ class GetRolesWithMultiThreadTest(unittest.TestCase):
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(Python_ZSPTests))
-    suite.addTest(unittest.makeSuite(C_ZSPTests))
     suite.addTest(unittest.makeSuite(Python_SMTests))
-    suite.addTest(unittest.makeSuite(C_SMTests))
+    if not os.environ.get('PURE_PYTHON'):
+        suite.addTest(unittest.makeSuite(C_ZSPTests))
+        suite.addTest(unittest.makeSuite(C_SMTests))
     suite.addTest(DocTestSuite())
     suite.addTest(unittest.makeSuite(GetRolesWithMultiThreadTest))
     return suite
