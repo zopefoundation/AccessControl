@@ -231,7 +231,7 @@ jobs:
           python -m coverage run -p -m zope.testrunner --test-path=src --auto-color --auto-progress
       - name: Run tests without C extensions
         run: |
-          AC_PURE_PYTHON=1 python -m coverage run -p -m zope.testrunner --test-path=src --auto-color --auto-progress
+          PURE_PYTHON=1 AC_PURE_PYTHON=1 python -m coverage run -p -m zope.testrunner --test-path=src --auto-color --auto-progress
       - name: Report Coverage
         run: |
           coverage combine
