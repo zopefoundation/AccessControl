@@ -26,13 +26,8 @@ from Acquisition import aq_parent
 from ExtensionClass import Base
 from zope.interface import implementer
 
-# This is used when a permission maps explicitly to no permission.  We
-# try and get this from cAccessControl first to make sure that if both
-# security implementations exist, we can switch between them later.
-try:
-    from AccessControl.cAccessControl import _what_not_even_god_should_do
-except (ImportError, AttributeError):
-    _what_not_even_god_should_do = []
+# We define our own `_what_not_even_god_should_do` to allow using PURE_PYTHON=1
+_what_not_even_god_should_do = []
 
 from AccessControl.interfaces import ISecurityManager
 from AccessControl.interfaces import ISecurityPolicy
