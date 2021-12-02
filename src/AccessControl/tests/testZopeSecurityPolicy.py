@@ -11,6 +11,7 @@
 #
 ##############################################################################
 
+import gc
 import sys
 import os
 import unittest
@@ -244,11 +245,14 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         eo = ImplictAcqObject()
         eo.getOwner = lambda: None
         self.context.stack.append(eo)
+        gc.collect()
         rc = sys.getrefcount(eo)
         self.testUserAccess()
+        gc.collect()
         self.assertEqual(rc, sys.getrefcount(eo))
         eo._proxy_roles = ()
         self.testUserAccess()
+        gc.collect()
         self.assertEqual(rc, sys.getrefcount(eo))
 
     def testAccessToUnprotectedSubobjects(self):
