@@ -92,6 +92,7 @@ jobs:
     # with `test`, and `docs` must use a subset.
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         python-version:
           - 2.7
@@ -171,6 +172,7 @@ jobs:
     needs: build-package
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         python-version:
           - 2.7
