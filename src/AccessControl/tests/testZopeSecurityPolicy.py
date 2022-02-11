@@ -11,9 +11,8 @@
 #
 ##############################################################################
 
-import gc
-import sys
 import os
+import sys
 import unittest
 from doctest import DocTestSuite
 

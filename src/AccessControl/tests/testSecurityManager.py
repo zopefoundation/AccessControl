@@ -14,8 +14,8 @@
 """Tests for the SecurityManager implementations
 """
 
-import unittest
 import os
+import unittest
 
 
 _THREAD_ID = 123

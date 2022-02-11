@@ -25,7 +25,9 @@ module was introduced.
 
 """
 from __future__ import absolute_import
+
 import os
+
 
 # We cannot use `PURE_PYTHON` as this would be propagated to `ExtensionClass`
 # and `Acquisition`. Due to restrictions of python implementation concerning
