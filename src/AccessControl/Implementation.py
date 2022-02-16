@@ -25,13 +25,12 @@ module was introduced.
 
 """
 from __future__ import absolute_import
+
 import os
 
-# We cannot use `PURE_PYTHON` as this would be propagated to `ExtensionClass`
-# and `Acquisition`. Due to restrictions of python implementation concerning
-# proxies it is not possible to run all with pure python and we influence only
-# the AccessControl implementation here.
-CAPI = not int(os.environ.get('AC_PURE_PYTHON', '0'))
+
+PURE_PYTHON = int(os.environ.get('PURE_PYTHON', '0'))
+CAPI = not PURE_PYTHON
 
 
 def getImplementationName():

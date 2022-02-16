@@ -92,6 +92,7 @@ jobs:
     # with `test`, and `docs` must use a subset.
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         python-version:
           - 2.7
@@ -171,6 +172,7 @@ jobs:
     needs: build-package
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         python-version:
           - 2.7
@@ -231,7 +233,7 @@ jobs:
           python -m coverage run -p -m zope.testrunner --test-path=src --auto-color --auto-progress
       - name: Run tests without C extensions
         run: |
-          AC_PURE_PYTHON=1 python -m coverage run -p -m zope.testrunner --test-path=src --auto-color --auto-progress
+          PURE_PYTHON=1 python -m coverage run -p -m zope.testrunner --test-path=src --auto-color --auto-progress
       - name: Report Coverage
         run: |
           coverage combine
