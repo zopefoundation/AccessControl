@@ -26,8 +26,12 @@ from Acquisition import aq_parent
 from ExtensionClass import Base
 from zope.interface import implementer
 
-# We define our own `_what_not_even_god_should_do` to allow using PURE_PYTHON=1
-_what_not_even_god_should_do = []
+PURE_PYTHON = int(os.environ.get('PURE_PYTHON', '0'))
+if PURE_PYTHON:
+    # We need our own to not depend on the C implementation:
+    _what_not_even_god_should_do = []
+else:
+    from AccessControl.cAccessControl import _what_not_even_god_should_do
 
 from AccessControl.interfaces import ISecurityManager
 from AccessControl.interfaces import ISecurityPolicy
@@ -37,6 +41,8 @@ from AccessControl.SimpleObjectPolicies import Containers
 from AccessControl.SimpleObjectPolicies import _noroles
 from AccessControl.unauthorized import Unauthorized
 from AccessControl.ZopeGuards import guarded_getitem  # NOQA
+
+
 # AccessControl.ZopeSecurityPolicy
 # --------------------------------
 #
