@@ -26,6 +26,12 @@ module was introduced.
 """
 from __future__ import absolute_import
 
+import os
+
+
+PURE_PYTHON = int(os.environ.get('PURE_PYTHON', '0'))
+CAPI = not PURE_PYTHON
+
 
 def getImplementationName():
     """Return the name of the implementation currently being used."""
@@ -96,7 +102,11 @@ _policy_names = {
                                          ),
 }
 
-setImplementation(_default_implementation)
+
+if CAPI:
+    setImplementation(_default_implementation)
+else:
+    setImplementation('PYTHON')
 
 # allow the implementation to change from the default
 _implementation_set = 0

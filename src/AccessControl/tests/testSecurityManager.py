@@ -14,6 +14,7 @@
 """Tests for the SecurityManager implementations
 """
 
+import os
 import unittest
 
 
@@ -250,6 +251,7 @@ class PythonSecurityManagerTests(SecurityManagerTestBase,
         return SecurityManager
 
 
+@unittest.skipIf(os.environ.get('PURE_PYTHON'), reason="Test expects C impl.")
 class C_SecurityManagerTests(SecurityManagerTestBase,
                              ISecurityManagerConformance,
                              unittest.TestCase):

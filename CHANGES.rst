@@ -8,6 +8,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Provide ``AccessControl.get_safe_globals`` to facilitate safe use.
 
+- Honor ``PURE_PYTHON`` environment variable to enable python implementation
+  during runtime.
 
 
 5.2 (2021-07-30)
