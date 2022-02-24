@@ -51,7 +51,7 @@ def InitializeClass(self):
                 name = name + '__roles__'
                 if not have(name):
                     setattr(self, name, ('Manager',))
-        elif name == 'manage' or name[:7] == 'manage_' and type(v) is ft:
+        elif name == 'manage' or name[:7] == 'manage_' and isinstance(v, ft):
             name = name + '__roles__'
             if not have(name):
                 setattr(self, name, ('Manager',))

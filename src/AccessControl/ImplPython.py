@@ -72,7 +72,7 @@ def rolesForPermissionOn(perm, object, default=_default_roles, n=None):
     n = n or getPermissionIdentifier(perm)
     r = None
 
-    while 1:
+    while True:
         if hasattr(object, n):
             roles = getattr(object, n)
             if roles is None:
@@ -169,7 +169,7 @@ class imPermissionRole(Base):
     def __getitem__(self, i):
         try:
             v = self._v
-        except:  # NOQA: flake8: F722
+        except:  # noqa: E722 do not use bare 'except'
             v = self._v = self.__of__(self._pa)
             del self._pa
 
@@ -178,7 +178,7 @@ class imPermissionRole(Base):
     def __len__(self):
         try:
             v = self._v
-        except:  # NOQA: flake8: F722
+        except:  # noqa: E722 do not use bare 'except'
             v = self._v = self.__of__(self._pa)
             del self._pa
 
@@ -533,7 +533,7 @@ class ZopeSecurityPolicy:
 #
 try:
     max_stack_size = int(os.environ.get('Z_MAX_STACK_SIZE', '100'))
-except:  # NOQA: flake8: F722
+except:  # noqa: E722 do not use bare 'except'
     max_stack_size = 100
 
 
@@ -804,7 +804,7 @@ def raiseVerbose(msg, accessed, container, name, value, context,
     if user is not None:
         try:
             ufolder = '/'.join(aq_parent(aq_inner(user)).getPhysicalPath())
-        except:  # NOQA: flake8: F722
+        except:  # noqa: E722 do not use bare 'except'
             ufolder = '(unknown)'
         info.append('Your user account, %s, exists at %s.' % (
             str(user), ufolder))

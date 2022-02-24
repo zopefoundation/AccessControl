@@ -93,7 +93,7 @@ SliceType = type(slice(0))
 
 
 def guarded_getitem(object, index):
-    if type(index) is SliceType:
+    if isinstance(index, SliceType):
         if index.step is not None:
             v = object[index]
         else:
@@ -196,7 +196,7 @@ def _check_dict_access(name, value):
     if self is None:  # item
         return 1
     # Disallow spoofing
-    if type(self) is not dict:
+    if not isinstance(self, dict):
         return 0
     if getattr(value, '__name__', None) != name:
         return 0
@@ -232,7 +232,7 @@ def _check_list_access(name, value):
     if self is None:  # item
         return 1
     # Disallow spoofing
-    if type(self) is not list:
+    if not isinstance(self, list):
         return 0
     if getattr(value, '__name__', None) != name:
         return 0

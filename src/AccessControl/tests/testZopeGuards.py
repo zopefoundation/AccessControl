@@ -270,8 +270,7 @@ class TestDictGuards(GuardTestCase):
         iterkeys = get_iter(d, 'iterkeys')
         keys = d.keys()
         keys.sort()
-        ikeys = list(iterkeys())
-        ikeys.sort()
+        ikeys = sorted(iterkeys())
         self.assertEqual(keys, ikeys)
 
     @unittest.skipIf(six.PY3, "iter... is Python 2 only")
@@ -319,8 +318,7 @@ class TestDictGuards(GuardTestCase):
         itervalues = get_iter(d, 'itervalues')
         values = d.values()
         values.sort()
-        ivalues = list(itervalues())
-        ivalues.sort()
+        ivalues = sorted(itervalues())
         self.assertEqual(values, ivalues)
 
     @unittest.skipIf(six.PY3, "iter... is Python 2 only")
@@ -690,6 +688,7 @@ class TestActualPython(GuardTestCase):
         class UnderprivilegedUser:
             """ Anonymous USer for unit testing purposes.
             """
+
             def getId(self):
                 return 'Underprivileged User'
 

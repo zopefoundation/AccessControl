@@ -97,7 +97,7 @@ Containers = ContainerAssertions.get
 def allow_type(Type, allowed=1):
     """Allow a type and all of its methods and attributes to be used from
     restricted code.  The argument Type must be a type."""
-    if type(Type) is not type:
+    if not isinstance(Type, type):
         raise ValueError("%r is not a type" % Type)
     if hasattr(Type, '__roles__'):
         raise ValueError("%r handles its own security" % Type)

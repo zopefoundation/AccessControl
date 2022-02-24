@@ -61,7 +61,7 @@ def newSecurityManager(request, user):
 def noSecurityManager():
     try:
         del _managers[get_ident()]
-    except:
+    except BaseException:
         pass
 
 

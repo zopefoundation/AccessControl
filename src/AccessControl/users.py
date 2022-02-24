@@ -92,7 +92,7 @@ class BasicUser(Implicit):
         roles = self.getRoles()
         local = {}
         object = getattr(object, 'aq_inner', object)
-        while 1:
+        while True:
             local_roles = getattr(object, '__ac_local_roles__', None)
             if local_roles:
                 if callable(local_roles):
@@ -188,7 +188,7 @@ class BasicUser(Implicit):
         inner_obj = getattr(object, 'aq_inner', object)
         userid = self.getId()
         parents = set()
-        while 1:
+        while True:
             local_roles = getattr(inner_obj, '__ac_local_roles__', None)
             if local_roles:
                 if callable(local_roles):
@@ -499,5 +499,5 @@ def absattr(attr):
 def reqattr(request, attr):
     try:
         return request[attr]
-    except:
+    except BaseException:
         return None

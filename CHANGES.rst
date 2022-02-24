@@ -11,6 +11,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 - Honor ``PURE_PYTHON`` environment variable to enable python implementation
   during runtime.
 
+- Add support for Python 3.10.
+
 
 5.2 (2021-07-30)
 ----------------

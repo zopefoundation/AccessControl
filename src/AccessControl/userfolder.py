@@ -122,7 +122,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
             try:
                 name, password = decodebytes(auth.split(b' ')[-1]) \
                     .decode().split(':', 1)
-            except:
+            except BaseException:
                 raise BadRequest('Invalid authentication token')
             return name, password
         else:
@@ -158,7 +158,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
                     if security.validate(accessed, container, name, value,
                                          roles):
                         return 1
-            except:
+            except BaseException:
                 noSecurityManager()
                 raise
         except Unauthorized:
@@ -319,7 +319,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
         try:
             parent = aq_base(aq_parent(self))
             return parent.isTopLevelPrincipiaApplicationObject
-        except:
+        except BaseException:
             return 0
 
     def __len__(self):

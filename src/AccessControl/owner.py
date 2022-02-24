@@ -184,11 +184,11 @@ class Owned(Base):
         for object in self.objectValues():
             try:
                 s = object._p_changed
-            except:
+            except BaseException:
                 s = 0
             try:
                 object._deleteOwnershipAfterAdd()
-            except:
+            except BaseException:
                 pass
             if s is None:
                 object._p_deactivate()
@@ -230,11 +230,11 @@ class Owned(Base):
         for object in self.objectValues():
             try:
                 s = object._p_changed
-            except:
+            except BaseException:
                 s = 0
             try:
                 object._deleteOwnershipAfterAdd()
-            except:
+            except BaseException:
                 pass
             if s is None:
                 object._p_deactivate()
@@ -268,7 +268,7 @@ def ownerInfo(user, getattr=getattr):
         return None
     path = [absattr(db.id)]
     root = db.getPhysicalRoot()
-    while 1:
+    while True:
         db = getattr(db, 'aq_inner', None)
         if db is None:
             break
@@ -279,7 +279,7 @@ def ownerInfo(user, getattr=getattr):
         if not isinstance(id, str):
             try:
                 id = id()
-            except:
+            except BaseException:
                 id = str(id)
         path.append(id)
 
