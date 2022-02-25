@@ -1,0 +1,49 @@
+# Generated from:
+# https://github.com/zopefoundation/meta/tree/master/config/c-code
+[meta]
+template = "c-code"
+commit-id = "121e74bd9c9718abd9a1a079e6ede252c1a0ba7d"
+
+[python]
+with-appveyor = true
+with-windows = false
+with-pypy = false
+with-future-python = false
+with-legacy-python = true
+with-sphinx-doctests = false
+
+[tox]
+use-flake8 = true
+
+[coverage]
+fail-under = 80
+
+[flake8]
+additional-config = [
+    "# E402 module level import not at top of file",
+    "# F401 imported but unused",
+    "per-file-ignores =",
+    "    src/AccessControl/__init__.py: F401",
+    "    src/AccessControl/ImplC.py: F401",
+    "    src/AccessControl/ImplPython.py: E402",
+    ]
+
+[manifest]
+additional-rules = [
+    "include *.sh",
+    "recursive-include docs *.rst",
+    "recursive-include include *.h",
+    "recursive-include src *.h",
+    "recursive-include src *.zcml",
+    ]
+
+[appveyor]
+global-env-vars = [
+    "# Currently the builds use @dataflake's Appveyor account.  The PyPI token belongs",
+    "# to zope.wheelbuilder, which is managed by @mgedmin and @dataflake.",
+    "",
+    "global:",
+    "  TWINE_USERNAME: __token__",
+    "  TWINE_PASSWORD:",
+    "    secure: vSlDBj79vziJOA5k3z16r1OSr/7Jq6uCf23VKErSsXWb2dGJMUxR6GQ6tRs53GfiyxBQdpdfOA5QuVS4G4W3rVLwD/YXCidpidwBF3pKk4J2Nnk88HpZID6lQOV713DA/kkEuoO97Ty1BRYeaca9bA0P0KmRYU7Iy30p4xBUnmNKYnfilH0/waASYEDwpkrl49DiUh1+bMQjE5LKIBeaF0LLquzHGYETQf4BgpywUIV/8dQnc0vL/RXCa6PrWOxg/8S6ponIYyJ32Y4OoprZ1Q==",
+    ]

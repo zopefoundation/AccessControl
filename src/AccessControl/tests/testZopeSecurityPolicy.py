@@ -761,7 +761,7 @@ class GetRolesWithMultiThreadTest(unittest.TestCase):
         mark = []
 
         def loop():
-            while 1:
+            while True:
                 getRoles(c, None, c.v2, 42)
                 if len(mark) > 0:
                     return

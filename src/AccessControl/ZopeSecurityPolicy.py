@@ -40,7 +40,7 @@ def getRoles(container, name, value, default):
         if not name or not isinstance(name, string_types):
             return default
 
-        if type(value) is MethodType:
+        if isinstance(value, MethodType):
             container = value.__self__
 
         cls = getattr(container, '__class__', None)

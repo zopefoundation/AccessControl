@@ -136,8 +136,7 @@ def f7():
                 'i': [(1, 2), (3, 4)]}
     for meth, kind in methods:
         access = getattr(d, meth)
-        result = list(access())
-        result.sort()
+        result = sorted(access())
         assert result == expected[kind], (meth, kind, result, expected[kind])
 
 

@@ -79,7 +79,7 @@ class Permission:
                 roles = list(roles)
                 roles.remove('Shared')
                 return roles
-            except:
+            except BaseException:
                 return []
 
         if roles is None:
@@ -105,11 +105,11 @@ class Permission:
                 attr = getattr(obj, name)
             try:
                 del attr.__roles__
-            except:
+            except BaseException:
                 pass
             try:
                 delattr(obj, name + '__roles__')
-            except:
+            except BaseException:
                 pass
 
     def setRole(self, role, present):

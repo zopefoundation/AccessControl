@@ -160,7 +160,7 @@ class RoleManager(Base, RoleManager):
         d = {}
         current = self
 
-        while 1:
+        while True:
             try:
                 uf = current.acl_users
             except AttributeError:
@@ -301,7 +301,7 @@ class RoleManager(Base, RoleManager):
         item = self
         userids = {}
         _notfound = []
-        while 1:
+        while True:
             aclu = getattr(aq_base(item), '__allow_groups__', _notfound)
             if aclu is not _notfound:
                 mlu = getattr(aclu, 'maxlistusers', _notfound)
@@ -431,7 +431,7 @@ InitializeClass(RoleManager)
 def reqattr(request, attr):
     try:
         return request[attr]
-    except:
+    except BaseException:
         return None
 
 
@@ -440,7 +440,7 @@ def classattr(cls, attr):
         return getattr(cls, attr)
     try:
         bases = cls.__bases__
-    except:
+    except BaseException:
         bases = ()
     for base in bases:
         if classattr(base, attr):
@@ -451,14 +451,14 @@ def classattr(cls, attr):
 def instance_dict(inst):
     try:
         return inst.__dict__
-    except:
+    except BaseException:
         return {}
 
 
 def class_dict(_class):
     try:
         return _class.__dict__
-    except:
+    except BaseException:
         return {}
 
 

@@ -100,7 +100,7 @@ class RoleManager:
                 r = self.aq_acquire('_isBeingUsedAsAMethod_')
             else:
                 r = self._isBeingUsedAsAMethod_
-        except:
+        except BaseException:
             r = 0
 
         if REQUEST is not None:
@@ -117,7 +117,7 @@ def getPermissionMapping(name, obj, st=type('')):
     obj = getattr(obj, 'aq_base', obj)
     name = getPermissionIdentifier(name)
     r = getattr(obj, name, '')
-    if type(r) is not st:
+    if not isinstance(r, st):
         r = ''
     return r
 
