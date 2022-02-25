@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-5.3 (unreleased)
+5.3 (2022-02-25)
 ----------------
 
 - Provide ``AccessControl.get_safe_globals`` to facilitate safe use.
