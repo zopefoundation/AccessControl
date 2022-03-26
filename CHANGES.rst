@@ -7,7 +7,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 ----------------
 
 - Prevent race condition in guarded_import
-  (see `#123 <https://github.com/zopefoundation/AccessControl/issues/123`_)
+  (see `#123 <https://github.com/zopefoundation/AccessControl/issues/123>`_)
 
 
 5.3 (2022-02-25)
