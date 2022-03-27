@@ -84,10 +84,8 @@ class ModuleSecurityTests(unittest.TestCase):
 
         threads = [threading.Thread(target=threaded_run) for _ in range(2)]
 
-        for t in threads:
-            t.start()
-        for t in threads:
-            t.join()
+        [t.start() for t in threads]
+        [t.join() for t in threads]
 
         self.assertEqual(len(finished), 2)
 
