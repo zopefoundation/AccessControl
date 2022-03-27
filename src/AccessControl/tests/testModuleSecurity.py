@@ -70,6 +70,25 @@ class ModuleSecurityTests(unittest.TestCase):
         self.assertAuth('AccessControl.tests.public_module.submodule',
                         ('pub',))
 
+    def testPublicModuleThreaded(self):
+        """
+        Import the same module from two threads simultaneously, checking that
+        this does not result in a race condition.
+        """
+        import threading
+        finished = []
+
+        def threaded_run():
+            self.assertAuth('AccessControl.tests.public_module', ())
+            finished.append(True)
+
+        threads = [threading.Thread(target=threaded_run) for _ in range(2)]
+
+        [t.start() for t in threads]
+        [t.join() for t in threads]
+
+        self.assertEqual(len(finished), 2)
+
     def test_public_module_asterisk_not_allowed(self):
         self.assertUnauth('AccessControl.tests.public_module', ('*',))
 

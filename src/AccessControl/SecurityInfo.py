@@ -270,10 +270,15 @@ def secureModule(mname, *imp):
 
     if imp:
         __import__(mname, *imp)
-    del _moduleSecurity[mname]
     module = sys.modules[mname]
     modsec.apply(module.__dict__)
     _appliedModuleSecurity[mname] = modsec
+    try:
+        del _moduleSecurity[mname]
+    except KeyError:
+        # In case of access from multiple threads, the del might fail, but that
+        # is OK.
+        pass
     return module
 
 
