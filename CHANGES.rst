@@ -3,8 +3,8 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-5.4 (unreleased)
-----------------
+5.3.1 (2022-03-29)
+------------------
 
 - Prevent race condition in guarded_import
   (see `#123 <https://github.com/zopefoundation/AccessControl/issues/123>`_)
