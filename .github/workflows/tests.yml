@@ -235,7 +235,7 @@ jobs:
           # when we ask it to load tests from that directory. This
           # might also save some build time?
           unzip -n dist/AccessControl-*whl -d src
-          pip install -U -e .[test]
+          pip install --pre -U -e .[test]
       - name: Run tests with C extensions
         if: ${{ !startsWith(matrix.python-version, 'pypy') }}
         run: |
