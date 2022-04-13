@@ -147,7 +147,7 @@ jobs:
           python setup.py bdist_wheel
           # Also install it, so that we get dependencies in the (pip) cache.
           pip install -U 'faulthandler; python_version == "2.7" and platform_python_implementation == "CPython"'
-          pip install .[test]
+          pip install --pre .[test]
 
       - name: Check AccessControl build
         run: |
