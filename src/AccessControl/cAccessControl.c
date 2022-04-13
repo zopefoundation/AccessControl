@@ -1932,10 +1932,10 @@ c_rolesForPermissionOn(PyObject *perm, PyObject *object,
           */
           else 
   	    {
-	      int bool = PyObject_IsTrue(roles);
-	      if (bool < 0)
+	      int roles_is_true = PyObject_IsTrue(roles);
+	      if (roles_is_true < 0)
 		  goto end;
-	      if (bool)
+	      if (roles_is_true)
 	        {
 		    PyObject *list_roles = PySequence_List(roles);
 		    Py_DECREF(roles);
