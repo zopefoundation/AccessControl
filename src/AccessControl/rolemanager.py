@@ -295,7 +295,7 @@ class RoleManager(Base, RoleManager):
         for user, roles in self.get_local_roles():
             if role in roles:
                 got[user] = 1
-        return got.keys()
+        return tuple(got.keys())
 
     def get_valid_userids(self):
         item = self
