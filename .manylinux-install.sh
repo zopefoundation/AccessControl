@@ -26,6 +26,20 @@ ls -ld /cache/pip
 # We need some libraries because we build wheels from scratch:
 yum -y install libffi-devel
 
+tox_env_map() {
+    case $1 in
+        *"cp27"*) echo 'py27';;
+        *"cp35"*) echo 'py35';;
+        *"cp311"*) echo 'py311';;
+        *"cp36"*) echo 'py36';;
+        *"cp37"*) echo 'py37';;
+        *"cp38"*) echo 'py38';;
+        *"cp39"*) echo 'py39';;
+        *"cp310"*) echo 'py310';;
+        *) echo 'py';;
+    esac
+}
+
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
     if \
@@ -47,7 +61,8 @@ for PYBIN in /opt/python/*/bin; do
         if [ `uname -m` == 'aarch64' ]; then
           cd /io/
           "${PYBIN}/pip" install tox
-          "${PYBIN}/tox" -e py
+          TOXENV=$(tox_env_map "${PYBIN}")
+          "${PYBIN}/tox"
           cd ..
         fi
         rm -rf /io/build /io/*.egg-info
