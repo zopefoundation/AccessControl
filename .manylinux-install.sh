@@ -62,7 +62,7 @@ for PYBIN in /opt/python/*/bin; do
           cd /io/
           "${PYBIN}/pip" install tox
           TOXENV=$(tox_env_map "${PYBIN}")
-          "${PYBIN}/tox"
+          "${PYBIN}/tox -e ${TOXENV}"
           cd ..
         fi
         rm -rf /io/build /io/*.egg-info
