@@ -60,9 +60,9 @@ for PYBIN in /opt/python/*/bin; do
         fi
         if [ `uname -m` == 'aarch64' ]; then
           cd /io/
-          "${PYBIN}/pip" install tox
+          ${PYBIN}/pip install tox
           TOXENV=$(tox_env_map "${PYBIN}")
-          "${PYBIN}/tox -e ${TOXENV}"
+          {PYBIN}/tox -e ${TOXENV}
           cd ..
         fi
         rm -rf /io/build /io/*.egg-info
