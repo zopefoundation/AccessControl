@@ -878,6 +878,37 @@ printed  # Prevent a warning of RestrictedPython that itis not used.
 
         self.assertEqual(its_globals['result'], 2411)
 
+    def test_guarded_next_default(self):
+        """There is a `safe_builtin` named `next` with `default`."""
+        SCRIPT = "result = next(iterator, 'default')"
+
+        code, its_globals = self._compile_str(SCRIPT, 'ignored')
+        its_globals['iterator'] = iter([])
+
+        sm = SecurityManager()
+        old = self.setSecurityManager(sm)
+        try:
+            exec(code, its_globals)
+        finally:
+            self.setSecurityManager(old)
+        self.assertEqual(its_globals['result'], "default")
+
+    def test_guarded_next_StopIteration(self):
+        """There is a `safe_builtin` named `next`, raising StopIteration
+        when iterator is exhausted."""
+        SCRIPT = "result = next(iterator)"
+
+        code, its_globals = self._compile_str(SCRIPT, 'ignored')
+        its_globals['iterator'] = iter([])
+
+        sm = SecurityManager()
+        old = self.setSecurityManager(sm)
+        with self.assertRaises(StopIteration):
+            try:
+                exec(code, its_globals)
+            finally:
+                self.setSecurityManager(old)
+
     def test_guarded_next__2(self):
         """It guards the access during iteration."""
         from AccessControl import Unauthorized

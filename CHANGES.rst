@@ -7,6 +7,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 ----------------
 
 - Add support for Python 3.11 (as of 3.11.0a6).
+- Support ``default`` argument in ``next`` built-in function.
 
 
 5.3.1 (2022-03-29)
