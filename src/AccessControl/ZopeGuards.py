@@ -254,8 +254,11 @@ ContainerAssertions[type([])] = _check_list_access
 # iterator that is known to be safe (as in guarded_enumerate).
 
 
-def guarded_next(iterator):
-    ob = next(iterator)
+def guarded_next(iterator, default=_marker):
+    if default is _marker:
+        ob = next(iterator)
+    else:
+        ob = next(iterator, default)
     if not isinstance(iterator, SafeIter):
         guard(ob, ob)
     return ob
