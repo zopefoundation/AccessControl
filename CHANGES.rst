@@ -6,15 +6,17 @@ For changes before version 3.0, see ``HISTORY.rst``.
 5.4 (unreleased)
 ----------------
 
-- Add support for Python 3.11 (as of 3.11.0a6).
+- Add support for Python 3.11 (as of 3.11.0b5).
+
 - Support ``default`` argument in ``next`` built-in function.
+  (`#131 <https://github.com/zopefoundation/AccessControl/pull/131>`_)
 
 
 5.3.1 (2022-03-29)
 ------------------
 
 - Prevent race condition in guarded_import
-  (see `#123 <https://github.com/zopefoundation/AccessControl/issues/123>`_)
+  (`#123 <https://github.com/zopefoundation/AccessControl/issues/123>`_)
 
 
 5.3 (2022-02-25)
