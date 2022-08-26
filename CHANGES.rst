@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-5.4 (unreleased)
+5.4 (2022-08-26)
 ----------------
 
 - Add support for Python 3.11 (as of 3.11.0b5).
