@@ -6,7 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 5.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Switch from ``-Ofast`` to ``-O3`` when compiling code for Linux wheels.
+  (`#133 <https://github.com/zopefoundation/AccessControl/pull/133>`_)
 
 
 5.4 (2022-08-26)
