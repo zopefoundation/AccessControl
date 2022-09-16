@@ -9,6 +9,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 - Switch from ``-Ofast`` to ``-O3`` when compiling code for Linux wheels.
   (`#133 <https://github.com/zopefoundation/AccessControl/pull/133>`_)
 
+- Add support for Python 3.11 (as of 3.11.0rc2).
+
 
 5.4 (2022-08-26)
 ----------------
