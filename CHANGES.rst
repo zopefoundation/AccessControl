@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-5.5 (unreleased)
+5.5 (2022-10-10)
 ----------------
 
 - Switch from ``-Ofast`` to ``-O3`` when compiling code for Linux wheels.
