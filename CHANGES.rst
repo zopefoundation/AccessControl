@@ -6,7 +6,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 5.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add support for final Python 3.11 release.
 
 
 5.5 (2022-10-10)
