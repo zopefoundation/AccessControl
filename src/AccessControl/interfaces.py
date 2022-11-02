@@ -211,7 +211,7 @@ class IStandardUserFolder(Interface):
         """
 
     def getUserNames():
-        """Get a sequence of names of the users which reside in the user folder.
+        """Get a sequence of all names of the users in the user folder.
         """
 
 
