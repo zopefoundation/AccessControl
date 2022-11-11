@@ -10,21 +10,13 @@ environment:
       secure: vSlDBj79vziJOA5k3z16r1OSr/7Jq6uCf23VKErSsXWb2dGJMUxR6GQ6tRs53GfiyxBQdpdfOA5QuVS4G4W3rVLwD/YXCidpidwBF3pKk4J2Nnk88HpZID6lQOV713DA/kkEuoO97Ty1BRYeaca9bA0P0KmRYU7Iy30p4xBUnmNKYnfilH0/waASYEDwpkrl49DiUh1+bMQjE5LKIBeaF0LLquzHGYETQf4BgpywUIV/8dQnc0vL/RXCa6PrWOxg/8S6ponIYyJ32Y4OoprZ1Q==
 
   matrix:
-    - python: 27
     - python: 27-x64
-    - python: 35
     - python: 35-x64
-    - python: 36
     - python: 36-x64
-    - python: 37
     - python: 37-x64
-    - python: 38
     - python: 38-x64
-    - python: 39
     - python: 39-x64
-    - python: 310
     - python: 310-x64
-    - python: 311
     - python: 311-x64
 
 install:
