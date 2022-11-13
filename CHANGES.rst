@@ -6,6 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 5.7 (unreleased)
 ----------------
 
+- Add support for building arm64 wheels on macOS.
+
 
 5.6 (2022-11-03)
 ----------------
