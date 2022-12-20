@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-5.8 (unreleased)
+6.0 (unreleased)
 ----------------
 
 
