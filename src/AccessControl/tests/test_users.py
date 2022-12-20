@@ -62,7 +62,7 @@ class BasicUserTests(unittest.TestCase):
         self.assertEqual(derived.getRolesInContext(self), ['Manager'])
 
     def test_getRolesInContext_no_aq_w_local_roles_as_dict(self):
-        class Target(object):
+        class Target:
             __ac_local_roles__ = {'user': ['Other']}
 
         derived = self._makeDerived()
@@ -72,7 +72,7 @@ class BasicUserTests(unittest.TestCase):
                          ['Manager', 'Other'])
 
     def test_getRolesInContext_no_aq_w_local_roles_as_callable(self):
-        class Context(object):
+        class Context:
             def __ac_local_roles__(self):
                 return {'user': ['Other']}
 
@@ -83,7 +83,7 @@ class BasicUserTests(unittest.TestCase):
                          ['Manager', 'Other'])
 
     def test_getRolesInContext_w_aq(self):
-        class Context(object):
+        class Context:
             pass
 
         derived = self._makeDerived()
@@ -95,10 +95,10 @@ class BasicUserTests(unittest.TestCase):
         target.__ac_local_roles__ = {'user': ['Other']}
         target.__parent__ = parent
         self.assertEqual(set(derived.getRolesInContext(target)),
-                         set(['Manager', 'Other', 'Another']))
+                         {'Manager', 'Other', 'Another'})
 
     def test_getRolesInContext_w_method(self):
-        class Context(object):
+        class Context:
             __ac_local_roles__ = {'user': ['Other']}
 
             def method(self):

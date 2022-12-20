@@ -19,14 +19,7 @@ conversion.
 """
 
 from functools import total_ordering
-
-import six
-
-
-try:
-    from html import escape
-except ImportError:  # PY2
-    from cgi import escape
+from html import escape
 
 
 def should_be_tainted(value):
@@ -34,10 +27,7 @@ def should_be_tainted(value):
         # ord('<') is 60
         return 60 == value
     elif isinstance(value, bytes):
-        if six.PY2:
-            return b'<' in value
-        else:
-            return 60 in value
+        return 60 in value
     else:
         return '<' in value
 
@@ -50,7 +40,7 @@ def taint_string(value):
 
 
 @total_ordering
-class TaintedString(object):
+class TaintedString:
 
     def __init__(self, value):
         self._value = value
@@ -60,10 +50,6 @@ class TaintedString(object):
 
     def __repr__(self):
         return repr(self.quoted())
-
-    if six.PY2:
-        def __cmp__(self, o):
-            return cmp(self._value, o)  # noqa
 
     def __eq__(self, o):
         return self._value == o
@@ -112,10 +98,6 @@ class TaintedString(object):
     def __float__(self):
         return float(self._value)
 
-    if six.PY2:
-        def __long__(self):
-            return long(self._value)  # NOQA
-
     def __getstate__(self):
         # If an object tries to store a TaintedString, it obviously wasn't
         # aware that it was playing with untrusted data. Complain acordingly.
@@ -127,10 +109,6 @@ class TaintedString(object):
     def __getattr__(self, a):
         # for string methods support other than those defined below
         return getattr(self._value, a)
-
-    # Python 2.2 only.
-    def decode(self, *args):
-        return self.__class__(self._value.decode(*args))
 
     def encode(self, *args):
         return self.__class__(self._value.encode(*args))
@@ -199,16 +177,12 @@ class TaintedBytes(TaintedString):
         if isinstance(value, bytes):
             self._value = value
         elif isinstance(value, int):
-            if six.PY2:
-                raise ValueError(
-                    "Constructing from a single character as an int "
-                    "is valid only with Python 3.")
             value = bytes([value])
             self._value = value
         else:
             raise ValueError(
                 "Can be constructed only from bytes "
-                "(or a single int with Python3).")
+                "(or a single int).")
 
     def quoted(self):
         result = escape(self._value.decode('utf8'), 1)

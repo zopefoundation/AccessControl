@@ -3,26 +3,26 @@
 **
 **	Access control acceleration routines
 
-  Copyright (c) 2001, Zope Foundation and Contributors.  
+  Copyright (c) 2001, Zope Foundation and Contributors.
   All rights reserved.
-  
+
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are
   met:
-  
+
     o Redistributions of source code must retain the above copyright
       notice, this list of conditions, and the disclaimer that follows.
-  
+
     o Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions, and the following disclaimer in
       the documentation and/or other materials provided with the
       distribution.
-  
+
     o Neither the name of Digital Creations nor the names of its
       contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-  
-  
+
+
   THIS SOFTWARE IS PROVIDED BY DIGITAL CREATIONS AND CONTRIBUTORS *AS
   IS* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
   TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -38,10 +38,10 @@
 
   If you have questions regarding this software,
   contact:
- 
-    Digital Creations L.C.  
+
+    Digital Creations L.C.
     info@digicool.com
- 
+
     (540) 371-6909
 
 */
@@ -104,8 +104,8 @@ callfunction2(PyObject *function, PyObject *arg0, PyObject *arg1)
 }
 
 static PyObject *
-callfunction3(PyObject *function, 
-              PyObject *arg0, PyObject *arg1, 
+callfunction3(PyObject *function,
+              PyObject *arg0, PyObject *arg1,
               PyObject *arg2
               )
 {
@@ -125,9 +125,9 @@ callfunction3(PyObject *function,
 }
 
 static PyObject *
-callfunction4(PyObject *function, 
-              PyObject *arg0, PyObject *arg1, 
-              PyObject *arg2, PyObject *arg3 
+callfunction4(PyObject *function,
+              PyObject *arg0, PyObject *arg1,
+              PyObject *arg2, PyObject *arg3
               )
 {
   PyObject *t, *r;
@@ -148,9 +148,9 @@ callfunction4(PyObject *function,
 }
 
 static PyObject *
-callfunction5(PyObject *function, 
-              PyObject *arg0, PyObject *arg1, 
-              PyObject *arg2, PyObject *arg3, PyObject *arg4 
+callfunction5(PyObject *function,
+              PyObject *arg0, PyObject *arg1,
+              PyObject *arg2, PyObject *arg3, PyObject *arg4
               )
 {
   PyObject *t, *r;
@@ -173,8 +173,8 @@ callfunction5(PyObject *function,
 }
 
 static PyObject *
-callfunction6(PyObject *function, 
-              PyObject *arg0, PyObject *arg1, 
+callfunction6(PyObject *function,
+              PyObject *arg0, PyObject *arg1,
               PyObject *arg2, PyObject *arg3,
               PyObject *arg4, PyObject *arg5
               )
@@ -200,14 +200,14 @@ callfunction6(PyObject *function,
   return r;
 }
 
-static int 
-unpacktuple2(PyObject *args, char *name, int min, 
+static int
+unpacktuple2(PyObject *args, char *name, int min,
              PyObject **a0, PyObject **a1)
-{ 
+{
   int l;
   l=PyTuple_Size(args);
   if (l < 0) return -1;
-  if (l < min) 
+  if (l < min)
     {
       PyErr_Format(PyExc_TypeError, "expected %d arguments, got %d", min, l);
       return -1;
@@ -217,14 +217,14 @@ unpacktuple2(PyObject *args, char *name, int min,
   return 0;
 }
 
-static int 
-unpacktuple3(PyObject *args, char *name, int min, 
+static int
+unpacktuple3(PyObject *args, char *name, int min,
              PyObject **a0, PyObject **a1, PyObject **a2)
-{ 
+{
   int l;
   l=PyTuple_Size(args);
   if (l < 0) return -1;
-  if (l < min) 
+  if (l < min)
     {
       PyErr_Format(PyExc_TypeError, "expected %d arguments, got %d", min, l);
       return -1;
@@ -235,14 +235,14 @@ unpacktuple3(PyObject *args, char *name, int min,
   return 0;
 }
 
-static int 
-unpacktuple4(PyObject *args, char *name, int min, 
+static int
+unpacktuple4(PyObject *args, char *name, int min,
              PyObject **a0, PyObject **a1, PyObject **a2, PyObject **a3)
-{ 
+{
   int l;
   l=PyTuple_Size(args);
   if (l < 0) return -1;
-  if (l < min) 
+  if (l < min)
     {
       PyErr_Format(PyExc_TypeError, "expected %d arguments, got %d", min, l);
       return -1;
@@ -254,15 +254,15 @@ unpacktuple4(PyObject *args, char *name, int min,
   return 0;
 }
 
-static int 
-unpacktuple5(PyObject *args, char *name, int min, 
-             PyObject **a0, PyObject **a1, PyObject **a2, 
+static int
+unpacktuple5(PyObject *args, char *name, int min,
+             PyObject **a0, PyObject **a1, PyObject **a2,
              PyObject **a3, PyObject **a4)
-{ 
+{
   int l;
   l=PyTuple_Size(args);
   if (l < 0) return -1;
-  if (l < min) 
+  if (l < min)
     {
       PyErr_Format(PyExc_TypeError, "expected %d arguments, got %d", min, l);
       return -1;
@@ -275,15 +275,15 @@ unpacktuple5(PyObject *args, char *name, int min,
   return 0;
 }
 
-static int 
-unpacktuple6(PyObject *args, char *name, int min, 
-             PyObject **a0, PyObject **a1, PyObject **a2, 
+static int
+unpacktuple6(PyObject *args, char *name, int min,
+             PyObject **a0, PyObject **a1, PyObject **a2,
              PyObject **a3, PyObject **a4, PyObject **a5)
-{ 
+{
   int l;
   l=PyTuple_Size(args);
   if (l < 0) return -1;
-  if (l < min) 
+  if (l < min)
     {
       PyErr_Format(PyExc_TypeError, "expected %d arguments, got %d", min, l);
       return -1;
@@ -300,7 +300,7 @@ unpacktuple6(PyObject *args, char *name, int min,
 
 
 /*
-** Structures 
+** Structures
 */
 
 typedef struct {
@@ -384,17 +384,17 @@ static getattrofunc ExtensionClassGetattro;
 */
 
 static PyMethodDef cAccessControl_methods[] = {
-	{"rolesForPermissionOn", 
+	{"rolesForPermissionOn",
 		(PyCFunction)rolesForPermissionOn,
 		METH_VARARGS,
 		""
 	},
-        {"guarded_getattr", 
+        {"guarded_getattr",
 		(PyCFunction)module_guarded_getattr,
 		METH_VARARGS,
 		""
-        },               
-        {"aq_validate", 
+        },
+        {"aq_validate",
 		(PyCFunction)module_aq_validate,
 		METH_VARARGS,
 		""
@@ -693,7 +693,7 @@ static int authenticated = 1;
 ** elsewhere... (e.g. imports)
 */
 
-static int 
+static int
 ZopeSecurityPolicy_setup(void) {
         UNLESS (NoSequenceFormat = NATIVE_FROM_STRING(
                     "'%s' passed as roles"
@@ -757,8 +757,8 @@ convert_name(PyObject *name)
 /*
 ** unauthErr
 **
-** Generate the unauthorized error 
-*/ 
+** Generate the unauthorized error
+*/
 
 static void unauthErr(PyObject *name, PyObject *value) {
 
@@ -810,7 +810,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 	PyObject *name = NULL;
 	PyObject *value = NULL;
 	PyObject *context = NULL;
-	PyObject *roles = NULL;	
+	PyObject *roles = NULL;
         /* Import from SimpleObject Policy._noroles */
         /* Note that _noroles means missing roles, spelled with a NULL in C.
            Jim. */
@@ -833,14 +833,14 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 	*/
 
 	if (unpacktuple6(args, "validate", 5, &accessed, &container,
-                         &name, &value, &context, &roles) < 0) 
+                         &name, &value, &context, &roles) < 0)
           return NULL;
 
 	/*| # Provide special rules for acquisition attributes
 	**| if type(name) in (StringType, UnicodeType):
 	**|     if name[:3] == 'aq_' and name not in valid_aq_:
 	**|	   raise Unauthorized(name, value)
-	*/ 
+	*/
 
 	if (NATIVE_CHECK(name) || PyUnicode_Check(name)) {
         char *sname = NULL;
@@ -854,7 +854,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 	     * to do then.  It's arguably conservative to raise Unauthorized
 	     * in this case.
 	     */
-	    if (sname == NULL || 
+	    if (sname == NULL ||
      	            /* or starts with "aq_" */
      	            (sname[0] == 'a' && sname[1] == 'q' && sname[2] == '_' &&
      	                 /* and isn't aq_{parent, inner, explicit} */
@@ -884,7 +884,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 
 	containerbase = aq_base(container);
 	if (containerbase == NULL) goto err;
-	
+
 	if (aq_isWrapper(accessed))
 		accessedbase = aq_base(accessed);
 	else {
@@ -910,7 +910,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 	}
 
 	/*| # We still might not have any roles
-	**| 
+	**|
 	**| if roles is _noroles:
 	*/
 
@@ -952,7 +952,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 				  unauthErr(name, value);
 				  goto err;
 				}
-			} 
+			}
                         else {
 				roles = aq_acquire(container, __roles__);
 				if (roles == NULL) {
@@ -992,7 +992,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 		if (p == Py_None) {
                         ASSIGN(p, PyObject_GetAttr(container,
 				__allow_access_to_unprotected_subobjects__));
-			if (p == NULL) 
+			if (p == NULL)
                           PyErr_Clear();
 		}
 
@@ -1009,11 +1009,11 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 		**|          p = p(name, value)
 		*/
 
-		if (p) 
+		if (p)
                   {
                     if (! INT_CHECK(p))
                       {
-                        if (PyDict_Check(p)) 
+                        if (PyDict_Check(p))
                           {
                             if (NATIVE_CHECK(name) || PyUnicode_Check(name))
                               {
@@ -1027,8 +1027,8 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
                                 if (p == NULL)
                                   goto err;
                               }
-                          } 
-                        else 
+                          }
+                        else
                           {
                             ASSIGN(p, callfunction2(p, name, value));
                             if (p == NULL)
@@ -1040,7 +1040,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 		/*| if not p:
 		**|     raise Unauthorized, cleanupName(name, value)
 		*/
-               
+
 		if (p == NULL || ! PyObject_IsTrue(p)) {
                   Py_XDECREF(p);
                   unauthErr(name, value);
@@ -1059,7 +1059,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 
 		/*| # We are going to need a security-aware object to pass
 		**| # to allowed().  We'll use the container
-		**| 
+		**|
 		**| value = container
 		*/
 
@@ -1072,7 +1072,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 	**|    if roles is None or 'Anonymous' in roles: return 1
 	**| except TypeError:
 	**|     LOG.warn('"%s' passed as roles"
-	**|		" during validation of '%s' is not a sequence." % 
+	**|		" during validation of '%s' is not a sequence." %
 	**|		('roles', name))
 	**|	raise
 	*/
@@ -1097,7 +1097,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
               if (!PyErr_ExceptionMatches(PyExc_TypeError))
                 goto err;
               PyErr_Fetch(&t, &v, &tb);
-              
+
               m=PyObject_Repr(roles);
               if (m) ASSIGN(m, Py_BuildValue("OO", m, name));
               if (m) ASSIGN(m, NATIVE_FORMAT(NoSequenceFormat, m));
@@ -1125,7 +1125,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 	**|    # If the executable had an owner, can it execute?
 	**|    owner = eo.getOwner()
 	**|    if (owner is not None) and not owner.allowed(value, roles)
-	**| 	  # We don't want someone to acquire if they can't 
+	**| 	  # We don't want someone to acquire if they can't
 	**|	  # get an unacquired!
 	**|       raise Unauthorized, ('You are not authorized to'
 	**|	      'access <em>%s</em>.' % cleanupName(name, value))
@@ -1138,7 +1138,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 
                 owner = PyObject_GetAttr(eo, getOwner_str);
                 if (owner) ASSIGN(owner, PyObject_CallObject(owner, NULL));
-                if (owner ==NULL) 
+                if (owner ==NULL)
                   {
                     Py_DECREF(eo);
                     goto err;
@@ -1171,14 +1171,14 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 	**|    if proxy_roles:
 	**|        # Verify that the owner actually can state the proxy role
 	**|        # in the context of the accessed item; users in subfolders
-	**|        # should not be able to use proxy roles to access items 
+	**|        # should not be able to use proxy roles to access items
 	**|        # above their subfolder!
 	**|        owner = eo.getWrappedOwner()
-	**|                        
+	**|
 	**|        if owner is not None:
         **|            if container is not containerbase:
 	**|                if not owner._check_context(container):
-	**|                    # container is higher up than the owner, 
+	**|                    # container is higher up than the owner,
 	**|                    # deny access
 	**|                    raise Unauthorized(name, value)
 	**|
@@ -1190,12 +1190,12 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 	*/
 		proxy_roles = PyObject_GetAttr(eo, _proxy_roles_str);
 
-		if (proxy_roles == NULL) 
+		if (proxy_roles == NULL)
                   {
 		    Py_DECREF(eo);
                     PyErr_Clear();
                   }
-                else if (PyObject_IsTrue(proxy_roles)) 
+                else if (PyObject_IsTrue(proxy_roles))
                   {
 
 		    method = PyObject_GetAttr(eo, getWrappedOwner_str);
@@ -1243,7 +1243,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
 
 
                     contains = 0;
-                    if (PyTuple_Check(proxy_roles)) 
+                    if (PyTuple_Check(proxy_roles))
                       {
                         l=PyTuple_GET_SIZE(proxy_roles);
                         for (i=0; i < l; i++)
@@ -1253,7 +1253,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
                               break;
                           }
                       }
-                    else 
+                    else
                       {
                         l=PySequence_Size(proxy_roles);
                         if (l < 0) contains = -1;
@@ -1266,7 +1266,7 @@ static PyObject *ZopeSecurityPolicy_validate(PyObject *self, PyObject *args) {
                               }
                             else
                               contains = -1;
-                            if (contains < 0)                          
+                            if (contains < 0)
                               break;
                           }
                       }
@@ -1358,37 +1358,37 @@ static void ZopeSecurityPolicy_dealloc(ZopeSecurityPolicy *self) {
 static PyObject *
 SecurityManager_validate(SecurityManager *self, PyObject *args)
 {
-  PyObject *accessed=Py_None, *container=Py_None, *name=Py_None, 
+  PyObject *accessed=Py_None, *container=Py_None, *name=Py_None,
     *value=Py_None, *roles=NULL;
-  
+
   if (unpacktuple5(args, "validate", 0,
                        &accessed, &container, &name, &value, &roles) < 0)
     return NULL;
 
   CHECK_SECURITY_MANAGER_STATE(self, NULL);
   GET_SECURITY_MANAGER_VALIDATE(self, NULL);
-  
+
   if (roles== NULL)
-    return callfunction5(self->validate, 
+    return callfunction5(self->validate,
                          accessed, container, name, value, self->context);
-  return callfunction6(self->validate, 
+  return callfunction6(self->validate,
                        accessed, container, name, value, self->context, roles);
 }
 
 static PyObject *
 SecurityManager_DTMLValidate(SecurityManager *self, PyObject *args)
 {
-  PyObject *accessed=Py_None, *container=Py_None, *name=Py_None, 
+  PyObject *accessed=Py_None, *container=Py_None, *name=Py_None,
     *value=Py_None, *md=NULL;
-  
+
   if (unpacktuple5(args, "DTMLValidate", 0,
                    &accessed, &container, &name, &value, &md) < 0)
     return NULL;
 
   CHECK_SECURITY_MANAGER_STATE(self, NULL);
   GET_SECURITY_MANAGER_VALIDATE(self, NULL);
-  
-  return callfunction5(self->validate, 
+
+  return callfunction5(self->validate,
                        accessed, container, name, value, self->context);
 }
 
@@ -1396,21 +1396,21 @@ static PyObject *
 SecurityManager_checkPermission(SecurityManager *self, PyObject *args)
 {
   PyObject *permission, *object;
-  
+
   if (unpacktuple2(args, "checkPermission", 2, &permission, &object) < 0)
     return NULL;
 
   CHECK_SECURITY_MANAGER_STATE(self, NULL);
-  if (self->checkPermission == NULL && 
-      ((self->checkPermission = PyObject_GetAttr(self->policy, 
-                                                 checkPermission_str)) 
+  if (self->checkPermission == NULL &&
+      ((self->checkPermission = PyObject_GetAttr(self->policy,
+                                                 checkPermission_str))
        == NULL)) return NULL;
 
-  return callfunction3(self->checkPermission, 
+  return callfunction3(self->checkPermission,
                        permission, object, self->context);
 }
 
-static void 
+static void
 SecurityManager_dealloc(SecurityManager *self)
 {
   Py_XDECREF(self->thread_id);
@@ -1461,7 +1461,7 @@ SecurityManager_getattro(SecurityManager *self, PyObject *name)
   return Py_FindAttr(OBJECT(self), name);
 }
 
-static int 
+static int
 SecurityManager_setattro(SecurityManager *self, PyObject *name, PyObject *v)
 {
   PyObject *name_as_bytes = NULL;
@@ -1535,7 +1535,7 @@ static PyObject *PermissionRole_init(PermissionRole *self, PyObject *args) {
 	**|  self.__name__ = name
 	**|  self._p = "_" + string.translate(name, name_trans) + "_Permission"
 	**|  self._d = default
-	*/ 
+	*/
 
 	if (unpacktuple2(args, "__init__", 1, &name, &deflt) < 0) return NULL;
 
@@ -1580,7 +1580,7 @@ PermissionRole_of(PermissionRole *self, PyObject *parent) {
 
 	r->_pa = parent;
 	Py_INCREF(parent);
-	
+
 	/*| r._d = self._d
 	*/
 
@@ -1666,7 +1666,7 @@ PermissionRole_getattro(PermissionRole *self, PyObject *name) {
     	if (name_s == NULL)
     		PyErr_Clear(); /* defer to ExtensionClassGetattro */
 	else if (name_s[0] == '_') {
-		if (! strcmp(name_s, "__name__")) 
+		if (! strcmp(name_s, "__name__"))
 			result = self->__name__;
 		else if (! strcmp(name_s, "__roles__"))
 			result = self->__roles__;
@@ -1796,7 +1796,7 @@ static void imPermissionRole_dealloc(imPermissionRole *self) {
 
 /*
 ** rolesForPermissionOn
-*/ 
+*/
 
 static PyObject *rolesForPermissionOn(PyObject *self, PyObject *args) {
 	PyObject *perm = NULL;
@@ -1809,19 +1809,19 @@ static PyObject *rolesForPermissionOn(PyObject *self, PyObject *args) {
 	**| """Return the roles that have the permisson on the given object"""
 	*/
 
-	if (unpacktuple4(args, "rolesForPermissionOn", 2, 
+	if (unpacktuple4(args, "rolesForPermissionOn", 2,
                          &perm, &object, &deflt, &n) < 0)
 		return NULL;
         return c_rolesForPermissionOn(perm, object, deflt, n);
 }
 
-/* 
+/*
 def rolesForPermissionOn(perm, object, default=_default_roles, n=None):
     """Return the roles that have the given permission on the given object
     """
 */
 static PyObject *
-c_rolesForPermissionOn(PyObject *perm, PyObject *object, 
+c_rolesForPermissionOn(PyObject *perm, PyObject *object,
                        PyObject *_default_roles, PyObject *n)
 {
   PyObject *r, *result = NULL;
@@ -1923,14 +1923,14 @@ c_rolesForPermissionOn(PyObject *perm, PyObject *object,
                   goto end;
                 }
             }
-          
+
           /*
             elif roles:
                 if r is None:
                     r = list(roles)
                 else: r = r + list(roles)
           */
-          else 
+          else
   	    {
 	      int roles_is_true = PyObject_IsTrue(roles);
 	      if (roles_is_true < 0)
@@ -1962,7 +1962,7 @@ c_rolesForPermissionOn(PyObject *perm, PyObject *object,
       else                      /* roles == NULL */
         PyErr_Clear();
 
-      
+
       /*
         object = aq_inner(object)
         if object is None:
@@ -1971,16 +1971,16 @@ c_rolesForPermissionOn(PyObject *perm, PyObject *object,
        */
       {
         PyObject *tobj = aq_inner(object);
-        if (tobj == NULL) 
+        if (tobj == NULL)
           goto end;
         Py_DECREF(object);
         object = tobj;
-        
-        if (object == Py_None) 
+
+        if (object == Py_None)
           break;
 
         tobj = aq_parent(object);
-        if (tobj == NULL) 
+        if (tobj == NULL)
           goto end;
         Py_DECREF(object);
         object = tobj;
@@ -2005,13 +2005,13 @@ c_rolesForPermissionOn(PyObject *perm, PyObject *object,
 
   Py_INCREF(r);
   result = r;
-   
+
  end:
   Py_DECREF(n);
   Py_DECREF(object);
   Py_DECREF(r);
   return result;
-}  
+}
 
 
 /*
@@ -2062,7 +2062,7 @@ static PyObject *permissionName(PyObject *name) {
 
 /* def guarded_getattr(inst, name, default=_marker): */
 static PyObject *
-guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_, 
+guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
                 PyObject *validate)
 {
   PyObject *v=0, *t=0;
@@ -2129,13 +2129,13 @@ guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
           if (PyDict_Check(t))
             {
               PyObject *attrv;
-              
+
               attrv = PyDict_GetItem(t, name);
               if (attrv != NULL)
                 {
                   i=PyObject_IsTrue(attrv);
                   if (i < 0) goto err;
-                  if (i) 
+                  if (i)
                     {
                       if (Py_TYPE(attrv)->tp_call)
                         {
@@ -2166,7 +2166,7 @@ guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
               PyObject *factory;
 
               factory = callfunction2(t, name, v);
-              if (factory == NULL) 
+              if (factory == NULL)
                 goto err;
 
               if (PyCallable_Check(factory))
@@ -2179,13 +2179,13 @@ guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
           return v;
         }
 
-      /* 
+      /*
         # See if we can get the value doing a filtered acquire.
         # aq_acquire will either return the same value as held by
         # v or it will return an Unauthorized raised by validate.
         validate = SecurityManagement.getSecurityManager().validate
         aq_acquire(inst, name, aq_validate, validate)
-        
+
         return v
       */
 
@@ -2198,7 +2198,7 @@ guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
       Py_DECREF(t);
 
       return v;
-            
+
       unauthErr(name, v);
     err:
       Py_DECREF(v);
@@ -2282,8 +2282,8 @@ dtml_guarded_getattr(PyObject *self, PyObject *args)
   if (unpacktuple3(args, "guarded_getattr", 2, &ob, &name, &default_) < 0)
     return NULL;
 
-  
-  UNLESS (validate = PyObject_GetAttr(self, validate_str)) 
+
+  UNLESS (validate = PyObject_GetAttr(self, validate_str))
     {
       /* This section is pure paranoia at this point. It was necessary
          while debugging. */
@@ -2301,7 +2301,7 @@ dtml_guarded_getattr(PyObject *self, PyObject *args)
 
 
 static struct PyMethodDef dtml_methods[] = {
-  {"guarded_getattr", (PyCFunction)dtml_guarded_getattr, 
+  {"guarded_getattr", (PyCFunction)dtml_guarded_getattr,
    METH_VARARGS|METH_KEYWORDS, "" },
   {NULL,	NULL}
 };
@@ -2314,7 +2314,6 @@ static struct PyMethodDef dtml_methods[] = {
 #define IMPORT(module, name) if ((module = PyImport_ImportModule(name)) == NULL) return NULL;
 #define GETATTR(module, name) if ((name = PyObject_GetAttrString(module, #name)) == NULL) return NULL;
 
-#ifdef PY3K
 static struct PyModuleDef moduledef =
 {
     PyModuleDef_HEAD_INIT,
@@ -2327,7 +2326,6 @@ static struct PyModuleDef moduledef =
     NULL,                                   /* m_clear */
     NULL,                                   /* m_free */
 };
-#endif
 
 static PyObject*
 module_init(void) {
@@ -2345,14 +2343,7 @@ module_init(void) {
 
 	ExtensionClassGetattro= Py_FindAttr;
 
-  #ifdef PY3K
-    module = PyModule_Create(&moduledef);
-  #else
-    module = Py_InitModule3(
-      "cAccessControl",
-      cAccessControl_methods,
-      "cAccessControl.c\n");
-  #endif
+  module = PyModule_Create(&moduledef);
 
 	aq_init(); /* For Python <= 2.1.1, aq_init() should be after
                       Py_InitModule(). */
@@ -2377,7 +2368,7 @@ module_init(void) {
 	PyExtensionClass_Export(dict, "imPermissionRole",
 		imPermissionRoleType);
 
- 	imPermissionRoleObj = PyMapping_GetItemString(dict, 
+ 	imPermissionRoleObj = PyMapping_GetItemString(dict,
                                                       "imPermissionRole");
 
         aq_validate = PyMapping_GetItemString(dict, "aq_validate");
@@ -2428,14 +2419,7 @@ module_init(void) {
   return module;
 }
 
-#ifdef PY3K
 PyMODINIT_FUNC PyInit_cAccessControl(void)
 {
     return module_init();
 }
-#else
-PyMODINIT_FUNC initcAccessControl(void)
-{
-    module_init();
-}
-#endif

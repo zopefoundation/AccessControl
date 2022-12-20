@@ -13,10 +13,16 @@
 # isort:skip_file
 """Python implementation of the access control machinery."""
 
+from AccessControl.ZopeSecurityPolicy import getRoles  # XXX
+from AccessControl.unauthorized import Unauthorized
+from AccessControl.SimpleObjectPolicies import _noroles
+from AccessControl.SimpleObjectPolicies import Containers
+from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.Permission import getPermissionIdentifier
+from AccessControl.interfaces import ISecurityPolicy
+from AccessControl.interfaces import ISecurityManager
 import os
 from logging import getLogger
-
-from six import string_types
 
 from Acquisition import aq_acquire
 from Acquisition import aq_base
@@ -33,13 +39,6 @@ if PURE_PYTHON:
 else:
     from AccessControl.cAccessControl import _what_not_even_god_should_do
 
-from AccessControl.interfaces import ISecurityManager
-from AccessControl.interfaces import ISecurityPolicy
-from AccessControl.Permission import getPermissionIdentifier
-from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.SimpleObjectPolicies import Containers
-from AccessControl.SimpleObjectPolicies import _noroles
-from AccessControl.unauthorized import Unauthorized
 from AccessControl.ZopeGuards import guarded_getitem  # NOQA
 
 
@@ -49,7 +48,6 @@ from AccessControl.ZopeGuards import guarded_getitem  # NOQA
 #   TODO:  implement this in cAccessControl, and have Implementation
 #          do the indirection.
 #
-from AccessControl.ZopeSecurityPolicy import getRoles  # XXX
 
 
 LOG = getLogger('ImplPython')
@@ -315,7 +313,7 @@ class ZopeSecurityPolicy:
                 if not isinstance(p, (bool, int)):
                     if isinstance(p, dict):
 
-                        if isinstance(name, string_types):
+                        if isinstance(name, str):
                             p = p.get(name)
                         else:
                             p = 1
@@ -487,7 +485,7 @@ class ZopeSecurityPolicy:
 
     def checkPermission(self, permission, object, context):
         roles = rolesForPermissionOn(permission, object)
-        if isinstance(roles, string_types):
+        if isinstance(roles, str):
             roles = [roles]
 
         # check executable owner and proxy roles
@@ -795,7 +793,7 @@ def raiseVerbose(msg, accessed, container, name, value, context,
                  ):
     """Raises an Unauthorized error with a verbose explanation."""
 
-    s = '%s.  Access to %s of %s' % (
+    s = '{}.  Access to {} of {}'.format(
         msg, repr(name), item_repr(container))
     if aq_base(container) is not aq_base(accessed):
         s += ', acquired through %s,' % item_repr(accessed)
@@ -806,7 +804,7 @@ def raiseVerbose(msg, accessed, container, name, value, context,
             ufolder = '/'.join(aq_parent(aq_inner(user)).getPhysicalPath())
         except:  # noqa: E722 do not use bare 'except'
             ufolder = '(unknown)'
-        info.append('Your user account, %s, exists at %s.' % (
+        info.append('Your user account, {}, exists at {}.'.format(
             str(user), ufolder))
 
     if required_roles is not None:

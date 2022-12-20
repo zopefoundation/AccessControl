@@ -17,7 +17,7 @@ class Item(Persistent):
             self.__roles__ = ['Anonymous']
 
     def __repr__(self):
-        return '<Item {0}>'.format(self.id)
+        return f'<Item {self.id}>'
 
 
 class Folder(Persistent):
@@ -41,13 +41,9 @@ class Folder(Persistent):
         if isinstance(key, SliceType):
             return self.item_list[key]
         # Is this numeric (integer) access or string access?
-        # We could use isinstance(key, (int, long)), but long
-        # is not defined in Python 3.
-        try:
-            key = int(key)
-        except (ValueError, TypeError):
-            return self.item_dict[key]
-        return self.item_list[key]
+        if isinstance(key, int):
+            return self.item_list[key]
+        return self.item_dict[key]
 
 
 class FormatterTest(unittest.TestCase):
@@ -100,21 +96,21 @@ class FormatterTest(unittest.TestCase):
         from AccessControl.safe_formatter import SafeFormatter
 
         # Accessing basic Python attributes on a basic Python type is fine.
-        formatted = SafeFormatter(u'{0.upper}').safe_format('foo')
+        formatted = SafeFormatter('{0.upper}').safe_format('foo')
         self.assertTrue(formatted.startswith('<built-in method upper'))
         # unless the name is protected
         self.assertRaises(Unauthorized,
-                          SafeFormatter(u'{0.__class__}').safe_format, 'foo')
+                          SafeFormatter('{0.__class__}').safe_format, 'foo')
         # But for non-basic items or non-basic lists, we want run checks.
         folder = self._create_folder_with_mixed_contents()
         # We can get the public items just fine:
-        self.assertEqual(SafeFormatter(u'{0.public1}').safe_format(folder),
+        self.assertEqual(SafeFormatter('{0.public1}').safe_format(folder),
                          '<Item public1>')
-        self.assertEqual(SafeFormatter(u'{0.public2}').safe_format(folder),
+        self.assertEqual(SafeFormatter('{0.public2}').safe_format(folder),
                          '<Item public2>')
         # But not the private item:
         self.assertRaises(Unauthorized,
-                          SafeFormatter(u'{0.private}').safe_format,
+                          SafeFormatter('{0.private}').safe_format,
                           folder)
 
     def test_prevents_bad_string_formatting_item(self):
@@ -141,18 +137,18 @@ class FormatterTest(unittest.TestCase):
 
         # Accessing basic Python types in a basic Python dict is fine.
         foo = {'bar': 'Can you see me?'}
-        self.assertEqual(SafeFormatter(u'{0[bar]}').safe_format(foo),
+        self.assertEqual(SafeFormatter('{0[bar]}').safe_format(foo),
                          'Can you see me?')
         # But for non-basic items or non-basic lists, we want run checks.
         folder = self._create_folder_with_mixed_contents()
         # We can get the public items just fine:
-        self.assertEqual(SafeFormatter(u'{0[public1]}').safe_format(folder),
+        self.assertEqual(SafeFormatter('{0[public1]}').safe_format(folder),
                          '<Item public1>')
-        self.assertEqual(SafeFormatter(u'{0[public2]}').safe_format(folder),
+        self.assertEqual(SafeFormatter('{0[public2]}').safe_format(folder),
                          '<Item public2>')
         # But not the private item:
         self.assertRaises(Unauthorized,
-                          SafeFormatter(u'{0[private]}').safe_format,
+                          SafeFormatter('{0[private]}').safe_format,
                           folder)
 
     def test_prevents_bad_string_formatting_key(self):
@@ -194,15 +190,15 @@ class FormatterTest(unittest.TestCase):
         # Accessing basic Python types in a basic Python list is fine.
         foo = list(['bar'])
         self.assertEqual(SafeFormatter('{0[0]}').safe_format(foo),
-                         u'bar')
+                         'bar')
         # But for non-basic items or non-basic lists, we want run checks.
         folder = self._create_folder_with_mixed_contents()
         # We can get the public items just fine:
-        self.assertEqual(SafeFormatter(u'{0[0]}').safe_format(folder),
+        self.assertEqual(SafeFormatter('{0[0]}').safe_format(folder),
                          '<Item public1>')
-        self.assertEqual(SafeFormatter(u'{0[2]}').safe_format(folder),
+        self.assertEqual(SafeFormatter('{0[2]}').safe_format(folder),
                          '<Item public2>')
         # But not the private item:
         self.assertRaises(Unauthorized,
-                          SafeFormatter(u'{0[1]}').safe_format,
+                          SafeFormatter('{0[1]}').safe_format,
                           folder)

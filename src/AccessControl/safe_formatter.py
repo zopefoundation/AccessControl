@@ -1,28 +1,14 @@
 import string
+from collections.abc import Mapping
 
-import six
+import _string
 
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl.ZopeGuards import guarded_getitem
 
 
-try:
-    # Python 3
-    import _string
-except ImportError:
-    pass
-
-if six.PY3:
-    from collections.abc import Mapping
-else:
-    from collections import Mapping
-
-
 def formatter_field_name_split(field_name):
-    if six.PY3:
-        return _string.formatter_field_name_split(field_name)
-    else:
-        return field_name._formatter_field_name_split()
+    return _string.formatter_field_name_split(field_name)
 
 
 class _MagicFormatMapping(Mapping):
@@ -63,7 +49,7 @@ class SafeFormatter(string.Formatter):
 
     def __init__(self, value):
         self.value = value
-        super(SafeFormatter, self).__init__()
+        super().__init__()
 
     def get_field(self, field_name, args, kwargs):
         """Get the field value using guarded methods."""

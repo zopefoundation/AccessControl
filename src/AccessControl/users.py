@@ -13,7 +13,6 @@
 """Access control package.
 """
 
-from __future__ import absolute_import
 
 import os
 import re
@@ -252,7 +251,7 @@ class BasicUser(Implicit):
         return self.getUserName()
 
     def __repr__(self):
-        return '<%s %r>' % (self.__class__.__name__, self.getUserName())
+        return '<{} {!r}>'.format(self.__class__.__name__, self.getUserName())
 
 
 class SimpleUser(BasicUser):
@@ -371,7 +370,7 @@ def readUserAccessFile(filename):
     try:
         with open(os.path.join(instancehome, filename), 'rb') as f:
             line = f.readline()
-    except IOError:
+    except OSError:
         return None
 
     if line:

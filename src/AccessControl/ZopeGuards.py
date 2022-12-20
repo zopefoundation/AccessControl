@@ -11,15 +11,11 @@
 #
 ##############################################################################
 
-from __future__ import absolute_import
 
 import math
 import random
 import string
-import warnings
-
-import six
-from six.moves import reduce
+from functools import reduce
 
 import RestrictedPython
 from RestrictedPython.Eval import RestrictionCapableEval
@@ -42,16 +38,6 @@ _marker = []  # Create a new marker object.
 
 safe_builtins = safe_builtins.copy()
 safe_builtins.update(utility_builtins)
-
-# Allow access to unprotected attributes (don't show deprecation warning).
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    try:
-        import sets
-    except ImportError:
-        pass
-    else:
-        sets.__allow_access_to_unprotected_subobjects__ = 1
 
 # Allow access to unprotected attributes
 string.__allow_access_to_unprotected_subobjects__ = 1
@@ -174,20 +160,10 @@ _dict_white_list = {
     'update': 1,
 }
 
-if six.PY3:
-    _dict_white_list.update({
-        'keys': get_iter,
-        'values': get_iter,
-    })
-else:
-    _dict_white_list.update({
-        'has_key': 1,
-        'iteritems': 1,
-        'iterkeys': get_iter,
-        'itervalues': get_iter,
-        'keys': 1,
-        'values': 1,
-    })
+_dict_white_list.update({
+    'keys': get_iter,
+    'values': get_iter,
+})
 
 
 def _check_dict_access(name, value):
@@ -206,11 +182,10 @@ def _check_dict_access(name, value):
 ContainerAssertions[type({})] = _check_dict_access
 
 
-if six.PY3:
-    # Allow iteration over the result of `dict.{keys, values, items}`
-    d = {}
-    for attr in ("keys", "values", "items"):
-        allow_type(type(getattr(d, attr)()))
+# Allow iteration over the result of `dict.{keys, values, items}`
+d = {}
+for attr in ("keys", "values", "items"):
+    allow_type(type(getattr(d, attr)()))
 
 
 _list_white_list = {
@@ -267,7 +242,7 @@ def guarded_next(iterator, default=_marker):
 safe_builtins['next'] = guarded_next
 
 
-class SafeIter(object):
+class SafeIter:
     __allow_access_to_unprotected_subobjects__ = 1
 
     def __init__(self, ob, container=None):
@@ -284,7 +259,7 @@ class SafeIter(object):
         guard(self.container, ob)
         return ob
 
-    next = __next__  # Python 2 compat
+    next = __next__
 
 
 class NullIter(SafeIter):
@@ -294,7 +269,7 @@ class NullIter(SafeIter):
     def __next__(self):
         return next(self._iter)
 
-    next = __next__  # Python 2 compat
+    next = __next__
 
 
 def _error(index):
@@ -307,7 +282,7 @@ def guarded_iter(*args):
         # Don't double-wrap
         if isinstance(i, SafeIter):
             return i
-        if not isinstance(i, six.moves.range):
+        if not isinstance(i, range):
             return SafeIter(i)
     # Other call styles / targets don't need to be guarded
     return NullIter(iter(*args))
@@ -402,10 +377,7 @@ def guarded_zip(*seqs):
 safe_builtins['zip'] = guarded_zip
 
 
-if six.PY3:
-    import_default_level = 0
-else:
-    import_default_level = -1
+import_default_level = 0
 
 
 def guarded_import(mname, globals=None, locals=None, fromlist=None,
@@ -482,7 +454,7 @@ def load_module(module, mname, mnameparts, validate, globals, locals):
         if mname is None:
             mname = nextname
         else:
-            mname = '%s.%s' % (mname, nextname)
+            mname = '{}.{}'.format(mname, nextname)
         # import (if not already imported) and  check for MSI
         nextmodule = secureModule(mname, globals, locals)
         if nextmodule is None:  # not allowed

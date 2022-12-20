@@ -11,9 +11,6 @@
 #
 ##############################################################################
 
-
-import six
-
 # This has to happen early so things get initialized properly
 from AccessControl.Implementation import setImplementation
 from AccessControl.safe_formatter import safe_format
@@ -45,18 +42,9 @@ ModuleSecurityInfo('DateTime').declarePublic('DateTime')  # NOQA: D001
 
 # We want to allow all methods on string type except "format".
 # That one needs special handling to avoid access to attributes.
-rules = dict([(m, True) for m in dir(str) if not m.startswith('_')])
+rules = {m: True for m in dir(str) if not m.startswith('_')}
 rules['format'] = safe_format
 allow_type(str, rules)
-
-if six.PY2:
-    # Same for unicode instead on Python 2:
-    rules = dict([(m, True) for m in dir(six.text_type) if
-                  not m.startswith('_')])
-    rules['format'] = safe_format
-    allow_type(six.text_type, rules)
-
-del six
 
 zodbupdate_decode_dict = {
     'AccessControl.users User name': 'utf-8',

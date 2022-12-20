@@ -12,9 +12,8 @@
 ##############################################################################
 """Security management
 """
-from __future__ import absolute_import
 
-from six.moves._thread import get_ident
+from _thread import get_ident
 
 from AccessControl import SpecialUsers
 

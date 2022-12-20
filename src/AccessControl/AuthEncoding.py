@@ -11,7 +11,6 @@
 #
 ##############################################################################
 
-from __future__ import absolute_import
 
 import AuthEncoding.AuthEncoding
 from zope.deferredimport import deprecated

@@ -17,6 +17,8 @@ when the object is used in special ways.  This is rather hard, since we
 need the object's ordinary permissions intact so we can manage it.
 """
 
+from html import escape
+
 from Acquisition import ImplicitAcquisitionWrapper
 from ExtensionClass import Base
 from zope.interface import implementer
@@ -26,12 +28,6 @@ from AccessControl.interfaces import IPermissionMappingSupport
 from AccessControl.owner import UnownableOwner
 from AccessControl.Permission import getPermissionIdentifier
 from AccessControl.requestmethod import requestmethod
-
-
-try:
-    from html import escape
-except ImportError:  # PY2
-    from cgi import escape
 
 
 @implementer(IPermissionMappingSupport)
@@ -113,7 +109,7 @@ class RoleManager:
 InitializeClass(RoleManager)
 
 
-def getPermissionMapping(name, obj, st=type('')):
+def getPermissionMapping(name, obj, st=str):
     obj = getattr(obj, 'aq_base', obj)
     name = getPermissionIdentifier(name)
     r = getattr(obj, name, '')
