@@ -291,7 +291,7 @@ class ISecurityManager(Interface):
     """Check access and manages executable context and policies.
     """
 
-    _policy = Attribute(u'Current Security Policy')
+    _policy = Attribute('Current Security Policy')
 
     def validate(accessed=None,
                  container=None,

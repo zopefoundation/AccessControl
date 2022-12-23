@@ -11,12 +11,13 @@
 #
 ##############################################################################
 
+import _thread as thread
 import os
 import sys
 import unittest
 from doctest import DocTestSuite
-
-from six.moves import _thread as thread
+from sys import getswitchinterval
+from sys import setswitchinterval
 
 from Acquisition import Explicit
 from Acquisition import Implicit
@@ -25,14 +26,6 @@ from zExceptions import Unauthorized
 
 from AccessControl.SecurityManagement import SecurityContext
 from AccessControl.userfolder import UserFolder
-
-
-try:
-    from sys import getswitchinterval
-    from sys import setswitchinterval
-except ImportError:  # Python 2
-    from sys import getcheckinterval as getswitchinterval
-    from sys import setcheckinterval as setswitchinterval
 
 
 user_roles = ('RoleOfUser',)
@@ -295,10 +288,10 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
     def testUnicodeAttributeLookups(self):
         item = self.item
         r_item = self.a.r_item
-        self.assertPolicyAllows(item, u'public_prop')
-        self.assertPolicyDenies(r_item, u'private_prop')
-        self.assertPolicyAllows(item, u'public_m')
-        self.assertPolicyDenies(item, u'dangerous_m')
+        self.assertPolicyAllows(item, 'public_prop')
+        self.assertPolicyDenies(r_item, 'private_prop')
+        self.assertPolicyAllows(item, 'public_m')
+        self.assertPolicyDenies(item, 'dangerous_m')
 
     def testRolesForPermission(self):
         # Test of policy.checkPermission().
@@ -361,10 +354,10 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
     def testUnicodeRolesForPermission(self):
         r_item = self.a.r_item
         context = self.context
-        v = self.policy.checkPermission(u'View', r_item, context)
+        v = self.policy.checkPermission('View', r_item, context)
         self.assertTrue(not v, '_View_Permission should deny access to user')
         o_context = SecurityContext(self.uf.getUserById('theowner'))
-        v = self.policy.checkPermission(u'View', r_item, o_context)
+        v = self.policy.checkPermission('View', r_item, o_context)
         self.assertTrue(v, '_View_Permission should grant access to theowner')
 
     def testContainersContextManager(self):
@@ -448,7 +441,7 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         # overridden to disallow some access of str.format.  So we temporarily
         # restore the default of allowing all access.
         with override_containers(str, 1):
-            assert policy.validate('', '', u'foo', '', None)
+            assert policy.validate('', '', 'foo', '', None)
 
     if 0:
         # This test purposely generates a log entry.
@@ -527,11 +520,11 @@ class SecurityManagerTestsBase(unittest.TestCase):
 
     def _makeEO(self):
         # create a faux executable whose owner forbids access
-        class Owner(object):
+        class Owner:
             def allowed(self, obj, roles):
                 return False
 
-        class EO(object):
+        class EO:
             def getOwner(self):
                 return Owner()
 
@@ -737,17 +730,17 @@ class GetRolesWithMultiThreadTest(unittest.TestCase):
     def testGetRolesWithMultiThread(self):
         from AccessControl.ZopeSecurityPolicy import getRoles
 
-        class C(object):
+        class C:
             pass
 
-        class V1(object):
-            class __roles__(object):
+        class V1:
+            class __roles__:
                 @staticmethod
                 def rolesForPermissionOn(ob):
                     return ['Member']
 
-        class V2(object):
-            class __roles__(object):
+        class V2:
+            class __roles__:
                 @staticmethod
                 def rolesForPermissionOn(ob):
                     return ['User']
@@ -775,11 +768,16 @@ class GetRolesWithMultiThreadTest(unittest.TestCase):
 
 def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(Python_ZSPTests))
-    suite.addTest(unittest.makeSuite(Python_SMTests))
+    suite.addTest(
+        unittest.defaultTestLoader.loadTestsFromTestCase(Python_ZSPTests))
+    suite.addTest(
+        unittest.defaultTestLoader.loadTestsFromTestCase(Python_SMTests))
     if not os.environ.get('PURE_PYTHON'):
-        suite.addTest(unittest.makeSuite(C_ZSPTests))
-        suite.addTest(unittest.makeSuite(C_SMTests))
+        suite.addTest(
+            unittest.defaultTestLoader.loadTestsFromTestCase(C_ZSPTests))
+        suite.addTest(
+            unittest.defaultTestLoader.loadTestsFromTestCase(C_SMTests))
     suite.addTest(DocTestSuite())
-    suite.addTest(unittest.makeSuite(GetRolesWithMultiThreadTest))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(
+        GetRolesWithMultiThreadTest))
     return suite

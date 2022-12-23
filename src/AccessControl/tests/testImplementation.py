@@ -61,4 +61,5 @@ class AccessControlImplementationTest(unittest.TestCase):
 
 
 def test_suite():
-    return unittest.makeSuite(AccessControlImplementationTest)
+    return unittest.defaultTestLoader.loadTestsFromTestCase(
+        AccessControlImplementationTest)

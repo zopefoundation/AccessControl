@@ -9,12 +9,7 @@
 
 
 def f1():
-    try:
-        range_ = xrange
-    except NameError:  # Py3
-        range_ = range
-
-    iterator = iter(range_(3))
+    iterator = iter(range(3))
     assert next(iterator) == 0
     assert next(iterator) == 1
     assert next(iterator) == 2
@@ -120,16 +115,6 @@ def f7():
     methods = [('keys', 'k'),
                ('items', 'i'),
                ('values', 'v')]
-    try:
-        {}.iterkeys
-    except AttributeError:
-        pass
-    else:
-        # Python 2 only:
-        methods.extend([
-            ('iterkeys', 'k'),
-            ('iteritems', 'i'),
-            ('itervalues', 'v')])
 
     expected = {'k': [1, 3],
                 'v': [2, 4],

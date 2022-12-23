@@ -11,19 +11,12 @@
 #
 ##############################################################################
 
-import six
+from inspect import getfullargspec
+from inspect import signature
 
 from zExceptions import Forbidden
 from zope.publisher.interfaces.browser import IBrowserRequest
 
-
-if six.PY3:
-    from inspect import getfullargspec
-    from inspect import signature
-else:  # Python 2
-    from inspect import getargspec as getfullargspec
-
-    from funcsigs import signature
 
 _default = []
 
@@ -42,9 +35,9 @@ def buildfacade(name, method, docstring):
         parts = str(v).split('=')
         args.append(
             parts[0] if len(parts) == 1 else
-            '{}=_default'.format(parts[0]))  # NOQA: 43
+            f'{parts[0]}=_default')  # NOQA: 43
         callargs.append(parts[0])
-    return 'def %s(%s):\n    """%s"""\n    return _curried(%s)' % (
+    return 'def {}({}):\n    """{}"""\n    return _curried({})'.format(
         name, ', '.join(args), docstring, ', '.join(callargs))
 
 

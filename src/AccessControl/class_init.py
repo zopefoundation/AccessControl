@@ -36,7 +36,8 @@ def InitializeClass(self):
                 if name != oldname:
                     # Tried to implicitly assign a different name!
                     try:
-                        classname = '%s.%s' % (self.__module__, self.__name__)
+                        classname = '{}.{}'.format(
+                            self.__module__, self.__name__)
                     except AttributeError:
                         classname = repr(self)
                     logging.getLogger("Init").warning(

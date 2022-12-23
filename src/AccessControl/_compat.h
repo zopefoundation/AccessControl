@@ -14,14 +14,5 @@
 
 #include "Python.h"
 
-#if PY_MAJOR_VERSION >= 3
-#define PY3K
-#endif
-
-#ifdef PY3K
 #define NATIVE_FORMAT PyUnicode_Format
 #define NATIVE_GET_SIZE PyUnicode_GET_SIZE
-#else
-#define NATIVE_FORMAT PyString_Format
-#define NATIVE_GET_SIZE PyString_GET_SIZE
-#endif

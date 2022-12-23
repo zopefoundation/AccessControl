@@ -21,8 +21,6 @@ import os
 import sys
 import unittest
 
-import six
-
 from AccessControl.ZopeGuards import guarded_all
 from AccessControl.ZopeGuards import guarded_any
 from AccessControl.ZopeGuards import guarded_getattr
@@ -153,7 +151,7 @@ class TestGuardedGetattr(GuardTestCase):
         orig_value = self.__sm.reject
         self.__sm.reject = True
         try:
-            items = [b'a ', u'a ']
+            items = [b'a ', 'a ']
             for item in items:
                 self.assertEqual(guarded_getattr(item, 'strip')(),
                                  item.strip())
@@ -259,44 +257,11 @@ class TestDictGuards(GuardTestCase):
             self.setSecurityManager(old)
         self.assertTrue(sm.calls)
 
-    @unittest.skipIf(six.PY3, "iter... is Python 2 only")
-    def test_iterkeys_simple(self):
-        from AccessControl.ZopeGuards import get_iter
-        d = {
-            'foo': 1,
-            'bar': 2,
-            'baz': 3,
-        }
-        iterkeys = get_iter(d, 'iterkeys')
-        keys = d.keys()
-        keys.sort()
-        ikeys = sorted(iterkeys())
-        self.assertEqual(keys, ikeys)
-
-    @unittest.skipIf(six.PY3, "iter... is Python 2 only")
-    def test_iterkeys_empty(self):
-        from AccessControl.ZopeGuards import get_iter
-        iterkeys = get_iter({}, 'iterkeys')
-        self.assertEqual(list(iterkeys()), [])
-
-    @unittest.skipIf(six.PY2, "keys() is only in Python 3 a generator")
     def test_keys_empty(self):
         from AccessControl.ZopeGuards import get_iter
         keys = get_iter({}, 'keys')
         self.assertEqual(list(keys()), [])
 
-    @unittest.skipIf(six.PY3, "iter... is Python 2 only")
-    def test_iterkeys_validates(self):
-        sm = SecurityManager()
-        old = self.setSecurityManager(sm)
-        iterkeys = guarded_getattr({GuardTestCase: 1}, 'iterkeys')
-        try:
-            next(iterkeys())
-        finally:
-            self.setSecurityManager(old)
-        self.assertTrue(sm.calls)
-
-    @unittest.skipIf(six.PY2, "keys() is only in Python 3 a generator")
     def test_keys_validates(self):
         sm = SecurityManager()
         old = self.setSecurityManager(sm)
@@ -307,44 +272,11 @@ class TestDictGuards(GuardTestCase):
             self.setSecurityManager(old)
         self.assertTrue(sm.calls)
 
-    @unittest.skipIf(six.PY3, "iter... is Python 2 only")
-    def test_itervalues_simple(self):
-        from AccessControl.ZopeGuards import get_iter
-        d = {
-            'foo': 1,
-            'bar': 2,
-            'baz': 3,
-        }
-        itervalues = get_iter(d, 'itervalues')
-        values = d.values()
-        values.sort()
-        ivalues = sorted(itervalues())
-        self.assertEqual(values, ivalues)
-
-    @unittest.skipIf(six.PY3, "iter... is Python 2 only")
-    def test_itervalues_empty(self):
-        from AccessControl.ZopeGuards import get_iter
-        itervalues = get_iter({}, 'itervalues')
-        self.assertEqual(list(itervalues()), [])
-
-    @unittest.skipIf(six.PY2, "values() is only in Python 3 a generator")
     def test_values_empty(self):
         from AccessControl.ZopeGuards import get_iter
         values = get_iter({}, 'values')
         self.assertEqual(list(values()), [])
 
-    @unittest.skipIf(six.PY3, "iter... is Python 2 only")
-    def test_itervalues_validates(self):
-        sm = SecurityManager()
-        old = self.setSecurityManager(sm)
-        itervalues = guarded_getattr({GuardTestCase: 1}, 'itervalues')
-        try:
-            next(itervalues())
-        finally:
-            self.setSecurityManager(old)
-        self.assertTrue(sm.calls)
-
-    @unittest.skipIf(six.PY2, "values() is only in Python 3 a generator")
     def test_values_validates(self):
         sm = SecurityManager()
         old = self.setSecurityManager(sm)
@@ -1077,5 +1009,5 @@ def test_suite():
                 TestRestrictedPythonApply,
                 TestActualPython,
                 ):
-        suite.addTest(unittest.makeSuite(cls))
+        suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(cls))
     return suite

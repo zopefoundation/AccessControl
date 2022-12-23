@@ -42,7 +42,7 @@ class IDummy(ISuperDummy):
 
 
 @implementer(IDummy)
-class Dummy1(object):
+class Dummy1:
 
     def foo(self):
         pass
@@ -72,19 +72,19 @@ class Dummy2(Dummy1):
 
 
 class IDummy3(Interface):
-    attr = TextLine(title=u"Attribute")
+    attr = TextLine(title="Attribute")
 
 
 @implementer(IDummy3)
-class Dummy3(object):
+class Dummy3:
     attr = None
 
 
-class Dummy4(object):
+class Dummy4:
     foo = None
 
 
-class Dummy5(object):
+class Dummy5:
     pass
 
 
@@ -132,7 +132,7 @@ class TestSecurity(unittest.TestCase):
         # ZCML declarations for ``Dummy1``:
 
         from io import StringIO
-        configure_zcml = StringIO(u'''
+        configure_zcml = StringIO('''
             <configure xmlns="http://namespaces.zope.org/zope">
               <class class="AccessControl.tests.testZCML.Dummy1">
                 <allow attributes="foo" />
@@ -483,6 +483,7 @@ def test_register_permission_with_non_default_roles():
 
 def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestSecurity))
+    suite.addTest(
+        unittest.defaultTestLoader.loadTestsFromTestCase(TestSecurity))
     suite.addTest(doctest.DocTestSuite(optionflags=doctest.ELLIPSIS))
     return suite

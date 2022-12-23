@@ -12,11 +12,8 @@
 ##############################################################################
 """Define Zope's default security policy
 """
-from __future__ import absolute_import
 
 from types import MethodType
-
-from six import string_types
 
 # AccessControl.Implementation inserts:
 #   ZopeSecurityPolicy, getRoles, rolesForPermissionOn
@@ -37,7 +34,7 @@ def getRoles(container, name, value, default):
 
     roles = getattr(value, '__roles__', _noroles)
     if roles is _noroles:
-        if not name or not isinstance(name, string_types):
+        if not name or not isinstance(name, str):
             return default
 
         if isinstance(value, MethodType):

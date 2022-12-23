@@ -13,12 +13,7 @@
 """User folders.
 """
 
-try:
-    from base64 import decodebytes
-except ImportError:
-    from base64 import decodestring as decodebytes
-
-import six
+from base64 import decodebytes
 
 from Acquisition import Implicit
 from Acquisition import aq_base
@@ -115,7 +110,7 @@ class BasicUserFolder(Implicit, Persistent, RoleManager):
         raise NotImplementedError
 
     def identify(self, auth):
-        if isinstance(auth, six.text_type):
+        if isinstance(auth, str):
             auth = auth.encode('UTF-8')
 
         if auth and auth.lower().startswith(b'basic '):

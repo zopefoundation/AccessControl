@@ -86,8 +86,8 @@ _marker = object()
 #        calling the function with the object and the attribute name.
 ContainerAssertions = {
     type(()): 1,
-    type(b''): 1,
-    type(u''): 1,
+    bytes: 1,
+    str: 1,
     range: 1,
 }
 

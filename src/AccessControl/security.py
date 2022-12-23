@@ -14,8 +14,6 @@
 """Security handling
 """
 
-import six
-
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.component.zcml import utility
@@ -80,8 +78,8 @@ def checkPermission(permission, object, interaction=None):
        permission is CheckerPublic:
         return True
 
-    if isinstance(permission, six.string_types):
-        permission = queryUtility(IPermission, six.u(permission))
+    if isinstance(permission, str):
+        permission = queryUtility(IPermission, permission)
         if permission is None:
             return False
 

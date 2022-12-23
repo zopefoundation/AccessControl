@@ -24,7 +24,6 @@ AccessControl package that defined the various components before this
 module was introduced.
 
 """
-from __future__ import absolute_import
 
 import os
 

@@ -15,8 +15,6 @@
 
 import unittest
 
-import six
-
 
 class TestFunctions(unittest.TestCase):
 
@@ -177,11 +175,6 @@ class TestTaintedString(unittest.TestCase):
                          unquoted.translate(transtable))
         self.assertTrue(isinstance(self._getClass()('<').translate(transtable),
                                    self._getClass()))
-        if six.PY2:
-            # Translate no longer supports a second argument
-            kls = self._getClass()('<')
-            self.assertFalse(isinstance(kls.translate(transtable, '<'),
-                                        self._getClass()))
 
     def testQuoted(self):
         self.assertEqual(self.tainted.quoted(), self.quoted)
@@ -210,7 +203,7 @@ class TestTaintedBytes(TestTaintedString):
         self.assertTrue(isinstance(self.tainted[0], self._getClass()))
         self.assertEqual(self.tainted[0], self._getClass()(b'<'))
         self.assertFalse(isinstance(self.tainted[-1], self._getClass()))
-        self.assertEqual(self.tainted[-1], 62 if six.PY3 else b'>')
+        self.assertEqual(self.tainted[-1], 62)
 
     def testStr(self):
         self.assertEqual(str(self.tainted), self.unquoted.decode('utf8'))
@@ -294,27 +287,16 @@ class TestTaintedBytes(TestTaintedString):
         self.assertTrue(isinstance(lines[1], self._getClass()))
         self.assertFalse(isinstance(lines[0], self._getClass()))
 
-        if six.PY3:
-            transtable = bytes(range(256))
-        else:
-            transtable = ''.join(map(chr, range(256)))
+        transtable = bytes(range(256))
         self.assertEqual(tainted.translate(transtable),
                          unquoted.translate(transtable))
         kls = self._getClass()(b'<')
         self.assertTrue(isinstance(kls.translate(transtable),
                                    self._getClass()))
-        if six.PY2:
-            # Translate no longer supports a second argument
-            kls = self._getClass()(b'<')
-            self.assertFalse(isinstance(kls.translate(transtable, b'<'),
-                                        self._getClass()))
 
     def testConstructor(self):
         from AccessControl.tainted import TaintedBytes
-        if six.PY2:
-            self.assertRaises(ValueError, TaintedBytes, [60])
-        if six.PY3:
-            self.assertEqual(TaintedBytes(60), b'<')
-            self.assertEqual(TaintedBytes(32), b' ')
+        self.assertEqual(TaintedBytes(60), b'<')
+        self.assertEqual(TaintedBytes(32), b' ')
         self.assertEqual(TaintedBytes(b'abc'), b'abc')
-        self.assertRaises(ValueError, TaintedBytes, u"abc")
+        self.assertRaises(ValueError, TaintedBytes, "abc")

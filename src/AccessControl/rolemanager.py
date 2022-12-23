@@ -14,6 +14,7 @@
 """
 
 from base64 import urlsafe_b64encode
+from html import escape
 
 from Acquisition import Acquired
 from Acquisition import aq_base
@@ -28,12 +29,6 @@ from AccessControl.Permission import Permission
 from AccessControl.Permission import getPermissions
 from AccessControl.PermissionMapping import RoleManager
 from AccessControl.Permissions import change_permissions
-
-
-try:
-    from html import escape
-except ImportError:  # PY2
-    from cgi import escape
 
 
 DEFAULTMAXLISTUSERS = 250
@@ -111,7 +106,7 @@ class RoleManager(Base, RoleManager):
                 'acquire': isinstance(roles, list) and 'CHECKED' or '',
                 'roles': tuple(map(
                     lambda ir, roles=roles, valid=valid, ip=ip:
-                    {'name': "permission_%srole_%s" % (
+                    {'name': "permission_{}role_{}".format(
                              _string_hash(permission_name),
                              _string_hash(valid[ir])),
                      'checked': (valid[ir] in roles) and 'CHECKED' or ''},

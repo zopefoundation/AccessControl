@@ -139,7 +139,7 @@ class SecurityInfo(Implicit):
         # the decorator returned is remembered in a set and will
         # remove itself upon call. self.apply will check for an empty
         # set and raise an AssertionError otherwise.
-        key = "'%s':%s" % (permission_name, id(lambda x: x))
+        key = "'{}':{}".format(permission_name, id(lambda x: x))
 
         def decor(func):
             self.declareProtected(permission_name, func.__name__)  # NOQA: D001
@@ -147,7 +147,7 @@ class SecurityInfo(Implicit):
             return func
         # make sure our key algo creates unique-enough keys
         if key in self._unused_protected_decorators:
-            raise KeyError("Duplicate key: %s" % (key,))
+            raise KeyError("Duplicate key: {}".format(key))
         self._unused_protected_decorators.add(key)
         return decor
 

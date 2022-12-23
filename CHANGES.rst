@@ -3,9 +3,11 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-5.8 (unreleased)
+6.0 (unreleased)
 ----------------
 
+
+- Drop support for Python 2.7, 3.5, 3.6.
 
 5.7 (2022-11-17)
 ----------------
