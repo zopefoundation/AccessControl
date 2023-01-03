@@ -6,6 +6,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 6.0 (unreleased)
 ----------------
 
+- Build Linux binary wheels for Python 3.11
 
 - Drop support for Python 2.7, 3.5, 3.6.
 
