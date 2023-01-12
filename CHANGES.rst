@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-6.0 (unreleased)
+6.0 (2023-01-12)
 ----------------
 
 - Build Linux binary wheels for Python 3.11
