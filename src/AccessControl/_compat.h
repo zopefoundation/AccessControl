@@ -15,4 +15,4 @@
 #include "Python.h"
 
 #define NATIVE_FORMAT PyUnicode_Format
-#define NATIVE_GET_SIZE PyUnicode_GET_SIZE
+#define NATIVE_GET_SIZE PyUnicode_GET_LENGTH

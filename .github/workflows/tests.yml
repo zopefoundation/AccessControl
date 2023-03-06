@@ -101,6 +101,7 @@ jobs:
           - "3.9"
           - "3.10"
           - "3.11"
+          - "3.12.0-alpha.5"
         os: [ubuntu-20.04, macos-11]
 
     steps:
@@ -173,7 +174,15 @@ jobs:
           python setup.py build_ext -i
           python setup.py bdist_wheel
 
+      - name: Install AccessControl and dependencies (3.12.0-alpha.5)
+        if: matrix.python-version == '3.12.0-alpha.5'
+        run: |
+          # Install to collect dependencies into the (pip) cache.
+          # Use "--pre" here because dependencies with support for this future
+          # Python release may only be available as pre-releases
+          pip install --pre .[test]
       - name: Install AccessControl and dependencies
+        if: matrix.python-version != '3.12.0-alpha.5'
         run: |
           # Install to collect dependencies into the (pip) cache.
           pip install .[test]
@@ -217,6 +226,7 @@ jobs:
           && startsWith(github.ref, 'refs/tags')
           && startsWith(runner.os, 'Mac')
           && !startsWith(matrix.python-version, 'pypy')
+          && !startsWith(matrix.python-version, '3.12.0-alpha.5')
         env:
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
@@ -234,6 +244,7 @@ jobs:
           - "3.9"
           - "3.10"
           - "3.11"
+          - "3.12.0-alpha.5"
         os: [ubuntu-20.04, macos-11]
 
     steps:
@@ -267,7 +278,22 @@ jobs:
         with:
           name: AccessControl-${{ runner.os }}-${{ matrix.python-version }}.whl
           path: dist/
+      - name: Install AccessControl 3.12.0-alpha.5
+        if: ${{ startsWith(matrix.python-version, '3.12.0-alpha.5') }}
+        run: |
+          pip install -U wheel setuptools
+          # coverage has a wheel on PyPI for a future python version which is
+          # not ABI compatible with the current one, so build it from sdist:
+          pip install -U --no-binary :all: coverage
+          # Unzip into src/ so that testrunner can find the .so files
+          # when we ask it to load tests from that directory. This
+          # might also save some build time?
+          unzip -n dist/AccessControl-*whl -d src
+          # Use "--pre" here because dependencies with support for this future
+          # Python release may only be available as pre-releases
+          pip install --pre -U -e .[test]
       - name: Install AccessControl
+        if: ${{ !startsWith(matrix.python-version, '3.12.0-alpha.5') }}
         run: |
           pip install -U wheel setuptools
           pip install -U coverage
