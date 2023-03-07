@@ -25,7 +25,7 @@ def InitializeClass(self):
     dict = self.__dict__
     have = dict.__contains__
     ft = type(InitializeClass)
-    dict_items = list(dict.items())
+    dict_items = dict.items()
 
     for name, v in dict_items:
         if getattr(v, '_need__name__', 0):
