@@ -25,6 +25,7 @@ def InitializeClass(self):
     dict = self.__dict__
     have = dict.__contains__
     ft = type(InitializeClass)
+    # Prevent `RuntimeError: dictionary changed size during iteration`:
     dict_items = list(dict.items())
 
     for name, v in dict_items:
