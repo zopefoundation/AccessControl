@@ -5,6 +5,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 6.1 (unreleased)
 ----------------
+- Update C header files for ``ExtensionClass`` and ``Acquisition``
+  from the original packages where needed.
+  (`#140 <https://github.com/zopefoundation/AccessControl/issues/140>`_)
 
 - Add preliminary support for Python 3.12a5.
 
