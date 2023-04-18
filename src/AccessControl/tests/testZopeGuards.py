@@ -98,7 +98,7 @@ class TestGuardedGetattr(GuardTestCase):
 
     def test_unhashable_key(self):
         from AccessControl.ZopeGuards import guarded_getattr
-        obj, name = object(), {}
+        obj, name = object(), []
         self.assertRaises(TypeError, guarded_getattr, obj, name)
         self.assertEqual(len(self.__sm.calls), 0)
 
@@ -180,7 +180,7 @@ class TestGuardedHasattr(GuardTestCase):
 
     def test_unhashable_key(self):
         from AccessControl.ZopeGuards import guarded_hasattr
-        obj, name = object(), {}
+        obj, name = object(), []
         self.assertFalse(guarded_hasattr(obj, name))
         self.assertEqual(len(self.__sm.calls), 0)
 
