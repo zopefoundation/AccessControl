@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-6.1 (unreleased)
+6.1 (2023-05-22)
 ----------------
 - Update C header files for ``ExtensionClass`` and ``Acquisition``
   from the original packages where needed.
