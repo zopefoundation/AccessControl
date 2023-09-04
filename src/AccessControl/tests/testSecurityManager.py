@@ -54,8 +54,9 @@ class ExecutableObject:
 class ISecurityManagerConformance:
 
     def test_conforms_to_ISecurityManager(self):
-        from AccessControl.interfaces import ISecurityManager
         from zope.interface.verify import verifyClass
+
+        from AccessControl.interfaces import ISecurityManager
         verifyClass(ISecurityManager, self._getTargetClass())
 
 

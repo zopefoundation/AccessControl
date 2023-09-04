@@ -96,6 +96,7 @@ class TestSecurity(unittest.TestCase):
 
     def tearDown(self):
         from zope.component.testing import tearDown
+
         from AccessControl.security import clearSecurityInfo
         clearSecurityInfo(Dummy1)
         clearSecurityInfo(Dummy2)
@@ -113,15 +114,17 @@ class TestSecurity(unittest.TestCase):
         # declarations and ``Dummy1`` does not.  Before we do anything, none
         # of them have security access controls:
 
-        from AccessControl.tests.testZCML import Dummy1, Dummy2
+        from AccessControl.tests.testZCML import Dummy1
+        from AccessControl.tests.testZCML import Dummy2
         self.assertFalse(hasattr(Dummy1, '__ac_permissions__'))
         self.assertFalse(hasattr(Dummy2, '__ac_permissions__'))
 
         # Before we can make security declarations through ZCML, we need to
         # register the directive and the permission:
 
-        import AccessControl
         from zope.configuration.xmlconfig import XMLConfig
+
+        import AccessControl
         XMLConfig('meta.zcml', AccessControl)()
         XMLConfig('permissions.zcml', AccessControl)()
 
@@ -158,9 +161,9 @@ class TestSecurity(unittest.TestCase):
 
         # Now we look at the individual permissions:
 
-        from AccessControl.ZopeSecurityPolicy import getRoles
-        from AccessControl import ACCESS_PUBLIC
         from AccessControl import ACCESS_PRIVATE
+        from AccessControl import ACCESS_PUBLIC
+        from AccessControl.ZopeSecurityPolicy import getRoles
 
         dummy1 = Dummy1()
         self.assertEqual(

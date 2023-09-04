@@ -43,8 +43,9 @@ class ClassSecurityInfoTests(unittest.TestCase):
 
     def test_SetPermissionDefault(self):
         # Test setting default roles for permissions.
-        from AccessControl.class_init import InitializeClass
         from ExtensionClass import Base
+
+        from AccessControl.class_init import InitializeClass
 
         ClassSecurityInfo = self._getTargetClass()
 
@@ -127,8 +128,9 @@ class ClassSecurityInfoTests(unittest.TestCase):
                          [('Make food', (), ('Chef',))])
 
     def test_EnsureProtectedDecoCall(self):
-        from AccessControl.class_init import InitializeClass
         from ExtensionClass import Base
+
+        from AccessControl.class_init import InitializeClass
 
         ClassSecurityInfo = self._getTargetClass()
 

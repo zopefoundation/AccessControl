@@ -367,10 +367,12 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
         self.assertTrue(v, '_View_Permission should grant access to theowner')
 
     def testContainersContextManager(self):
-        from AccessControl.SimpleObjectPolicies import override_containers
+        from types import TracebackType
+
         from AccessControl.SimpleObjectPolicies import ContainerAssertions
         from AccessControl.SimpleObjectPolicies import Containers
-        from types import TracebackType
+        from AccessControl.SimpleObjectPolicies import override_containers
+
         # Surely we have no assertions for this type:
         self.assertNotIn(TracebackType, ContainerAssertions)
         with override_containers(TracebackType, 1):
@@ -396,6 +398,7 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
             'aq_inner': 1,
         }
         from AccessControl.SimpleObjectPolicies import override_containers
+
         # By default we allow all access to str, but this may have been
         # overridden to disallow some access of str.format.  So we temporarily
         # restore the default of allowing all access.
@@ -439,6 +442,7 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
     def testUnicodeName(self):
         policy = self.policy
         from AccessControl.SimpleObjectPolicies import override_containers
+
         # By default we allow all access to str, but this may have been
         # overridden to disallow some access of str.format.  So we temporarily
         # restore the default of allowing all access.
@@ -468,8 +472,9 @@ class ZopeSecurityPolicyTestBase(unittest.TestCase):
 class ISecurityPolicyConformance:
 
     def test_conforms_to_ISecurityPolicy(self):
-        from AccessControl.interfaces import ISecurityPolicy
         from zope.interface.verify import verifyClass
+
+        from AccessControl.interfaces import ISecurityPolicy
         verifyClass(ISecurityPolicy, self._getTargetClass())
 
 

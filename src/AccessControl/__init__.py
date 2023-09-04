@@ -30,8 +30,8 @@ from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import setSecurityPolicy
 from AccessControl.SimpleObjectPolicies import allow_type
 from AccessControl.unauthorized import Unauthorized
-from AccessControl.ZopeGuards import get_safe_globals
 from AccessControl.ZopeGuards import full_write_guard
+from AccessControl.ZopeGuards import get_safe_globals
 from AccessControl.ZopeGuards import safe_builtins
 
 

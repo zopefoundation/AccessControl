@@ -50,9 +50,9 @@ def setImplementation(name):
     if name == _implementation_name:
         return
     if name == "C":
-        from AccessControl import ImplC as impl  # NOQA
+        from AccessControl import ImplC as impl
     elif name == "PYTHON":
-        from AccessControl import ImplPython as impl  # NOQA
+        from AccessControl import ImplPython as impl
     else:
         raise ValueError("unknown policy implementation: %r" % name)
 
