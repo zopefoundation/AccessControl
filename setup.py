@@ -32,7 +32,7 @@ ext_modules = [
                  join('include', 'Acquisition', 'Acquisition.h')]),
 ]
 
-version = '6.2'
+version = '6.3.dev0'
 
 
 setup(name='AccessControl',
