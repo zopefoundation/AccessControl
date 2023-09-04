@@ -17,6 +17,7 @@ import six
 # This has to happen early so things get initialized properly
 from AccessControl.Implementation import setImplementation
 from AccessControl.safe_formatter import safe_format
+from AccessControl.safe_formatter import safe_format_map
 from AccessControl.SecurityInfo import ACCESS_NONE
 from AccessControl.SecurityInfo import ACCESS_PRIVATE
 from AccessControl.SecurityInfo import ACCESS_PUBLIC
@@ -47,6 +48,7 @@ ModuleSecurityInfo('DateTime').declarePublic('DateTime')  # NOQA: D001
 # That one needs special handling to avoid access to attributes.
 rules = dict([(m, True) for m in dir(str) if not m.startswith('_')])
 rules['format'] = safe_format
+rules['format_map'] = safe_format_map
 allow_type(str, rules)
 
 if six.PY2:
@@ -54,6 +56,7 @@ if six.PY2:
     rules = dict([(m, True) for m in dir(six.text_type) if
                   not m.startswith('_')])
     rules['format'] = safe_format
+    rules['format_map'] = safe_format_map
     allow_type(six.text_type, rules)
 
 del six

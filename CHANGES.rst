@@ -6,6 +6,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 4.4 (unreleased)
 ----------------
 
+- Fix information disclosure through ``str.format_map``.
+  (CVE-2023-41050)
+
 - Provide ``AccessControl.get_safe_globals`` to facilitate safe use.
 
 
