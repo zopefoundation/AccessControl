@@ -3,6 +3,13 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
+5.8 (unreleased)
+----------------
+
+- Fix information disclosure through ``str.format_map``.
+  (CVE-2023-41050)
+
+
 5.7 (2022-11-17)
 ----------------
 
