@@ -72,7 +72,15 @@ class SafeFormatter(string.Formatter):
         kwargs = _MagicFormatMapping(args, kwargs)
         return self.vformat(self.value, args, kwargs)
 
+    def safe_format_map(self, kw):
+        kwargs = _MagicFormatMapping((), kw)
+        return self.vformat(self.value, (), kwargs)
+
 
 def safe_format(inst, method):
     """Use our SafeFormatter that uses guarded_getattr for attribute access."""
     return SafeFormatter(inst).safe_format
+
+
+def safe_format_map(inst, method):
+    return SafeFormatter(inst).safe_format_map

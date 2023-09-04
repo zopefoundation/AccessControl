@@ -202,3 +202,25 @@ class FormatterTest(unittest.TestCase):
         self.assertRaises(Unauthorized,
                           SafeFormatter('{0[1]}').safe_format,
                           folder)
+
+    def test_format_map(self):
+        from AccessControl.safe_formatter import SafeFormatter
+
+        # Accessing basic Python types in a basic Python list is fine.
+        foo = list(['bar'])
+        self.assertEqual(SafeFormatter('{foo[0]}')
+                         .safe_format_map(dict(foo=foo)),
+                         'bar')
+        # But for non-basic items or non-basic lists, we want run checks.
+        folder = self._create_folder_with_mixed_contents()
+        # We can get the public items just fine:
+        self.assertEqual(SafeFormatter('{foo[0]}')
+                         .safe_format_map(dict(foo=folder)),
+                         '<Item public1>')
+        self.assertEqual(SafeFormatter('{foo[2]}')
+                         .safe_format_map(dict(foo=folder)),
+                         '<Item public2>')
+        # But not the private item:
+        self.assertRaises(Unauthorized,
+                          SafeFormatter('{foo[1]}').safe_format_map,
+                          dict(foo=folder))

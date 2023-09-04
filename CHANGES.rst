@@ -6,6 +6,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 6.2 (unreleased)
 ----------------
 
+- Fix information disclosure through ``str.format_map``.
+  (CVE-2023-41050)
+
 
 6.1 (2023-05-22)
 ----------------
