@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-6.2 (unreleased)
+6.2 (2023-09-04)
 ----------------
 
 - Fix information disclosure through ``str.format_map``.
