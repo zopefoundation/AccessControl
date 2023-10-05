@@ -3,10 +3,10 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-6.3 (unreleased)
+6.3 (2023-10-05)
 ----------------
 
-- Nothing changed yet.
+- Add support for Python 3.12.
 
 
 6.2 (2023-09-04)

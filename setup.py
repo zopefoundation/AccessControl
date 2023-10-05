@@ -32,7 +32,7 @@ ext_modules = [
                  join('include', 'Acquisition', 'Acquisition.h')]),
 ]
 
-version = '6.3.dev0'
+version = '6.3'
 
 
 setup(name='AccessControl',
@@ -65,6 +65,7 @@ setup(name='AccessControl',
           'Programming Language :: Python :: 3.9',
           'Programming Language :: Python :: 3.10',
           'Programming Language :: Python :: 3.11',
+          'Programming Language :: Python :: 3.12',
           'Programming Language :: Python :: Implementation :: CPython',
       ],
       ext_modules=ext_modules,
