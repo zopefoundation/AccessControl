@@ -6,7 +6,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 6.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add preliminary support for Python 3.13 as of 3.13a3.
 
 
 6.3 (2023-11-20)
