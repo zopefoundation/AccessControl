@@ -78,7 +78,8 @@ class SecurityInfo(Implicit):
     def _setaccess(self, names, access):
         for name in names:
             if self.names.get(name, access) != access:
-                LOG.warn('Conflicting security declarations for "%s"' % name)
+                LOG.warning(
+                    f'Conflicting security declarations for {name!r}')
                 self._warnings = 1
             self.names[name] = access
 
@@ -159,8 +160,8 @@ class SecurityInfo(Implicit):
         for role in roles:
             rdict[role] = 1
         if self.roles.get(permission_name, rdict) != rdict:
-            LOG.warn('Conflicting default role'
-                     'declarations for permission "%s"' % permission_name)
+            LOG.warning('Conflicting default role'
+                        ' declarations for permission "%s"' % permission_name)
             self._warnings = 1
         self.roles[permission_name] = rdict
 
@@ -248,8 +249,8 @@ class ClassSecurityInfo(SecurityInfo):
                     access)
 
         if getattr(self, '_warnings', None):
-            LOG.warn('Class "%s" had conflicting '
-                     'security declarations' % classobj.__name__)
+            LOG.warning('Class "%s" had conflicting'
+                        ' security declarations' % classobj.__name__)
 
 
 class ClassSecurityInformation(ClassSecurityInfo):
@@ -343,8 +344,8 @@ class _ModuleSecurityInfo(SecurityInfo):
             dict['__allow_access_to_unprotected_subobjects__'] = self
 
         if getattr(self, '_warnings', None):
-            LOG.warn('Module "%s" had conflicting '
-                     'security declarations' % dict['__name__'])
+            LOG.warning('Module "%s" had conflicting'
+                        ' security declarations' % dict['__name__'])
 
     declareProtected__roles__ = ACCESS_PRIVATE
 
