@@ -5,4 +5,4 @@ from logging import getLogger
 
 
 LOG = getLogger('AccessControl')
-warn = LOG.warn
+warn = LOG.warning
