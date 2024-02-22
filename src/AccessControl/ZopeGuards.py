@@ -12,6 +12,7 @@
 ##############################################################################
 
 
+import collections.abc
 import math
 import random
 import string
@@ -127,13 +128,18 @@ def get_dict_pop(d, name):
     return guarded_pop
 
 
-def get_iter(c, name):
-    iter = getattr(c, name)
+def get_mapping_view(c, name):
 
-    def guarded_iter():
-        return SafeIter(iter(), c)
+    view_class = {
+        'keys': SafeKeysView,
+        'items': SafeItemsView,
+        'values': SafeValuesView,
+    }
 
-    return guarded_iter
+    def guarded_mapping_view():
+        return view_class[name](c)
+
+    return guarded_mapping_view
 
 
 def get_list_pop(lst, name):
@@ -153,17 +159,14 @@ _dict_white_list = {
     'copy': 1,
     'fromkeys': 1,
     'get': get_dict_get,
-    'items': 1,
+    'items': get_mapping_view,
+    'keys': get_mapping_view,
     'pop': get_dict_pop,
     'popitem': 1,
     'setdefault': 1,
     'update': 1,
+    'values': get_mapping_view,
 }
-
-_dict_white_list.update({
-    'keys': get_iter,
-    'values': get_iter,
-})
 
 
 def _check_dict_access(name, value):
@@ -270,6 +273,40 @@ class NullIter(SafeIter):
         return next(self._iter)
 
     next = __next__
+
+
+# The following three view classes are used only for mappings of type `dict`
+# (not subclasses). Therefore, the mapping does not have security assertions
+# and cannot acquire ones. As a consequence, the `guard` calls used in their
+# methods verify that the checked key or value is accessible based solely on
+# its own virtues, i.e. either because it is public or has its own security
+# assertions allowing access.
+class _SafeMappingView:
+    __allow_access_to_unprotected_subobjects__ = 1
+
+    def __iter__(self):
+        for e in super().__iter__():
+            guard(self._mapping, e)
+            yield e
+
+
+class SafeKeysView(_SafeMappingView, collections.abc.KeysView):
+    pass
+
+
+class SafeValuesView(_SafeMappingView, collections.abc.ValuesView):
+    pass
+
+
+class SafeItemsView(_SafeMappingView, collections.abc.ItemsView):
+    def __iter__(self):
+        for k, v in super().__iter__():
+            guard(self._mapping, k)
+            # When checking the value, we check the guard with index=None,
+            # not with index=k, the key name does not matter. guard just
+            # needs to verify that the value itself can be accessed.
+            guard(self._mapping, v)
+            yield k, v
 
 
 def _error(index):
