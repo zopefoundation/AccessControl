@@ -297,6 +297,7 @@ jobs:
         if: ${{ startsWith(matrix.python-version, '3.13.0-alpha - 3.13.0') }}
         run: |
           pip install -U wheel setuptools uv
+          uv venv
           # cffi will probably have no public release until a beta or even RC
           # version of Python 3.13, see https://github.com/python-cffi/cffi/issues/23
           echo 'cffi @ git+https://github.com/python-cffi/cffi.git@954cab4f889fb019a7f90df153ee1be501495f58 ; platform_python_implementation == "CPython"' > cffi_constraint.txt
