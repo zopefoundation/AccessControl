@@ -296,7 +296,7 @@ jobs:
       - name: Install AccessControl 3.13.0-alpha - 3.13.0
         if: ${{ startsWith(matrix.python-version, '3.13.0-alpha - 3.13.0') }}
         run: |
-          pip install -U wheel setuptools
+          pip install -U wheel setuptools uv
           # cffi will probably have no public release until a beta or even RC
           # version of Python 3.13, see https://github.com/python-cffi/cffi/issues/23
           echo 'cffi @ git+https://github.com/python-cffi/cffi.git@954cab4f889fb019a7f90df153ee1be501495f58 ; platform_python_implementation == "CPython"' > cffi_constraint.txt
@@ -309,7 +309,7 @@ jobs:
           unzip -n dist/AccessControl-*whl -d src
           # Use "--pre" here because dependencies with support for this future
           # Python release may only be available as pre-releases
-          PIP_CONSTRAINT=$PWD/cffi_constraint.txt pip install --pre -U -e .[test]
+          PIP_CONSTRAINT=$PWD/cffi_constraint.txt uv pip install --pre -U -e .[test]
       - name: Install AccessControl
         if: ${{ !startsWith(matrix.python-version, '3.13.0-alpha - 3.13.0') }}
         run: |
