@@ -300,7 +300,7 @@ jobs:
           uv venv
           # cffi will probably have no public release until a beta or even RC
           # version of Python 3.13, see https://github.com/python-cffi/cffi/issues/23
-          uv pip install git+https://github.com/python-cffi/cffi.git@954cab4f889fb019a7f90df153ee1be501495f58#cffi
+          uv pip install "cffi @ git+https://github.com/python-cffi/cffi.git@954cab4f889fb019a7f90df153ee1be501495f58"
           # coverage has a wheel on PyPI for a future python version which is
           # not ABI compatible with the current one, so build it from sdist:
           uv pip install -U --no-binary :all: coverage
