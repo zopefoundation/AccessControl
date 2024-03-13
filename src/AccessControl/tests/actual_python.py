@@ -123,6 +123,39 @@ def f7():
         access = getattr(d, meth)
         result = sorted(access())
         assert result == expected[kind], (meth, kind, result, expected[kind])
+        assert len(access()) == len(expected[kind]), (meth, kind, "len")
+        iter_ = access()  # iterate twice on the same view
+        assert list(iter_) == list(iter_)
+
+        assert sorted([k for k in getattr(d, meth)()]) == expected[kind]
+        assert sorted(k for k in getattr(d, meth)()) == expected[kind]
+    assert {k: v for k, v in d.items()} == d
+
+    assert 1 in d
+    assert 1 in d.keys()
+    assert 2 in d.values()
+    assert (1, 2) in d.items()
+
+    assert d
+    assert d.keys()
+    assert d.values()
+    assert d.items()
+
+    empty_d = {}
+    assert not empty_d
+    assert not empty_d.keys()
+    assert not empty_d.values()
+    assert not empty_d.items()
+
+    smaller_d = {1: 2}
+    for m, _ in methods:
+        assert getattr(d, m)() != getattr(smaller_d, m)()
+        assert not getattr(d, m)() == getattr(smaller_d, m)()
+        if m != 'values':
+            assert getattr(d, m)() > getattr(smaller_d, m)()
+            assert getattr(d, m)() >= getattr(smaller_d, m)()
+            assert getattr(smaller_d, m)() < getattr(d, m)()
+            assert getattr(smaller_d, m)() <= getattr(d, m)()
 
 
 f7()

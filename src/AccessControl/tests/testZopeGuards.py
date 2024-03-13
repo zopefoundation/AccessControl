@@ -258,23 +258,40 @@ class TestDictGuards(GuardTestCase):
         self.assertTrue(sm.calls)
 
     def test_keys_empty(self):
-        from AccessControl.ZopeGuards import get_iter
-        keys = get_iter({}, 'keys')
+        from AccessControl.ZopeGuards import get_mapping_view
+        keys = get_mapping_view({}, 'keys')
         self.assertEqual(list(keys()), [])
+
+    def test_kvi_len(self):
+        from AccessControl.ZopeGuards import get_mapping_view
+        for attr in ("keys", "values", "items"):
+            with self.subTest(attr):
+                view = get_mapping_view({'a': 1}, attr)
+                self.assertEqual(len(view()), 1)
 
     def test_keys_validates(self):
         sm = SecurityManager()
         old = self.setSecurityManager(sm)
         keys = guarded_getattr({GuardTestCase: 1}, 'keys')
         try:
-            next(keys())
+            next(iter(keys()))
         finally:
             self.setSecurityManager(old)
         self.assertTrue(sm.calls)
 
+    def test_items_validates(self):
+        sm = SecurityManager()
+        old = self.setSecurityManager(sm)
+        items = guarded_getattr({GuardTestCase: GuardTestCase}, 'items')
+        try:
+            next(iter(items()))
+        finally:
+            self.setSecurityManager(old)
+        self.assertEqual(len(sm.calls), 2)
+
     def test_values_empty(self):
-        from AccessControl.ZopeGuards import get_iter
-        values = get_iter({}, 'values')
+        from AccessControl.ZopeGuards import get_mapping_view
+        values = get_mapping_view({}, 'values')
         self.assertEqual(list(values()), [])
 
     def test_values_validates(self):
@@ -282,18 +299,17 @@ class TestDictGuards(GuardTestCase):
         old = self.setSecurityManager(sm)
         values = guarded_getattr({GuardTestCase: 1}, 'values')
         try:
-            next(values())
+            next(iter(values()))
         finally:
             self.setSecurityManager(old)
         self.assertTrue(sm.calls)
 
     def test_kvi_iteration(self):
-        from AccessControl.ZopeGuards import SafeIter
         d = dict(a=1, b=2)
         for attr in ("keys", "values", "items"):
             v = getattr(d, attr)()
-            si = SafeIter(v)
-            self.assertEqual(next(si), next(iter(v)))
+            si = guarded_getattr(d, attr)()
+            self.assertEqual(next(iter(si)), next(iter(v)))
 
 
 class TestListGuards(GuardTestCase):
