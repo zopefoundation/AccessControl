@@ -294,7 +294,7 @@ jobs:
       - name: Submit to Coveralls
         # This is a container action, which only runs on Linux.
         if: ${{ startsWith(runner.os, 'Linux') }}
-        uses: AndreMiras/coveralls-python-action@develop
+        uses: icemac/coveralls-python-action@develop
         with:
           parallel: true
 
@@ -303,7 +303,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Coveralls Finished
-      uses: AndreMiras/coveralls-python-action@develop
+      uses: icemac/coveralls-python-action@develop
       with:
         parallel-finished: true
 
