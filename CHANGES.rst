@@ -6,14 +6,14 @@ For changes before version 3.0, see ``HISTORY.rst``.
 6.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
 - Make dict views (`.keys()`, `.items()` and `.values()`) behave like their
   unrestricted versions.
   (`#147 <https://github.com/zopefoundation/AccessControl/pull/147>`_)
 
 - Make `.items()` validate each keys and values, like `.keys()` and
   `.values()` do.
+
+- Fix build errors on recent macOS versions.
 
 
 6.3 (2023-11-20)
