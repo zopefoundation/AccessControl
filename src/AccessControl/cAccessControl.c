@@ -484,7 +484,7 @@ static PyExtensionClass SecurityManagerType = {
 	0,					/* tp_itemsize	*/
 	/* Standard methods 	*/
 	(destructor) SecurityManager_dealloc,/* tp_dealloc	*/
-	0,  					/* tp_print	*/
+	0,  					/* tp_vectorcall_offset*/
 	NULL,					/* tp_getattr	*/
 	NULL,					/* tp_setattr	*/
 	NULL,					/* tp_compare	*/
