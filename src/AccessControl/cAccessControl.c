@@ -425,7 +425,7 @@ static PyExtensionClass ZopeSecurityPolicyType = {
 	0,					/* tp_itemsize	*/
 	/* Standard methods 	*/
 	(destructor) ZopeSecurityPolicy_dealloc,/* tp_dealloc	*/
-	NULL,					/* tp_print	*/
+	0,  					/* tp_vectorcall_offset	*/
 	NULL,					/* tp_getattr	*/
 	NULL,					/* tp_setattr	*/
 	NULL,					/* tp_compare	*/
@@ -484,7 +484,7 @@ static PyExtensionClass SecurityManagerType = {
 	0,					/* tp_itemsize	*/
 	/* Standard methods 	*/
 	(destructor) SecurityManager_dealloc,/* tp_dealloc	*/
-	NULL,					/* tp_print	*/
+	0,  					/* tp_vectorcall_offset*/
 	NULL,					/* tp_getattr	*/
 	NULL,					/* tp_setattr	*/
 	NULL,					/* tp_compare	*/
@@ -543,7 +543,7 @@ static PyExtensionClass PermissionRoleType = {
 	0,					/* tp_itemsize	*/
 	/* Standard methods 	*/
 	(destructor) PermissionRole_dealloc,	/* tp_dealloc	*/
-	NULL,					/* tp_print	*/
+	0,  					/* tp_vectorcall_offset	*/
 	NULL,					/* tp_getattr	*/
 	NULL,					/* tp_setattr	*/
 	NULL,					/* tp_compare	*/
@@ -613,7 +613,7 @@ static PyExtensionClass imPermissionRoleType = {
 	0,					/* tp_itemsize	*/
 	/* Standard methods 	*/
 	(destructor) imPermissionRole_dealloc,	/* tp_dealloc	*/
-	NULL,					/* tp_print	*/
+	0,  					/* tp_vectorcall_offset	*/
 	NULL,					/* tp_getattr	*/
 	NULL,	                                /* tp_setattr	*/
 	NULL,					/* tp_compare	*/
