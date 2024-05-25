@@ -6,6 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 6.4 (unreleased)
 ----------------
 
+- Build Windows wheels on GHA.
+
 - Make dict views (`.keys()`, `.items()` and `.values()`) behave like their
   unrestricted versions.
   (`#147 <https://github.com/zopefoundation/AccessControl/pull/147>`_)
