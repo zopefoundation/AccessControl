@@ -2,13 +2,13 @@
 # https://github.com/zopefoundation/meta/tree/master/config/c-code
 [meta]
 template = "c-code"
-commit-id = "4dc0484e"
+commit-id = "9f78efd3"
 
 [python]
 with-appveyor = false
 with-windows = true
 with-pypy = false
-with-future-python = false
+with-future-python = true
 with-sphinx-doctests = false
 with-macos = false
 with-docs = false
@@ -37,3 +37,6 @@ additional-rules = [
     "recursive-include src *.h",
     "recursive-include src *.zcml",
     ]
+
+[c-code]
+require-cffi = true

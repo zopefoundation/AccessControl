@@ -32,7 +32,7 @@ ext_modules = [
                  join('include', 'Acquisition', 'Acquisition.h')]),
 ]
 
-version = '6.4.dev0'
+version = '7.0.dev0'
 
 
 setup(name='AccessControl',
@@ -60,12 +60,12 @@ setup(name='AccessControl',
           'Operating System :: OS Independent',
           'Programming Language :: Python',
           'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
           'Programming Language :: Python :: 3.9',
           'Programming Language :: Python :: 3.10',
           'Programming Language :: Python :: 3.11',
           'Programming Language :: Python :: 3.12',
+          'Programming Language :: Python :: 3.13',
           'Programming Language :: Python :: Implementation :: CPython',
       ],
       ext_modules=ext_modules,
@@ -89,7 +89,7 @@ setup(name='AccessControl',
           'zope.testing',
           'funcsigs;python_version<"3.3"',
       ],
-      python_requires='>=3.7',
+      python_requires='>=3.8',
       include_package_data=True,
       zip_safe=False,
       extras_require={
