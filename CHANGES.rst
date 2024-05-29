@@ -3,8 +3,12 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-6.4 (unreleased)
+7.0 (unreleased)
 ----------------
+
+- Add preliminary support for Python 3.13 as of 3.13b1.
+
+- Remove support for Python 3.7.
 
 - Build Windows wheels on GHA.
 
