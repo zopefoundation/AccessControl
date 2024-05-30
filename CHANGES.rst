@@ -3,7 +3,7 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
-7.0 (unreleased)
+7.0 (2024-05-30)
 ----------------
 
 - Add preliminary support for Python 3.13 as of 3.13b1.
