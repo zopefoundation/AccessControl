@@ -5,7 +5,6 @@ template = "c-code"
 commit-id = "13719585"
 
 [python]
-with-appveyor = false
 with-windows = true
 with-pypy = false
 with-future-python = true
