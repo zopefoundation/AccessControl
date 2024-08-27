@@ -217,7 +217,7 @@ class TestDictGuards(GuardTestCase):
     def test_get_default(self):
         from AccessControl.ZopeGuards import get_dict_get
         get = get_dict_get({'foo': 'bar'}, 'get')
-        self.assertTrue(get('baz') is None)
+        self.assertIsNone(get('baz'))
         self.assertEqual(get('baz', 'splat'), 'splat')
 
     def test_get_validates(self):

@@ -80,7 +80,7 @@ def assertPRoles(ob, permission, expect):
             expected[r] = 1
         if got == expected:  # Dict compare does the Right Thing.
             same = 1
-    assert same, 'Expected roles: {!r}, got: {!r}'.format(expect, roles)
+    assert same, f'Expected roles: {expect!r}, got: {roles!r}'
 
 
 class PermissionRoleTests (unittest.TestCase):
@@ -123,7 +123,7 @@ class PermissionRoleTests (unittest.TestCase):
 
     def testPermissionRoleSupportsGetattr(self):
         a = PermissionRole('a')
-        self.assertTrue(getattr(a, '__roles__') == ('Manager', ))
-        self.assertTrue(getattr(a, '_d') == ('Manager', ))
-        self.assertTrue(getattr(a, '__name__') == 'a')
-        self.assertTrue(getattr(a, '_p') == '_a_Permission')
+        self.assertEqual(getattr(a, '__roles__'), ('Manager', ))
+        self.assertEqual(getattr(a, '_d'), ('Manager', ))
+        self.assertEqual(getattr(a, '__name__'), 'a')
+        self.assertEqual(getattr(a, '_p'), '_a_Permission')

@@ -102,10 +102,10 @@ class ClassSecurityInfoTests(unittest.TestCase):
         self.assertEqual(object.private__roles__, ())
         imPermissionRole = [r for r in object.protected__roles__
                             if not r.endswith('_Permission')]
-        self.assertTrue(len(imPermissionRole) == 4)
+        self.assertEqual(len(imPermissionRole), 4)
 
         for item in ('Manager', 'Role A', 'Role B', 'Role C'):
-            self.assertTrue(item in imPermissionRole)
+            self.assertIn(item, imPermissionRole)
 
         # functions exist, i.e. decorators returned them
         self.assertEqual(object.public_new.__name__, 'public_new')
@@ -117,10 +117,10 @@ class ClassSecurityInfoTests(unittest.TestCase):
         self.assertEqual(object.private_new__roles__, ())
         imPermissionRole = [r for r in object.protected_new__roles__
                             if not r.endswith('_Permission')]
-        self.assertTrue(len(imPermissionRole) == 4)
+        self.assertEqual(len(imPermissionRole), 4)
 
         for item in ('Manager', 'Role A', 'Role B', 'Role C'):
-            self.assertTrue(item in imPermissionRole)
+            self.assertIn(item, imPermissionRole)
 
         # Make sure that a permission defined without accompanying method
         # is still reflected in __ac_permissions__
@@ -160,7 +160,7 @@ class ClassSecurityInfoTests(unittest.TestCase):
         # Do class initialization.
         exc = self.assertRaises(AssertionError,
                                 InitializeClass, Test)
-        self.assertTrue('has 2 non-decorator' in str(exc))
+        self.assertIn('has 2 non-decorator', str(exc))
 
     def test_aq_context_in_decorators(self):
         from Acquisition import Implicit

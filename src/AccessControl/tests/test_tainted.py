@@ -56,9 +56,9 @@ class TestTaintedString(unittest.TestCase):
         self.assertEqual(self.tainted, self.unquoted)
 
     def testCmp(self):
-        self.assertTrue(self.tainted == self.unquoted)
-        self.assertTrue(self.tainted < 'a')
-        self.assertTrue(self.tainted > '.')
+        self.assertEqual(self.tainted, self.unquoted)
+        self.assertLess(self.tainted, 'a')
+        self.assertGreater(self.tainted, '.')
 
     def testHash(self):
         hash = {}
@@ -70,41 +70,45 @@ class TestTaintedString(unittest.TestCase):
         self.assertEqual(len(self.tainted), len(self.unquoted))
 
     def testGetItem(self):
-        self.assertTrue(isinstance(self.tainted[0], self._getClass()))
+        self.assertIsInstance(self.tainted[0], self._getClass())
         self.assertEqual(self.tainted[0], '<')
-        self.assertFalse(isinstance(self.tainted[-1], self._getClass()))
+        self.assertNotIsInstance(self.tainted[-1], self._getClass())
         self.assertEqual(self.tainted[-1], '>')
 
     def testGetSlice(self):
-        self.assertTrue(isinstance(self.tainted[0:1], self._getClass()))
+        self.assertIsInstance(self.tainted[0:1], self._getClass())
         self.assertEqual(self.tainted[0:1], '<')
-        self.assertFalse(isinstance(self.tainted[1:], self._getClass()))
+        self.assertNotIsInstance(self.tainted[1:], self._getClass())
         self.assertEqual(self.tainted[1:], self.unquoted[1:])
 
     CONCAT = 'test'
 
     def testConcat(self):
-        self.assertTrue(isinstance(self.tainted + self.CONCAT,
-                        self._getClass()))
+        self.assertIsInstance(
+            self.tainted + self.CONCAT,
+            self._getClass()
+        )
         self.assertEqual(self.tainted + self.CONCAT,
                          self.unquoted + self.CONCAT)
-        self.assertTrue(isinstance(self.CONCAT + self.tainted,
-                                   self._getClass()))
+        self.assertIsInstance(
+            self.CONCAT + self.tainted,
+            self._getClass()
+        )
         self.assertEqual(self.CONCAT + self.tainted,
                          self.CONCAT + self.unquoted)
 
     def testMultiply(self):
-        self.assertTrue(isinstance(2 * self.tainted, self._getClass()))
+        self.assertIsInstance(2 * self.tainted, self._getClass())
         self.assertEqual(2 * self.tainted, 2 * self.unquoted)
-        self.assertTrue(isinstance(self.tainted * 2, self._getClass()))
+        self.assertIsInstance(self.tainted * 2, self._getClass())
         self.assertEqual(self.tainted * 2, self.unquoted * 2)
 
     def testInterpolate(self):
         tainted = self._getClass()('<%s>')
-        self.assertTrue(isinstance(tainted % 'foo', self._getClass()))
+        self.assertIsInstance(tainted % 'foo', self._getClass())
         self.assertEqual(tainted % 'foo', '<foo>')
         tainted = self._getClass()('<%s attr="%s">')
-        self.assertTrue(isinstance(tainted % ('foo', 'bar'), self._getClass()))
+        self.assertIsInstance(tainted % ('foo', 'bar'), self._getClass())
         self.assertEqual(tainted % ('foo', 'bar'), '<foo attr="bar">')
 
     def testStringMethods(self):
@@ -118,21 +122,21 @@ class TestTaintedString(unittest.TestCase):
             v = getattr(tainted, f)()
             self.assertEqual(v, getattr(unquoted, f)())
             if f in returnsTainted:
-                self.assertTrue(isinstance(v, self._getClass()))
+                self.assertIsInstance(v, self._getClass())
             else:
-                self.assertFalse(isinstance(v, self._getClass()))
+                self.assertNotIsInstance(v, self._getClass())
 
         optArg = "lstrip rstrip strip".split()
         for f in optArg:
             v = getattr(tainted, f)(" ")
             self.assertEqual(v, getattr(unquoted, f)(" "))
-            self.assertTrue(isinstance(v, self._getClass()))
+            self.assertIsInstance(v, self._getClass())
 
         justify = "center ljust rjust".split()
         for f in justify:
             v = getattr(tainted, f)(30)
             self.assertEqual(v, getattr(unquoted, f)(30))
-            self.assertTrue(isinstance(v, self._getClass()))
+            self.assertIsInstance(v, self._getClass())
 
         searches = "find index rfind rindex endswith startswith".split()
         searchraises = "index rindex".split()
@@ -146,35 +150,41 @@ class TestTaintedString(unittest.TestCase):
                          unquoted.count('test', 1, -1))
 
         self.assertEqual(tainted.encode(), unquoted.encode())
-        self.assertTrue(isinstance(tainted.encode(), self._getClass()))
+        self.assertIsInstance(tainted.encode(), self._getClass())
 
         self.assertEqual(tainted.expandtabs(10), unquoted.expandtabs(10))
-        self.assertTrue(isinstance(tainted.expandtabs(), self._getClass()))
+        self.assertIsInstance(tainted.expandtabs(), self._getClass())
 
         self.assertEqual(tainted.replace('test', 'spam'),
                          unquoted.replace('test', 'spam'))
-        self.assertTrue(isinstance(tainted.replace('test', '<'),
-                                   self._getClass()))
-        self.assertFalse(isinstance(tainted.replace('test', 'spam'),
-                                    self._getClass()))
+        self.assertIsInstance(
+            tainted.replace('test', '<'),
+            self._getClass()
+        )
+        self.assertNotIsInstance(
+            tainted.replace('test', 'spam'),
+            self._getClass()
+        )
 
         self.assertEqual(tainted.split(), unquoted.split())
         for part in self._getClass()('< < <').split():
-            self.assertTrue(isinstance(part, self._getClass()))
+            self.assertIsInstance(part, self._getClass())
         for part in tainted.split():
-            self.assertFalse(isinstance(part, self._getClass()))
+            self.assertNotIsInstance(part, self._getClass())
 
         multiline = 'test\n<tainted>'
         lines = self._getClass()(multiline).split()
         self.assertEqual(lines, multiline.split())
-        self.assertTrue(isinstance(lines[1], self._getClass()))
-        self.assertFalse(isinstance(lines[0], self._getClass()))
+        self.assertIsInstance(lines[1], self._getClass())
+        self.assertNotIsInstance(lines[0], self._getClass())
 
         transtable = ''.join(map(chr, range(256)))
         self.assertEqual(tainted.translate(transtable),
                          unquoted.translate(transtable))
-        self.assertTrue(isinstance(self._getClass()('<').translate(transtable),
-                                   self._getClass()))
+        self.assertIsInstance(
+            self._getClass()('<').translate(transtable),
+            self._getClass()
+        )
 
     def testQuoted(self):
         self.assertEqual(self.tainted.quoted(), self.quoted)
@@ -192,35 +202,37 @@ class TestTaintedBytes(TestTaintedString):
         return TaintedBytes
 
     def testCmp(self):
-        self.assertTrue(self.tainted == self.unquoted)
         self.assertEqual(self.tainted, self.unquoted)
-        self.assertTrue(self.tainted < b'a')
-        self.assertTrue(self.tainted > b'.')
+        self.assertEqual(self.tainted, self.unquoted)
+        self.assertLess(self.tainted, b'a')
+        self.assertGreater(self.tainted, b'.')
 
     CONCAT = b'test'
 
     def testGetItem(self):
-        self.assertTrue(isinstance(self.tainted[0], self._getClass()))
+        self.assertIsInstance(self.tainted[0], self._getClass())
         self.assertEqual(self.tainted[0], self._getClass()(b'<'))
-        self.assertFalse(isinstance(self.tainted[-1], self._getClass()))
+        self.assertNotIsInstance(self.tainted[-1], self._getClass())
         self.assertEqual(self.tainted[-1], 62)
 
     def testStr(self):
         self.assertEqual(str(self.tainted), self.unquoted.decode('utf8'))
 
     def testGetSlice(self):
-        self.assertTrue(isinstance(self.tainted[0:1], self._getClass()))
+        self.assertIsInstance(self.tainted[0:1], self._getClass())
         self.assertEqual(self.tainted[0:1], b'<')
-        self.assertFalse(isinstance(self.tainted[1:], self._getClass()))
+        self.assertNotIsInstance(self.tainted[1:], self._getClass())
         self.assertEqual(self.tainted[1:], self.unquoted[1:])
 
     def testInterpolate(self):
         tainted = self._getClass()(b'<%s>')
-        self.assertTrue(isinstance(tainted % b'foo', self._getClass()))
+        self.assertIsInstance(tainted % b'foo', self._getClass())
         self.assertEqual(tainted % b'foo', b'<foo>')
         tainted = self._getClass()(b'<%s attr="%s">')
-        self.assertTrue(isinstance(tainted % (b'foo', b'bar'),
-                                   self._getClass()))
+        self.assertIsInstance(
+            tainted % (b'foo', b'bar'),
+            self._getClass()
+        )
         self.assertEqual(tainted % (b'foo', b'bar'), b'<foo attr="bar">')
 
     def testStringMethods(self):
@@ -234,21 +246,21 @@ class TestTaintedBytes(TestTaintedString):
             v = getattr(tainted, f)()
             self.assertEqual(v, getattr(unquoted, f)())
             if f in returnsTainted:
-                self.assertTrue(isinstance(v, self._getClass()))
+                self.assertIsInstance(v, self._getClass())
             else:
-                self.assertFalse(isinstance(v, self._getClass()))
+                self.assertNotIsInstance(v, self._getClass())
 
         optArg = "lstrip rstrip strip".split()
         for f in optArg:
             v = getattr(tainted, f)(b" ")
             self.assertEqual(v, getattr(unquoted, f)(b" "))
-            self.assertTrue(isinstance(v, self._getClass()))
+            self.assertIsInstance(v, self._getClass())
 
         justify = "center ljust rjust".split()
         for f in justify:
             v = getattr(tainted, f)(30)
             self.assertEqual(v, getattr(unquoted, f)(30))
-            self.assertTrue(isinstance(v, self._getClass()))
+            self.assertIsInstance(v, self._getClass())
 
         searches = "find index rfind rindex endswith startswith".split()
         searchraises = "index rindex".split()
@@ -263,36 +275,42 @@ class TestTaintedBytes(TestTaintedString):
 
         self.assertEqual(tainted.decode(), unquoted.decode())
         from AccessControl.tainted import TaintedString
-        self.assertTrue(isinstance(tainted.decode(), TaintedString))
+        self.assertIsInstance(tainted.decode(), TaintedString)
 
         self.assertEqual(tainted.expandtabs(10), unquoted.expandtabs(10))
-        self.assertTrue(isinstance(tainted.expandtabs(), self._getClass()))
+        self.assertIsInstance(tainted.expandtabs(), self._getClass())
 
         self.assertEqual(tainted.replace(b'test', b'spam'),
                          unquoted.replace(b'test', b'spam'))
-        self.assertTrue(isinstance(tainted.replace(b'test', b'<'),
-                                   self._getClass()))
-        self.assertFalse(isinstance(tainted.replace(b'test', b'spam'),
-                                    self._getClass()))
+        self.assertIsInstance(
+            tainted.replace(b'test', b'<'),
+            self._getClass()
+        )
+        self.assertNotIsInstance(
+            tainted.replace(b'test', b'spam'),
+            self._getClass()
+        )
 
         self.assertEqual(tainted.split(), unquoted.split())
         for part in self._getClass()(b'< < <').split():
-            self.assertTrue(isinstance(part, self._getClass()))
+            self.assertIsInstance(part, self._getClass())
         for part in tainted.split():
-            self.assertFalse(isinstance(part, self._getClass()))
+            self.assertNotIsInstance(part, self._getClass())
 
         multiline = b'test\n<tainted>'
         lines = self._getClass()(multiline).split()
         self.assertEqual(lines, multiline.split())
-        self.assertTrue(isinstance(lines[1], self._getClass()))
-        self.assertFalse(isinstance(lines[0], self._getClass()))
+        self.assertIsInstance(lines[1], self._getClass())
+        self.assertNotIsInstance(lines[0], self._getClass())
 
         transtable = bytes(range(256))
         self.assertEqual(tainted.translate(transtable),
                          unquoted.translate(transtable))
         kls = self._getClass()(b'<')
-        self.assertTrue(isinstance(kls.translate(transtable),
-                                   self._getClass()))
+        self.assertIsInstance(
+            kls.translate(transtable),
+            self._getClass()
+        )
 
     def testConstructor(self):
         from AccessControl.tainted import TaintedBytes

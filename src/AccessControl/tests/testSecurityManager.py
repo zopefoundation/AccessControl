@@ -69,7 +69,7 @@ class SecurityManagerTestBase:
     def test_getUser(self):
         context = DummyContext()
         mgr = self._makeOne(_THREAD_ID, context)
-        self.assertTrue(mgr.getUser() is context.user)
+        self.assertIs(mgr.getUser(), context.user)
 
     def test_calledByExecutable_no_stack(self):
         context = DummyContext()
@@ -89,7 +89,7 @@ class SecurityManagerTestBase:
         original_policy = mgr._policy
         executableObject = object()
         mgr.addContext(executableObject)
-        self.assertTrue(mgr._policy is original_policy)
+        self.assertIs(mgr._policy, original_policy)
 
     def test_addContext_with_custom_policy(self):
         context = DummyContext()
@@ -97,7 +97,7 @@ class SecurityManagerTestBase:
         new_policy = DummyPolicy()
         executableObject = ExecutableObject(new_policy)
         mgr.addContext(executableObject)
-        self.assertTrue(mgr._policy is new_policy)
+        self.assertIs(mgr._policy, new_policy)
 
     def test_addContext_with_custom_policy_then_none(self):
         context = DummyContext()
@@ -107,7 +107,7 @@ class SecurityManagerTestBase:
         executableObject = ExecutableObject(new_policy)
         mgr.addContext(executableObject)
         mgr.addContext(object())
-        self.assertTrue(mgr._policy is original_policy)
+        self.assertIs(mgr._policy, original_policy)
 
     def test_removeContext_pops_items_above_EO(self):
         context = DummyContext()
@@ -121,8 +121,8 @@ class SecurityManagerTestBase:
         mgr.removeContext(GAMMA)
 
         self.assertEqual(len(context.stack), 2)
-        self.assertTrue(context.stack[0] is ALPHA)
-        self.assertTrue(context.stack[1] is BETA)
+        self.assertIs(context.stack[0], ALPHA)
+        self.assertIs(context.stack[1], BETA)
 
     def test_removeContext_last_EO_restores_default_policy(self):
         context = DummyContext()
@@ -131,7 +131,7 @@ class SecurityManagerTestBase:
         top = object()
         context.stack.append(top)
         mgr.removeContext(top)
-        self.assertTrue(mgr._policy is original_policy)
+        self.assertIs(mgr._policy, original_policy)
 
     def test_removeContext_with_top_having_custom_policy(self):
         context = DummyContext()
@@ -141,7 +141,7 @@ class SecurityManagerTestBase:
         top = object()
         context.stack.append(top)
         mgr.removeContext(top)
-        self.assertTrue(mgr._policy is new_policy)
+        self.assertIs(mgr._policy, new_policy)
 
     def test_removeContext_with_top_having_no_custom_policy(self):
         context = DummyContext()
@@ -153,7 +153,7 @@ class SecurityManagerTestBase:
         top = object()
         context.stack.append(top)
         mgr.removeContext(executableObject)
-        self.assertTrue(mgr._policy is original_policy)
+        self.assertIs(mgr._policy, original_policy)
 
     def test_checkPermission_delegates_to_policy(self):
         context = DummyContext()
@@ -162,10 +162,10 @@ class SecurityManagerTestBase:
         mgr = self._makeOne(_THREAD_ID, context)
         new_policy = mgr._policy = DummyPolicy()
         result = mgr.checkPermission(PERMISSION, TARGET)
-        self.assertTrue(result is DummyPolicy.CHECK_PERMISSION_RESULT)
-        self.assertTrue(new_policy.CHECK_PERMISSION_ARGS[0] is PERMISSION)
-        self.assertTrue(new_policy.CHECK_PERMISSION_ARGS[1] is TARGET)
-        self.assertTrue(new_policy.CHECK_PERMISSION_ARGS[2] is context)
+        self.assertIs(result, DummyPolicy.CHECK_PERMISSION_RESULT)
+        self.assertIs(new_policy.CHECK_PERMISSION_ARGS[0], PERMISSION)
+        self.assertIs(new_policy.CHECK_PERMISSION_ARGS[1], TARGET)
+        self.assertIs(new_policy.CHECK_PERMISSION_ARGS[2], context)
 
     def test_validate_without_roles_delegates_to_policy(self):
         context = DummyContext()
@@ -184,11 +184,11 @@ class SecurityManagerTestBase:
 
         self.assertTrue(result)
         self.assertEqual(len(new_policy.VALIDATE_ARGS), 5)
-        self.assertTrue(new_policy.VALIDATE_ARGS[0] is ACCESSED)
-        self.assertTrue(new_policy.VALIDATE_ARGS[1] is CONTAINER)
+        self.assertIs(new_policy.VALIDATE_ARGS[0], ACCESSED)
+        self.assertIs(new_policy.VALIDATE_ARGS[1], CONTAINER)
         self.assertEqual(new_policy.VALIDATE_ARGS[2], NAME)
-        self.assertTrue(new_policy.VALIDATE_ARGS[3] is VALUE)
-        self.assertTrue(new_policy.VALIDATE_ARGS[4] is context)
+        self.assertIs(new_policy.VALIDATE_ARGS[3], VALUE)
+        self.assertIs(new_policy.VALIDATE_ARGS[4], context)
 
     def test_validate_with_roles_delegates_to_policy(self):
         context = DummyContext()
@@ -209,11 +209,11 @@ class SecurityManagerTestBase:
 
         self.assertTrue(result)
         self.assertEqual(len(new_policy.VALIDATE_ARGS), 6)
-        self.assertTrue(new_policy.VALIDATE_ARGS[0] is ACCESSED)
-        self.assertTrue(new_policy.VALIDATE_ARGS[1] is CONTAINER)
+        self.assertIs(new_policy.VALIDATE_ARGS[0], ACCESSED)
+        self.assertIs(new_policy.VALIDATE_ARGS[1], CONTAINER)
         self.assertEqual(new_policy.VALIDATE_ARGS[2], NAME)
-        self.assertTrue(new_policy.VALIDATE_ARGS[3] is VALUE)
-        self.assertTrue(new_policy.VALIDATE_ARGS[4] is context)
+        self.assertIs(new_policy.VALIDATE_ARGS[3], VALUE)
+        self.assertIs(new_policy.VALIDATE_ARGS[4], context)
         self.assertEqual(new_policy.VALIDATE_ARGS[5], ROLES)
 
     def test_DTMLValidate_delegates_to_policy_validate(self):
@@ -235,11 +235,11 @@ class SecurityManagerTestBase:
 
         self.assertTrue(result)
         self.assertEqual(len(new_policy.VALIDATE_ARGS), 5)
-        self.assertTrue(new_policy.VALIDATE_ARGS[0] is ACCESSED)
-        self.assertTrue(new_policy.VALIDATE_ARGS[1] is CONTAINER)
+        self.assertIs(new_policy.VALIDATE_ARGS[0], ACCESSED)
+        self.assertIs(new_policy.VALIDATE_ARGS[1], CONTAINER)
         self.assertEqual(new_policy.VALIDATE_ARGS[2], NAME)
-        self.assertTrue(new_policy.VALIDATE_ARGS[3] is VALUE)
-        self.assertTrue(new_policy.VALIDATE_ARGS[4] is context)
+        self.assertIs(new_policy.VALIDATE_ARGS[3], VALUE)
+        self.assertIs(new_policy.VALIDATE_ARGS[4], context)
 
 
 class PythonSecurityManagerTests(SecurityManagerTestBase,
