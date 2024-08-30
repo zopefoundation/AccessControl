@@ -491,7 +491,7 @@ def load_module(module, mname, mnameparts, validate, globals, locals):
         if mname is None:
             mname = nextname
         else:
-            mname = '{}.{}'.format(mname, nextname)
+            mname = f'{mname}.{nextname}'
         # import (if not already imported) and  check for MSI
         nextmodule = secureModule(mname, globals, locals)
         if nextmodule is None:  # not allowed

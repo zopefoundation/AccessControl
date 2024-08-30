@@ -104,7 +104,7 @@ class UserFolderTests(unittest.TestCase):
     def testGetRoles(self):
         uf = self._makeOne()
         user = uf.getUser('user1')
-        self.assertTrue('role1' in user.getRoles())
+        self.assertIn('role1', user.getRoles())
 
     def testMaxListUsers(self):
         # create a folder-ish thing which contains a roleManager,

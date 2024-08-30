@@ -251,7 +251,7 @@ class BasicUser(Implicit):
         return self.getUserName()
 
     def __repr__(self):
-        return '<{} {!r}>'.format(self.__class__.__name__, self.getUserName())
+        return f'<{self.__class__.__name__} {self.getUserName()!r}>'
 
 
 class SimpleUser(BasicUser):
