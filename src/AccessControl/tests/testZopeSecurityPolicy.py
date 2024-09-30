@@ -27,6 +27,8 @@ from zExceptions import Unauthorized
 from AccessControl.SecurityManagement import SecurityContext
 from AccessControl.userfolder import UserFolder
 
+from ..Implementation import PURE_PYTHON
+
 
 user_roles = ('RoleOfUser',)
 eo_roles = ('RoleOfExecutableOwner',)
@@ -772,7 +774,7 @@ def test_suite():
         unittest.defaultTestLoader.loadTestsFromTestCase(Python_ZSPTests))
     suite.addTest(
         unittest.defaultTestLoader.loadTestsFromTestCase(Python_SMTests))
-    if not int(os.environ.get('PURE_PYTHON', '0')):
+    if not PURE_PYTHON:
         suite.addTest(
             unittest.defaultTestLoader.loadTestsFromTestCase(C_ZSPTests))
         suite.addTest(

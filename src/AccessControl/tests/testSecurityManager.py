@@ -17,6 +17,8 @@
 import os
 import unittest
 
+from ..Implementation import PURE_PYTHON
+
 
 _THREAD_ID = 123
 
@@ -251,8 +253,7 @@ class PythonSecurityManagerTests(SecurityManagerTestBase,
         return SecurityManager
 
 
-@unittest.skipIf(int(os.environ.get('PURE_PYTHON', '0')),
-                 reason="Test expects C impl.")
+@unittest.skipIf(PURE_PYTHON, reason="Test expects C impl.")
 class C_SecurityManagerTests(SecurityManagerTestBase,
                              ISecurityManagerConformance,
                              unittest.TestCase):
