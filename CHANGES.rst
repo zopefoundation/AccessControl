@@ -8,6 +8,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Respect ``PURE_PYTHON`` environment variable set to ``0`` when running tests.
 
+- Make Python implementation behave same as C implementation regarding
+  objects raising exceptions in ``__getattr__``.
+
 
 7.0 (2024-05-30)
 ----------------

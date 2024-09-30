@@ -127,6 +127,35 @@ class PermissionRoleTestBase:
         self.assertEqual(getattr(a, '__name__'), 'a')
         self.assertEqual(getattr(a, '_p'), '_a_Permission')
 
+    def testErrorsDuringGetattr(self):
+        pr = self._getTargetClass()('View')
+
+        class AttributeErrorObject(Implicit):
+            pass
+        self.assertEqual(
+            tuple(pr.__of__(AttributeErrorObject())), ('Manager', ))
+
+        # Unauthorized errors are tolerated and equivalent to no
+        # permission declaration
+        class UnauthorizedErrorObject(Implicit):
+            def __getattr__(self, name):
+                from zExceptions import Unauthorized
+                if name == '_View_Permission':
+                    raise Unauthorized(name)
+                raise AttributeError(name)
+        self.assertEqual(
+            tuple(pr.__of__(UnauthorizedErrorObject())), ('Manager', ))
+
+        # other exceptions propagate
+        class ErrorObject(Implicit):
+            def __getattr__(self, name):
+                if name == '_View_Permission':
+                    raise RuntimeError("Error raised during getattr")
+                raise AttributeError(name)
+        with self.assertRaisesRegex(
+                RuntimeError, "Error raised during getattr"):
+            tuple(pr.__of__(ErrorObject()))
+
 
 class Python_PermissionRoleTests(PermissionRoleTestBase, unittest.TestCase):
     def _getTargetClass(self):

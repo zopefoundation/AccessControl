@@ -31,6 +31,7 @@ from Acquisition import aq_inner
 from Acquisition import aq_parent
 from ExtensionClass import Base
 from zope.interface import implementer
+from zExceptions import Unauthorized as zExceptions_Unauthorized
 
 PURE_PYTHON = int(os.environ.get('PURE_PYTHON', '0'))
 if PURE_PYTHON:
@@ -71,8 +72,11 @@ def rolesForPermissionOn(perm, object, default=_default_roles, n=None):
     r = None
 
     while True:
-        if hasattr(object, n):
+        try:
             roles = getattr(object, n)
+        except (AttributeError, zExceptions_Unauthorized):
+            pass
+        else:
             if roles is None:
                 if _embed_permission_in_roles:
                     return (('Anonymous',), n)

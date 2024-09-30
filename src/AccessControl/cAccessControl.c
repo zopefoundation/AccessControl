@@ -652,6 +652,7 @@ static PyExtensionClass imPermissionRoleType = {
 static PyObject *Containers = NULL;
 static PyObject *ContainerAssertions = NULL;
 static PyObject *Unauthorized = NULL;
+static PyObject *zExceptions_Unauthorized = NULL;
 static PyObject *warn= NULL;
 static PyObject *NoSequenceFormat = NULL;
 static PyObject *_what_not_even_god_should_do = NULL;
@@ -1847,15 +1848,27 @@ c_rolesForPermissionOn(PyObject *perm, PyObject *object,
   Py_INCREF(r);
 
   /*
-    while 1:
+    while True:
   */
   while (1)
     {
       /*
-        if hasattr(object, n):
+        try:
             roles = getattr(object, n)
+        except (AttributeError, zExceptions_Unauthorized):
+            pass
+        else:
       */
       PyObject *roles = PyObject_GetAttr(object, n);
+      if (roles == NULL)
+        {
+          if (! (PyErr_ExceptionMatches(PyExc_AttributeError)
+              || PyErr_ExceptionMatches(zExceptions_Unauthorized)))
+            {
+              /* re-raise */
+              return NULL;
+            }
+        }
       if (roles != NULL)
         {
 
@@ -2313,6 +2326,7 @@ static struct PyMethodDef dtml_methods[] = {
 */
 #define IMPORT(module, name) if ((module = PyImport_ImportModule(name)) == NULL) return NULL;
 #define GETATTR(module, name) if ((name = PyObject_GetAttrString(module, #name)) == NULL) return NULL;
+#define GETATTR_AS(module, name, as_name) if ((as_name = PyObject_GetAttrString(module, name)) == NULL) return NULL;
 
 static struct PyModuleDef moduledef =
 {
@@ -2397,6 +2411,14 @@ module_init(void) {
 
 	IMPORT(tmp, "AccessControl.unauthorized");
 	GETATTR(tmp, Unauthorized);
+	Py_DECREF(tmp);
+	tmp = NULL;
+
+	/*| from zExceptions import Unauthorized as zExceptions_Unauthorized
+	*/
+
+	IMPORT(tmp, "zExceptions");
+	GETATTR_AS(tmp, "Unauthorized", zExceptions_Unauthorized);
 	Py_DECREF(tmp);
 	tmp = NULL;
 
