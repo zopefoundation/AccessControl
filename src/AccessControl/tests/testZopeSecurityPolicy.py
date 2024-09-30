@@ -12,7 +12,6 @@
 ##############################################################################
 
 import _thread as thread
-import os
 import sys
 import unittest
 from doctest import DocTestSuite
@@ -26,6 +25,8 @@ from zExceptions import Unauthorized
 
 from AccessControl.SecurityManagement import SecurityContext
 from AccessControl.userfolder import UserFolder
+
+from ..Implementation import PURE_PYTHON
 
 
 user_roles = ('RoleOfUser',)
@@ -772,7 +773,7 @@ def test_suite():
         unittest.defaultTestLoader.loadTestsFromTestCase(Python_ZSPTests))
     suite.addTest(
         unittest.defaultTestLoader.loadTestsFromTestCase(Python_SMTests))
-    if not os.environ.get('PURE_PYTHON'):
+    if not PURE_PYTHON:
         suite.addTest(
             unittest.defaultTestLoader.loadTestsFromTestCase(C_ZSPTests))
         suite.addTest(
