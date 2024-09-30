@@ -12,7 +12,6 @@
 ##############################################################################
 
 import _thread as thread
-import os
 import sys
 import unittest
 from doctest import DocTestSuite

@@ -14,7 +14,6 @@
 """Tests for the SecurityManager implementations
 """
 
-import os
 import unittest
 
 from ..Implementation import PURE_PYTHON
