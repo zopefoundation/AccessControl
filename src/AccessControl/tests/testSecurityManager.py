@@ -251,7 +251,8 @@ class PythonSecurityManagerTests(SecurityManagerTestBase,
         return SecurityManager
 
 
-@unittest.skipIf(os.environ.get('PURE_PYTHON'), reason="Test expects C impl.")
+@unittest.skipIf(int(os.environ.get('PURE_PYTHON', '0')),
+                 reason="Test expects C impl.")
 class C_SecurityManagerTests(SecurityManagerTestBase,
                              ISecurityManagerConformance,
                              unittest.TestCase):

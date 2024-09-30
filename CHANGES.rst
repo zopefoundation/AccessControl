@@ -6,6 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.1 (unreleased)
 ----------------
 
+- Respect ``PURE_PYTHON`` environment variable set to ``0`` when running tests.
+
 
 7.0 (2024-05-30)
 ----------------

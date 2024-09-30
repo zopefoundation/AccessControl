@@ -772,7 +772,7 @@ def test_suite():
         unittest.defaultTestLoader.loadTestsFromTestCase(Python_ZSPTests))
     suite.addTest(
         unittest.defaultTestLoader.loadTestsFromTestCase(Python_SMTests))
-    if not os.environ.get('PURE_PYTHON'):
+    if not int(os.environ.get('PURE_PYTHON', '0')):
         suite.addTest(
             unittest.defaultTestLoader.loadTestsFromTestCase(C_ZSPTests))
         suite.addTest(
