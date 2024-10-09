@@ -8,8 +8,7 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Respect ``PURE_PYTHON`` environment variable set to ``0`` when running tests.
 
-- Make Python implementation behave same as C implementation regarding
-  objects raising exceptions in ``__getattr__``.
+- Let the roles access in ``rolesForPermissionOn`` interpret ``AttributeError`` and ``Unauthorized`` as "no roles definition for this permission at this object" and report any other exception (for the Python and C implementation). We have to treat ``Unauthorized`` like ``AttributeError`` to support ``Shared.DC.Scripts.Bindings.UnauthorizedBinding`` which raises ``Unauthorized`` for any access.
 
 
 7.0 (2024-05-30)
