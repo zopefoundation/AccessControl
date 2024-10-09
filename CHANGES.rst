@@ -6,6 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.1 (unreleased)
 ----------------
 
+- Add final support for Python 3.13.
+
 
 7.0 (2024-05-30)
 ----------------
