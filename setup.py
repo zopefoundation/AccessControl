@@ -32,7 +32,7 @@ ext_modules = [
                  join('include', 'Acquisition', 'Acquisition.h')]),
 ]
 
-version = '7.1.dev0'
+version = '7.1'
 
 
 setup(name='AccessControl',
@@ -47,8 +47,9 @@ setup(name='AccessControl',
       description='Security framework for Zope.',
       keywords='security access authorization',
       author='Zope Foundation and Contributors',
-      author_email='zope-dev@zope.org',
+      author_email='zope-dev@zope.dev',
       long_description=README + '\n\n' + CHANGES,
+      long_description_content_type='text/x-rst',
       packages=find_packages('src'),
       package_dir={'': 'src'},
       classifiers=[
