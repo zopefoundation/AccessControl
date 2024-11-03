@@ -376,6 +376,7 @@ class UserFolder(BasicUserFolder):
     zmi_show_add_dialog = False
     id = 'acl_users'
     title = 'User Folder'
+    data__roles__ = ()  # prevent untrusted access to ``data``.
 
     def __init__(self):
         self.data = PersistentMapping()

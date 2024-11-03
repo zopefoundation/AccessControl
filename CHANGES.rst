@@ -6,6 +6,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.2 (unreleased)
 ----------------
 
+- Prevent untrusted access to ``AccessControl.userfolder.UserFolder.data``
+  (fixes `GHSA-g5vw-3h65-2q3v <https://github.com/zopefoundation/AccessControl/security/advisories/GHSA-g5vw-3h65-2q3v>`_).
+
 
 7.1 (2024-10-10)
 ----------------
