@@ -3,6 +3,10 @@ Changelog
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
+7.3 (unreleased)
+----------------
+
+
 7.2 (2024-11-03)
 ----------------
 
