@@ -6,6 +6,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.3 (unreleased)
 ----------------
 
+- Drop support for Python 3.8.
+
 
 7.2 (2024-11-03)
 ----------------
