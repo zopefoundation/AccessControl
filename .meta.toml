@@ -2,7 +2,7 @@
 # https://github.com/zopefoundation/meta/tree/master/config/c-code
 [meta]
 template = "c-code"
-commit-id = "85622de1"
+commit-id = "3c1c588c"
 
 [python]
 with-windows = true
@@ -36,6 +36,3 @@ additional-rules = [
     "recursive-include src *.h",
     "recursive-include src *.zcml",
     ]
-
-[c-code]
-require-cffi = true
