@@ -11,7 +11,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "AccessControl"
-version = "7.3.dev0"
+version = "7.3"
 description = "Security framework for Zope"
 keywords = ["security", "access", "authorization"]
 readme = "README.rst"
