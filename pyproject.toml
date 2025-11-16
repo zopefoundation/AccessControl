@@ -4,9 +4,73 @@
 
 [build-system]
 requires = [
-    "setuptools <= 75.6.0",
+    "setuptools",
+    "wheel",
 ]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "AccessControl"
+version = "7.3.dev0"
+description = "Security framework for Zope"
+keywords = ["security", "access", "authorization"]
+readme = "README.rst"
+requires-python = ">=3.10"
+license = "ZPL-2.1"
+authors = [
+  { name = "Zope Foundation and contributors", email = "zope-dev@zope.dev" },
+]
+maintainers = [
+  { name = "Plone Foundation and contributors", email = "zope-dev@zope.dev" },
+]
+classifiers = [
+  "Development Status :: 6 - Mature",
+  "Environment :: Web Environment",
+  "Framework :: Zope",
+  "Framework :: Zope :: 5",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: Implementation :: CPython",
+]
+dependencies = [
+  "Acquisition",
+  "AuthEncoding",
+  "BTrees",
+  "DateTime",
+  "ExtensionClass",
+  "Persistence",
+  "RestrictedPython",
+  "transaction",
+  "zExceptions",
+  "zope.component",
+  "zope.configuration",
+  "zope.deferredimport",
+  "zope.interface",
+  "zope.publisher",
+  "zope.schema",
+  "zope.security",
+  "zope.testing",
+]
+
+[project.entry-points."zodbupdate.decode"]
+decodes = "AccessControl:zodbupdate_decode_dict"
+
+[project.optional-dependencies]
+test = [
+  "zope.testrunner >= 6.4",
+]
+
+[project.urls]
+Issues = "https://github.com/zopefoundation/AccessControl/issues"
+Source = "https://github.com/zopefoundation/AccessControl"
+Changelog = "https://github.com/zopefoundation/AccessControl/blob/master/CHANGES.rst"
 
 [tool.coverage.run]
 branch = true

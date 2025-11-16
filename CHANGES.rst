@@ -1,12 +1,17 @@
-Changelog
-=========
+Change log
+==========
 
 For changes before version 3.0, see ``HISTORY.rst``.
+
 
 7.3 (unreleased)
 ----------------
 
-- Drop support for Python 3.8.
+- Move all supported package metadata into ``pyproject.toml``.
+
+- Add support for Python 3.14.
+
+- Drop support for Python 3.8 and 3.9.
 
 
 7.2 (2024-11-03)
@@ -250,15 +255,18 @@ Changes since 3.0.12:
   ``SecurityInfo._ModuleSecurityInfo``.  See:
   https://github.com/zopefoundation/AccessControl/issues/12
 
+
 3.0.11 (2014-11-02)
 -------------------
 
 - Harden test fix for machines that do not define `localhost`.
 
+
 3.0.10 (2014-11-02)
 -------------------
 
 - Test fix for machines that do not define `localhost`.
+
 
 3.0.9 (2014-08-08)
 ------------------
@@ -270,12 +278,14 @@ Changes since 3.0.12:
 - LP #1248529: Leave existing security manager in place inside
   ``RoleManager.manage_getUserRolesAndPermissions``.
 
+
 3.0.8 (2013-07-16)
 ------------------
 
 - LP #1169923:  ensure initialization of shared ``ImplPython`` state
   (used by ``ImplC``) when using the "C" security policy.  Thanks to
   Arnaud Fontaine for the patch.
+
 
 3.0.7 (2013-05-14)
 ------------------
@@ -286,11 +296,13 @@ Changes since 3.0.12:
 - Prevent infinite loop when looking up local roles in an acquisition chain
   with cycles.
 
+
 3.0.6 (2012-10-31)
 ------------------
 
 - LP #1071067: Use a stronger random number generator and a constant time
   comparison function.
+
 
 3.0.5 (2012-10-21)
 ------------------
@@ -298,10 +310,12 @@ Changes since 3.0.12:
 - LP #966101: Recognize special `zope2.Private` permission in ZCML
   role directive.
 
+
 3.0.4 (2012-09-09)
 ------------------
 
 - LP #1047318: Tighten import restrictions for restricted code.
+
 
 3.0.3 (2012-08-23)
 ------------------
@@ -309,15 +323,18 @@ Changes since 3.0.12:
 - Fix a bug in ZopeSecurityPolicy.py. Global variable `rolesForPermissionOn`
   could be overridden if `__role__` had custom rolesForPermissionOn.
 
+
 3.0.2 (2012-06-22)
 ------------------
 
 - Add Anonymous as a default role for Public permission.
 
+
 3.0.1 (2012-05-24)
 ------------------
 
 - Fix tests under Python 2.6.
+
 
 3.0 (2012-05-12)
 ----------------

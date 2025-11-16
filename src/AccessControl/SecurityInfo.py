@@ -320,7 +320,7 @@ class _ModuleSecurityInfo(SecurityInfo):
     def __init__(self, module_name=None):
         self.names = {}
         if module_name is not None:
-            global _moduleSecurity
+            global _moduleSecurity  # noqa: F824
             _moduleSecurity[module_name] = self
 
     __call____roles__ = ACCESS_PRIVATE
