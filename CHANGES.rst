@@ -7,6 +7,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.4 (unreleased)
 ----------------
 
+- Add caching for ``guarded_import`` in Python Scripts. This can speed up the
+  execution of Scripts considerably if they use many ``import`` statements.
 
 7.3 (2025-11-16)
 ----------------
