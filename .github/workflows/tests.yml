@@ -93,7 +93,10 @@ jobs:
           - "3.12"
           - "3.13"
           - "3.14"
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest, windows-11-arm]
+        exclude:
+          - os: windows-11-arm
+            python-version: "3.10"
 
     steps:
       - name: checkout
@@ -124,27 +127,27 @@ jobs:
           echo "dir=$(pip cache dir)" >> $Env:GITHUB_OUTPUT
 
       - name: pip cache (default)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: ${{ !startsWith(runner.os, 'Windows') }}
         with:
           path: ${{ steps.pip-cache-default.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}
+          key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ matrix.python-version }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-${{ runner.arch }}-pip-
 
       - name: pip cache (Windows)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: ${{ startsWith(runner.os, 'Windows') }}
         with:
           path: ${{ steps.pip-cache-windows.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}
+          key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ matrix.python-version }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-${{ runner.arch }}-pip-
 
       - name: Install Build Dependencies
         run: |
           pip install -U pip
-          pip install -U "setuptools >= 78.1.1,< 81" wheel twine
+          pip install -U "setuptools >= 78.1.1,< 82" wheel twine
 
       - name: Build AccessControl (macOS x86_64)
         if: >
@@ -182,10 +185,17 @@ jobs:
           python setup.py build_ext -i
           python setup.py bdist_wheel
 
+      - name: Create AccessControl sdist
+        if: >
+          startsWith(runner.os, 'Linux')
+          && matrix.python-version == '3.14'
+        run: |
+          python setup.py sdist
+
       - name: Install AccessControl and dependencies
         run: |
           # Install to collect dependencies into the (pip) cache.
-          pip install -U pip "setuptools >= 78.1.1,< 81"
+          pip install -U pip "setuptools >= 78.1.1,< 82"
           pip install .[test]
 
       - name: Check AccessControl build
@@ -195,7 +205,7 @@ jobs:
       - name: Upload AccessControl wheel (macOS x86_64)
         if: >
           startsWith(runner.os, 'Mac')
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           # The x86_64 wheel is uploaded with a different name just so it can be
           # manually downloaded when desired. The wheel itself *cannot* be tested
@@ -206,17 +216,32 @@ jobs:
         if: >
           startsWith(runner.os, 'Mac')
           && !startsWith(matrix.python-version, 'pypy')
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: AccessControl-${{ runner.os }}-${{ matrix.python-version }}.whl
           path: dist/*arm64.whl
-      - name: Upload AccessControl wheel (all other platforms)
-        if: >
-          !startsWith(runner.os, 'Mac')
-        uses: actions/upload-artifact@v4
+      - name: Upload AccessControl wheel (Windows)
+        if: startsWith(runner.os, 'Windows')
+        uses: actions/upload-artifact@v7
+        with:
+          name: AccessControl-${{ runner.os }}-${{ matrix.python-version }}-${{ runner.arch }}.whl
+          path: dist/*whl
+
+      - name: Upload AccessControl wheel (Linux)
+        if: startsWith(runner.os, 'Linux')
+        uses: actions/upload-artifact@v7
         with:
           name: AccessControl-${{ runner.os }}-${{ matrix.python-version }}.whl
           path: dist/*whl
+
+      - name: Upload AccessControl sdist
+        if: >
+          startsWith(runner.os, 'Linux')
+          && matrix.python-version == '3.14'
+        uses: actions/upload-artifact@v7
+        with:
+          name: AccessControl-${{ github.ref_name }}.tar.gz
+          path: dist/*gz
 
   test:
     needs: build-package
@@ -230,7 +255,10 @@ jobs:
           - "3.12"
           - "3.13"
           - "3.14"
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest, windows-11-arm]
+        exclude:
+          - os: windows-11-arm
+            python-version: "3.10"
 
     steps:
       - name: checkout
@@ -261,31 +289,38 @@ jobs:
           echo "dir=$(pip cache dir)" >> $Env:GITHUB_OUTPUT
 
       - name: pip cache (default)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: ${{ !startsWith(runner.os, 'Windows') }}
         with:
           path: ${{ steps.pip-cache-default.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}
+          key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ matrix.python-version }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-${{ runner.arch }}-pip-
 
       - name: pip cache (Windows)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: ${{ startsWith(runner.os, 'Windows') }}
         with:
           path: ${{ steps.pip-cache-windows.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}
+          key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ matrix.python-version }}
           restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Download AccessControl wheel
-        uses: actions/download-artifact@v4
+            ${{ runner.os }}-${{ runner.arch }}-pip-
+      - name: Download AccessControl wheel (Linux/macOS)
+        if: "!startsWith(runner.os, 'Windows')"
+        uses: actions/download-artifact@v8
         with:
           name: AccessControl-${{ runner.os }}-${{ matrix.python-version }}.whl
           path: dist/
+
+      - name: Download AccessControl wheel (Windows)
+        if: startsWith(runner.os, 'Windows')
+        uses: actions/download-artifact@v8
+        with:
+          name: AccessControl-${{ runner.os }}-${{ matrix.python-version }}-${{ runner.arch }}.whl
+          path: dist/
       - name: Install AccessControl
         run: |
-          pip install -U wheel "setuptools >= 78.1.1,< 81"
+          pip install -U wheel "setuptools >= 78.1.1,< 82"
           pip install -U coverage[toml]
           pip install -U 'cffi; platform_python_implementation == "CPython"'
           # Unzip into src/ so that testrunner can find the .so files
@@ -361,25 +396,24 @@ jobs:
           echo "dir=$(pip cache dir)" >> $Env:GITHUB_OUTPUT
 
       - name: pip cache (default)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: ${{ !startsWith(runner.os, 'Windows') }}
         with:
           path: ${{ steps.pip-cache-default.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}
+          key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ matrix.python-version }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-${{ runner.arch }}-pip-
 
       - name: pip cache (Windows)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: ${{ startsWith(runner.os, 'Windows') }}
         with:
           path: ${{ steps.pip-cache-windows.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}
+          key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ matrix.python-version }}
           restore-keys: |
-            ${{ runner.os }}-pip-
-
+            ${{ runner.os }}-${{ runner.arch }}-pip-
       - name: Download AccessControl wheel
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: AccessControl-${{ runner.os }}-${{ matrix.python-version }}.whl
           path: dist/
@@ -439,22 +473,22 @@ jobs:
           echo "dir=$(pip cache dir)" >> $Env:GITHUB_OUTPUT
 
       - name: pip cache (default)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: ${{ !startsWith(runner.os, 'Windows') }}
         with:
           path: ${{ steps.pip-cache-default.outputs.dir }}
           key: ${{ runner.os }}-pip_manylinux-${{ matrix.image }}-${{ matrix.python-version }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-${{ runner.arch }}-pip-
 
       - name: pip cache (Windows)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         if: ${{ startsWith(runner.os, 'Windows') }}
         with:
           path: ${{ steps.pip-cache-windows.outputs.dir }}
           key: ${{ runner.os }}-pip_manylinux-${{ matrix.image }}-${{ matrix.python-version }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-${{ runner.arch }}-pip-
 
       - name: Update pip
         run: pip install -U pip
@@ -477,7 +511,7 @@ jobs:
           bash .manylinux.sh
 
       - name: Upload AccessControl wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           path: wheelhouse/*whl
           name: manylinux_${{ matrix.image }}_wheels.zip
@@ -501,7 +535,7 @@ jobs:
 
     steps:
       - name: Download all wheel artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: dist/
           pattern: '*'
@@ -518,7 +552,7 @@ jobs:
           # PyPy wheels shouldn't be uploaded, remove them if present
           find dist/ -name "*pypy*" -type f -delete || true
           find dist/ -name "*none-any*" -type f -delete || true
-          # Wheels for the no-yet-supported future Python version need to go
+          # Wheels for the not-yet-supported future Python version need to go
           find dist/ -name "*3.15*" -type f -delete || true
           find dist/ -name "*cp315*" -type f -delete || true
           # For Linux, we only want the manylinux wheels
