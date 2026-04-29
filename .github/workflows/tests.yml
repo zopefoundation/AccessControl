@@ -240,7 +240,7 @@ jobs:
           && matrix.python-version == '3.14'
         uses: actions/upload-artifact@v7
         with:
-          name: AccessControl-${{ github.ref_name }}.tar.gz
+          name: AccessControl.tar.gz
           path: dist/*gz
 
   test:
