@@ -7,6 +7,10 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.4 (unreleased)
 ----------------
 
+- Add support for automatically building and publishing Windows/ARM64 wheels.
+
+- Add support for automatically building and publishing source distributions.
+
 
 7.3 (2025-11-16)
 ----------------
