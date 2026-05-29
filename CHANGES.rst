@@ -7,6 +7,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.4 (unreleased)
 ----------------
 
+- Add preliminary support for Python 3.15 as of 3.15b1.
+
 - Add support for automatically building and publishing Windows/ARM64 wheels.
 
 - Add support for automatically building and publishing source distributions.
