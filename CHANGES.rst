@@ -7,6 +7,14 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.4 (unreleased)
 ----------------
 
+- Fix a parity defect between the Python and C implementations of
+  ``guarded_getattr``: the pure-Python implementation keyed the container
+  assertion on ``type(value.__self__)`` instead of ``type(inst)``, so under
+  ``PURE_PYTHON`` a bound method of an allow-listed simple type (e.g.
+  ``tuple``/``bytes``/``range``) was returned without calling ``validate()``.
+  The Python implementation now keys on ``type(inst)``, matching the C
+  implementation, and a regression test guards the behaviour.
+
 - Add preliminary support for Python 3.15 as of 3.15b1.
 
 - Add support for automatically building and publishing Windows/ARM64 wheels.

@@ -733,12 +733,14 @@ def guarded_getattr(inst, name, default=_marker):
             return default
         raise
 
-    try:
-        container = v.__self__
-    except AttributeError:
-        container = aq_parent(aq_inner(v)) or inst
-
-    assertion = Containers(type(container))
+    # The container assertion must be keyed on the type of the accessed
+    # object, to match the C implementation (see ``cAccessControl.c``, which
+    # uses ``Containers(type(inst))``).  Keying on ``type(v.__self__)``
+    # instead let a bound method whose ``__self__`` is an allow-listed simple
+    # type (e.g. ``tuple``, ``bytes``, ``range``) take the truthy-assertion
+    # short-circuit and be returned without calling ``validate()`` -- a
+    # divergence from the C engine.
+    assertion = Containers(type(inst))
 
     if isinstance(assertion, dict):
         # We got a table that lets us reason about individual
