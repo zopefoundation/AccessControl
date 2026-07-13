@@ -4,7 +4,7 @@ Change log
 For changes before version 3.0, see ``HISTORY.rst``.
 
 
-7.4 (unreleased)
+7.4 (2026-07-13)
 ----------------
 
 - Fix a parity defect between the Python and C implementations of
