@@ -178,6 +178,44 @@ class TestGuardedGetattr(GuardTestCase):
             self.__sm.reject = orig_value
         self.assertEqual(len(self.__sm.calls), 0)
 
+    def test_str_subclass_format_uses_safe_formatter(self):
+        from AccessControl import Unauthorized
+        from AccessControl.ZopeGuards import guarded_getattr
+
+        class X(str):
+            pass
+
+        fmt = guarded_getattr(X('{0.__class__}'), 'format')
+        self.assertRaises(Unauthorized, fmt, 0)
+
+    def test_str_subclass_format_map_uses_safe_formatter(self):
+        from AccessControl import Unauthorized
+        from AccessControl.ZopeGuards import guarded_getattr
+
+        class X(str):
+            pass
+
+        fmt = guarded_getattr(X('{foo.__class__}'), 'format_map')
+        self.assertRaises(Unauthorized, fmt, {'foo': 0})
+
+    def test_str_subclass_type_format_is_unauthorized(self):
+        from AccessControl import Unauthorized
+        from AccessControl.ZopeGuards import guarded_getattr
+
+        class X(str):
+            pass
+
+        self.assertRaises(Unauthorized, guarded_getattr, X, 'format')
+
+    def test_str_subclass_type_format_map_is_unauthorized(self):
+        from AccessControl import Unauthorized
+        from AccessControl.ZopeGuards import guarded_getattr
+
+        class X(str):
+            pass
+
+        self.assertRaises(Unauthorized, guarded_getattr, X, 'format_map')
+
 
 class TestGuardedHasattr(GuardTestCase):
 

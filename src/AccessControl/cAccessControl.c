@@ -772,6 +772,46 @@ static void unauthErr(PyObject *name, PyObject *value) {
           }
 }
 
+static int
+is_string_format_name(PyObject *name)
+{
+  PyObject *name_as_bytes;
+  char *name_s;
+  int result;
+
+  name_as_bytes = convert_name(name);
+  if (name_as_bytes == NULL) {
+    return -1;
+  }
+
+  name_s = PyBytes_AS_STRING(name_as_bytes);
+  result = strcmp(name_s, "format") == 0
+           || strcmp(name_s, "format_map") == 0;
+  Py_DECREF(name_as_bytes);
+  return result;
+}
+
+static PyObject *
+guarded_string_format(PyObject *inst, PyObject *name)
+{
+  PyObject *assertion;
+  PyObject *attrv;
+
+  assertion = PyDict_GetItem(ContainerAssertions, OBJECT(&PyUnicode_Type));
+  if (assertion == NULL || !PyDict_Check(assertion)) {
+    PyErr_SetObject(Unauthorized, name);
+    return NULL;
+  }
+
+  attrv = PyDict_GetItem(assertion, name);
+  if (attrv == NULL) {
+    PyErr_SetObject(Unauthorized, name);
+    return NULL;
+  }
+
+  return callfunction2(attrv, inst, name);
+}
+
 static PyObject *
 ZopeSecurityPolicy_getattro(ZopeSecurityPolicy *self, PyObject *name)
 {
@@ -2094,6 +2134,45 @@ guarded_getattr(PyObject *inst, PyObject *name, PyObject *default_,
 
     if (!starts_with_underscore)
     {
+      /*
+        Special-case str.format / str.format_map so a str subclass cannot
+        escape the SafeFormatter guard (GHSA-pq59-9fq7-m886).
+
+        Gate on the receiver type FIRST: is_string_format_name() converts
+        `name` to bytes (an allocation) and must not run on every attribute
+        access -- only when inst is a str (or subclass), or a type that
+        might be a str subclass.  PyUnicode_Check / PyType_Check are just
+        tp_flags bit tests, so the common case stays free.
+       */
+      if (PyUnicode_Check(inst) || PyType_Check(inst))
+      {
+        int string_format_name;
+
+        string_format_name = is_string_format_name(name);
+        if (string_format_name < 0) {
+          return NULL;
+        }
+        if (string_format_name) {
+          if (PyUnicode_Check(inst)) {
+            /* str instance or subclass -> guarded formatter */
+            return guarded_string_format(inst, name);
+          }
+          else {
+            /* inst is a type: forbid format access on str and subclasses */
+            int string_subclass;
+
+            string_subclass = PyObject_IsSubclass(
+              inst, OBJECT(&PyUnicode_Type));
+            if (string_subclass < 0) {
+              return NULL;
+            }
+            if (string_subclass) {
+              PyErr_SetObject(Unauthorized, name);
+              return NULL;
+            }
+          }
+        }
+      }
 
       /*
         # Try to get the attribute normally so that unusual

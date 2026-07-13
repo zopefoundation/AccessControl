@@ -724,6 +724,16 @@ def guarded_getattr(inst, name, default=_marker):
     if name[:1] == '_':
         raise Unauthorized(name)
 
+    if name in ('format', 'format_map'):
+        if isinstance(inst, str):
+            from AccessControl.safe_formatter import safe_format
+            from AccessControl.safe_formatter import safe_format_map
+            if name == 'format':
+                return safe_format(inst, name)
+            return safe_format_map(inst, name)
+        if isinstance(inst, type) and issubclass(inst, str):
+            raise Unauthorized(name)
+
     # Try to get the attribute normally so that unusual
     # exceptions are caught early.
     try:
