@@ -3,6 +3,9 @@ Change log
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
+7.6 (unreleased)
+----------------
+
 
 7.5 (2026-08-20)
 ----------------
