@@ -7,6 +7,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.5 (unreleased)
 ----------------
 
+- Add final support for Python 3.15.
+
 
 7.4 (2026-07-13)
 ----------------
