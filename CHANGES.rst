@@ -4,10 +4,12 @@ Change log
 For changes before version 3.0, see ``HISTORY.rst``.
 
 
-7.5 (unreleased)
+7.5 (2026-08-20)
 ----------------
 
 - Add final support for Python 3.15.
+
+- Switch to PyPI Trusted Publishing.
 
 
 7.4 (2026-07-13)
