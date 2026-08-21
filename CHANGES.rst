@@ -18,6 +18,15 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.4 (2026-07-13)
 ----------------
 
+- Prevent information disclosure through the ``format`` and ``format_map``
+  methods of ``str`` subclasses: the guards which route these methods to the
+  safe formatter only covered ``str`` itself, so a subclass instance could be
+  used to read otherwise inaccessible objects via attribute access and
+  subscription in a format string
+  (fixes `GHSA-pq59-9fq7-m886
+  <https://github.com/zopefoundation/AccessControl/security/advisories/GHSA-pq59-9fq7-m886>`_,
+  CVE-2026-77401).
+
 - Fix a parity defect between the Python and C implementations of
   ``guarded_getattr``: the pure-Python implementation keyed the container
   assertion on ``type(value.__self__)`` instead of ``type(inst)``, so under
