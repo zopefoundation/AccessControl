@@ -40,7 +40,7 @@
         name="permission"
         schema="zope.security.zcml.IPermissionDirective"
         handler=".security.PermissionDirective"/>
-    
+
     <meta:directive
         name="role"
         usedIn="zope.security.zcml.IPermissionDirective"
