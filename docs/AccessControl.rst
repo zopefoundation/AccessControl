@@ -30,15 +30,15 @@ Types of access
 
 A "type of access" is a named grouping of 0 or more of the
 permissions defined by an object. All objects have one predefined
-type of access called Full Access (all permissions defined by that 
-object). A user who has the special role "Manager" always has Full 
-Access to all objects at or below the level in the object hierarchy 
+type of access called Full Access (all permissions defined by that
+object). A user who has the special role "Manager" always has Full
+Access to all objects at or below the level in the object hierarchy
 at which the user is defined.
 
 New types of access may be defined as combinations of the
 various permissions defined by a given object. These new
 types of access may be defined by the programmer, or by
-users at runtime. 
+users at runtime.
 
 
 
@@ -50,13 +50,13 @@ A role is a name that ties users (authentication of identity)
 to permissions (authorization for that identity) in the system.
 Roles may be defined in any Folder (or Folderish) object in the
 system. Sub folders can make use of roles defined higher in the
-hierarchy. These roles can be assigned to users. All users, 
-including non-authenticated users have the built-in role of 
-"Anonymous". 
+hierarchy. These roles can be assigned to users. All users,
+including non-authenticated users have the built-in role of
+"Anonymous".
 
-Principia objects allow the association of defined roles 
-with a single "type of access" each, in the context of that 
-object. A single role is associated with one and only one 
+Principia objects allow the association of defined roles
+with a single "type of access" each, in the context of that
+object. A single role is associated with one and only one
 type of access in the context of a given object.
 
 
@@ -191,14 +191,14 @@ Example:
     )
 
 The developer may also predefine useful types of access, by
-specifying an __ac_types__ attribute. This should be a tuple of 
-tuples, where each tuple represents a type of access and contains 
-a string name as its first element and a list of permission names 
+specifying an __ac_types__ attribute. This should be a tuple of
+tuples, where each tuple represents a type of access and contains
+a string name as its first element and a list of permission names
 as its second element.
 
 By default, only "Full Access" is defined (by the RoleManager mixin).
 If you wish to override __ac_types__ to provide convenient types of
-access, you must always be sure to define "Full Access" as containing 
+access, you must always be sure to define "Full Access" as containing
 the names of all possible permissions for your object.
 
 Example:
