@@ -7,6 +7,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 ----------------
 
 
+- Drop support for Python 3.10.
+
 7.5 (2026-08-20)
 ----------------
 
