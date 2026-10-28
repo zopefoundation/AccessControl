@@ -416,6 +416,12 @@ safe_builtins['zip'] = guarded_zip
 
 import_default_level = 0
 
+# Cache of (mname, fromlist) pairs whose security check has already passed.
+# Module security in Zope is configured globally, so the result is the same
+# for every request/user — skipping the repeated validate() calls saves
+# significant CPU on instances where Scripts run many imports per request.
+_guarded_import_cache = set()
+
 
 def guarded_import(mname, globals=None, locals=None, fromlist=None,
                    level=import_default_level):
@@ -430,6 +436,10 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
         raise Unauthorized("Using import with a level specification isn't "
                            "supported by AccessControl: %s" % mname)
 
+    cache_key = (mname, tuple(fromlist))
+    if cache_key in _guarded_import_cache:
+        return __import__(mname, globals, locals, fromlist)
+
     mnameparts = mname.split('.')
     validate = getSecurityManager().validate
     module = load_module(None, None, mnameparts, validate, globals, locals)
@@ -443,6 +453,7 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
         if not validate(module, module, name, v):
             raise Unauthorized
     else:
+        _guarded_import_cache.add(cache_key)
         return __import__(mname, globals, locals, fromlist)
 
 
