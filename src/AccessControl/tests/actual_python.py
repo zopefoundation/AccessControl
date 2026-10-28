@@ -127,9 +127,9 @@ def f7():
         iter_ = access()  # iterate twice on the same view
         assert list(iter_) == list(iter_)
 
-        assert sorted([k for k in getattr(d, meth)()]) == expected[kind]
+        assert sorted([*getattr(d, meth)()]) == expected[kind]
         assert sorted(k for k in getattr(d, meth)()) == expected[kind]
-    assert {k: v for k, v in d.items()} == d
+    assert {**d} == d
 
     assert 1 in d
     assert 1 in d.keys()
