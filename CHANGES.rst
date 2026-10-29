@@ -7,6 +7,21 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.6 (unreleased)
 ----------------
 
+- Add ``freeze_security_declarations``.  Call it once all code has been
+  loaded, for example when Zope has started.  Afterwards, any change to
+  module security declarations, for example with ``allow_module`` or
+  ``ModuleSecurityInfo``, raises ``Forbidden``.  The same is true for
+  ``allow_class``, ``allow_type`` and other changes to
+  ``ContainerAssertions``.  Dangerous modules like
+  ``os``, ``subprocess`` and ``AccessControl`` itself that are
+  fully accessible from restricted code, for example with ``allow_module``,
+  are logged as a warning.  Pass ``dangerous_modules`` to change which
+  modules are dangerous.  Calling it a second time does nothing.  Call
+  ``check_dangerous_modules`` to check other modules, also after the freeze.
+
+- Remove module security declaration for ``sets``.
+  This module only existed in Python 2.
+
 - Add additional safeguards to ``SecurityInfo.allow_class`` / ``allow_module``
   and ``SimpleObjectPolicies.allow_type`` to prevent use from untrusted code.
 

@@ -61,6 +61,8 @@ from BTrees.OOBTree import OOBTree
 from BTrees.OOBTree import OOBucket
 from BTrees.OOBTree import OOSet
 
+from AccessControl.frozen import FreezableDict
+
 
 _noroles = []  # this is imported in various places
 _marker = object()
@@ -84,12 +86,13 @@ _marker = object()
 #        The boolean values behave as above, but the functions do not.
 #        The value returned for attribute access is the result of
 #        calling the function with the object and the attribute name.
-ContainerAssertions = {
+# Changes are refused once security declarations are frozen.
+ContainerAssertions = FreezableDict({
     type(()): 1,
     bytes: 1,
     str: 1,
     range: 1,
-}
+})
 
 Containers = ContainerAssertions.get
 

@@ -135,3 +135,201 @@ class ModuleSecurityTests(unittest.TestCase):
                           ('allow_module',))
         self.assertUnauth('AccessControl.tests.public_module',
                           ('allow_type',))
+
+
+class FrozenSecurityDeclarationsTests(unittest.TestCase):
+
+    setUp = ModuleSecurityTests.setUp
+    assertUnauth = ModuleSecurityTests.assertUnauth
+    assertAuth = ModuleSecurityTests.assertAuth
+
+    def tearDown(self):
+        from AccessControl import frozen
+        frozen._frozen = False
+        ModuleSecurityTests.tearDown(self)
+
+    def assertForbidden(self, func, *args):
+        from zExceptions import Forbidden
+        self.assertRaises(Forbidden, func, *args)
+
+    def assertUnauthAttribute(self, obj, name):
+        from zExceptions import Unauthorized
+
+        from AccessControl.ZopeGuards import guarded_getattr
+        self.assertRaises(Unauthorized, guarded_getattr, obj, name)
+
+    def test_declared_modules_stay_importable(self):
+        from AccessControl import freeze_security_declarations
+        freeze_security_declarations()
+        self.assertAuth('AccessControl.tests.public_module', ('pub',))
+        self.assertAuth('AccessControl.tests.public_module.submodule', ())
+        self.assertAuth('AccessControl.tests.mixed_module', ('pub',))
+        self.assertUnauth('AccessControl.tests.mixed_module', ('priv',))
+        self.assertUnauth('AccessControl.tests.private_module', ())
+
+    def test_new_declarations_forbidden(self):
+        from AccessControl import ModuleSecurityInfo as MSI
+        from AccessControl import allow_module
+        from AccessControl import freeze_security_declarations
+        freeze_security_declarations()
+        name = 'AccessControl.tests.private_module'
+        self.assertForbidden(allow_module, name)
+        self.assertForbidden(MSI, name)
+        self.assertUnauth(name, ())
+
+    def test_existing_declarations_forbidden(self):
+        from AccessControl import ModuleSecurityInfo as MSI
+        from AccessControl import freeze_security_declarations
+        from AccessControl.SecurityInfo import _appliedModuleSecurity
+        freeze_security_declarations()
+        self.assertForbidden(MSI, 'AccessControl.tests.mixed_module')
+        modsec = _appliedModuleSecurity['AccessControl.tests.mixed_module']
+        self.assertForbidden(modsec.declarePublic, 'priv')
+        self.assertForbidden(modsec.declarePrivate, 'pub')
+        self.assertForbidden(modsec.setDefaultAccess, 1)
+        # The declarations are unchanged.
+        self.assertAuth('AccessControl.tests.mixed_module', ('pub',))
+        self.assertUnauth('AccessControl.tests.mixed_module', ('priv',))
+
+    def test_registry_changes_forbidden(self):
+        from AccessControl import freeze_security_declarations
+        from AccessControl.SecurityInfo import _appliedModuleSecurity
+        from AccessControl.SecurityInfo import _moduleSecurity
+        freeze_security_declarations()
+        name = 'AccessControl.tests.public_module'
+        for registry in (_moduleSecurity, _appliedModuleSecurity):
+            self.assertForbidden(registry.__setitem__, name, None)
+            self.assertForbidden(registry.setdefault, name, None)
+            self.assertForbidden(registry.update, {name: None})
+            self.assertForbidden(registry.clear)
+            self.assertForbidden(registry.popitem)
+        self.assertForbidden(_appliedModuleSecurity.__delitem__, name)
+        self.assertForbidden(_appliedModuleSecurity.pop, name)
+        self.assertAuth(name, ('pub',))
+
+    def test_unimportable_module(self):
+        from AccessControl import ModuleSecurityInfo as MSI
+        from AccessControl import freeze_security_declarations
+        from AccessControl.SecurityInfo import _moduleSecurity as MS
+        from AccessControl.ZopeGuards import guarded_import
+        MSI('AccessControl.tests.nonesuch').declarePublic('pub')  # NOQA: D001
+        freeze_security_declarations()
+        self.assertIn('AccessControl.tests.nonesuch', MS)
+        self.assertRaises(ImportError,
+                          guarded_import,
+                          'AccessControl.tests.nonesuch',
+                          ())
+
+    def test_dangerous_modules_logged(self):
+        from AccessControl import ModuleSecurityInfo as MSI
+        from AccessControl import freeze_security_declarations
+        MSI('AccessControl.tests.nonesuch_all').setDefaultAccess(1)
+        MSI('AccessControl.tests.nonesuch_dict').setDefaultAccess({'x': 1})
+        MSI('AccessControl.tests.nonesuch_none')
+        # Only modules with all names accessible are logged, not those with
+        # specific public names, like public_module.
+        dangerous = frozenset([
+            'AccessControl.tests.public_module',
+            'AccessControl.tests.nonesuch_all',
+            'AccessControl.tests.nonesuch_dict',
+            'AccessControl.tests.nonesuch_none',
+        ])
+        with self.assertLogs('SecurityInfo', 'WARNING') as logs:
+            freeze_security_declarations(dangerous_modules=dangerous)
+        self.assertEqual(
+            [record.getMessage() for record in logs.records],
+            ["Module 'AccessControl.tests.nonesuch_all' is accessible"
+             " from restricted code."])
+
+    def test_freeze_twice(self):
+        from AccessControl import ModuleSecurityInfo as MSI
+        from AccessControl import freeze_security_declarations
+        from AccessControl.frozen import is_frozen
+        MSI('AccessControl.tests.nonesuch_all').setDefaultAccess(1)
+        dangerous = frozenset(['AccessControl.tests.nonesuch_all'])
+        with self.assertLogs('SecurityInfo', 'WARNING'):
+            freeze_security_declarations(dangerous_modules=dangerous)
+        # The second call does nothing, so it does not log again.
+        with self.assertNoLogs('SecurityInfo'):
+            freeze_security_declarations(dangerous_modules=dangerous)
+        self.assertTrue(is_frozen())
+
+    def test_check_dangerous_modules(self):
+        # This can be called separately, also after the freeze.
+        from AccessControl import ModuleSecurityInfo as MSI
+        from AccessControl import freeze_security_declarations
+        from AccessControl.SecurityInfo import check_dangerous_modules
+        MSI('AccessControl.tests.nonesuch_all').setDefaultAccess(1)
+        with self.assertNoLogs('SecurityInfo', 'WARNING'):
+            freeze_security_declarations(dangerous_modules=frozenset())
+        with self.assertLogs('SecurityInfo', 'WARNING') as logs:
+            check_dangerous_modules({'AccessControl.tests.nonesuch_all'})
+        self.assertEqual(
+            [record.getMessage() for record in logs.records],
+            ["Module 'AccessControl.tests.nonesuch_all' is accessible"
+             " from restricted code."])
+
+    def test_allow_class_forbidden(self):
+        from AccessControl import allow_class
+        from AccessControl import freeze_security_declarations
+
+        class Dummy:
+            def method(self):
+                pass
+
+        freeze_security_declarations()
+        self.assertForbidden(allow_class, Dummy)
+        self.assertFalse(hasattr(Dummy, '_security'))
+        self.assertUnauthAttribute(Dummy(), 'method')
+
+    def test_allow_type_forbidden(self):
+        from AccessControl import allow_type
+        from AccessControl import freeze_security_declarations
+        from AccessControl.SimpleObjectPolicies import ContainerAssertions
+
+        class Dummy:
+            def method(self):
+                pass
+
+        freeze_security_declarations()
+        self.assertForbidden(allow_type, Dummy)
+        self.assertNotIn(Dummy, ContainerAssertions)
+        self.assertUnauthAttribute(Dummy(), 'method')
+
+    def test_container_assertions_changes_forbidden(self):
+        from AccessControl import freeze_security_declarations
+        from AccessControl.SimpleObjectPolicies import ContainerAssertions
+        freeze_security_declarations()
+        self.assertForbidden(ContainerAssertions.__setitem__, object, 1)
+        self.assertForbidden(ContainerAssertions.__delitem__, str)
+        self.assertForbidden(ContainerAssertions.update, {object: 1})
+        self.assertForbidden(ContainerAssertions.setdefault, object, 1)
+        self.assertForbidden(ContainerAssertions.pop, str)
+        self.assertIn(str, ContainerAssertions)
+        self.assertNotIn(object, ContainerAssertions)
+
+    def test_class_security_info_still_works(self):
+        # Classes may be imported after the freeze, for example when
+        # loading objects from the database.
+        from AccessControl import ClassSecurityInfo
+        from AccessControl import freeze_security_declarations
+        from AccessControl.class_init import InitializeClass
+        from AccessControl.ZopeGuards import guarded_getattr
+
+        class Dummy:
+            security = ClassSecurityInfo()
+
+            @security.public
+            def method(self):
+                return 'ok'
+
+            @security.private
+            def private_method(self):
+                return 'private'
+
+        freeze_security_declarations()
+        InitializeClass(Dummy)
+        self.assertEqual(guarded_getattr(Dummy(), 'method')(), 'ok')
+        self.assertUnauthAttribute(Dummy(), 'private_method')
+        # Python code can still call it.
+        self.assertEqual(Dummy().private_method(), 'private')
