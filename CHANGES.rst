@@ -3,13 +3,17 @@ Change log
 
 For changes before version 3.0, see ``HISTORY.rst``.
 
+
 7.6 (unreleased)
 ----------------
 
+- Add additional safeguards to ``SecurityInfo.allow_class`` / ``allow_module``
+  and ``SimpleObjectPolicies.allow_type`` to prevent use from untrusted code.
 
 - Add support for Python 3.15.
 
 - Drop support for Python 3.10.
+
 
 7.5 (2026-08-20)
 ----------------

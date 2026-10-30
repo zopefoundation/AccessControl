@@ -106,6 +106,9 @@ def allow_type(Type, allowed=1):
     ContainerAssertions[Type] = allowed
 
 
+allow_type.__roles__ = ()  # Only accessible from trusted code
+
+
 for tree_type, has_values in [
     (OOBTree, 1),
     (OOBucket, 1),

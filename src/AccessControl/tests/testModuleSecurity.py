@@ -111,3 +111,27 @@ class ModuleSecurityTests(unittest.TestCase):
 
     def test_level_nondefault(self):
         self.assertUnauth('AccessControl.tests.public_module', (), level=1)
+
+    def test_allow_class_allow_module_unauthorized(self):
+        """ Make sure security policy mutators are safe
+
+        This test doesn't check the module or class guarding functionality per
+        se but makes sure several powerful security policy mutator functions
+        cannot be used from untrusted code, like ``allow_module`` and
+        ``allow_class`` from AccessControl.SecurityInfo and ``allow_type`` from
+        AccessControl.SimpleObjectPolicies.
+        """
+        from AccessControl import ModuleSecurityInfo as MSI
+
+        # Malicious or careless code may try to remove safeguards
+        MSI('AccessControl.tests.public_module').declarePublic('allow_class')
+        MSI('AccessControl.tests.public_module').declarePublic('allow_module')
+        MSI('AccessControl.tests.public_module').declarePublic('allow_type')
+
+        # Additional security declarations on the functions prevent this
+        self.assertUnauth('AccessControl.tests.public_module',
+                          ('allow_class',))
+        self.assertUnauth('AccessControl.tests.public_module',
+                          ('allow_module',))
+        self.assertUnauth('AccessControl.tests.public_module',
+                          ('allow_type',))

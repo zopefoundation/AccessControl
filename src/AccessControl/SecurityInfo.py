@@ -380,6 +380,9 @@ def allow_module(module_name):
         dot = module_name.find('.', dot + 1)
 
 
+allow_module.__roles__ = ACCESS_PRIVATE
+
+
 def allow_class(Class):
     """Allow a class and all of its methods to be used from a
     restricted Script.  The argument Class must be a class."""
@@ -388,3 +391,6 @@ def allow_class(Class):
     sec.setDefaultAccess(1)
     sec.apply(Class)
     InitializeClass(Class)
+
+
+allow_class.__roles__ = ACCESS_PRIVATE
