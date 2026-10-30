@@ -397,6 +397,9 @@ allow_module.__roles__ = ACCESS_PRIVATE
 # Modules that should never be fully accessible from restricted code.
 # A declaration for one of these, or a submodule, is logged by
 # check_dangerous_modules, which freeze_security_declarations calls.
+# PLEASE NOTE: This listing cannot ever be complete and it cannot guard
+# against malicious or sloppy code exposing other unsafe modules! Its
+# purpose is just informational, it is not a safe catch-all.
 DANGEROUS_MODULES = frozenset((
     # processes and code execution
     '_posixsubprocess', '_thread', 'asyncio', 'atexit', 'bdb', 'builtins',
