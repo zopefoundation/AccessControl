@@ -113,13 +113,13 @@ class ModuleSecurityTests(unittest.TestCase):
         self.assertUnauth('AccessControl.tests.public_module', (), level=1)
 
     def test_allow_class_allow_module_unauthorized(self):
-        """ Make sure ``allow_module`` and ``allow_class`` are safe
+        """ Make sure security policy mutators are safe
 
         This test doesn't check the module or class guarding functionality per
-        se but makes sure the powerful ``allow_module`` and ``allow_class``
-        functions from AccessControl.SecurityInfo cannot be used from untrusted
-        code if someone uses ``allow_module`` for a module that imports these
-        functions.
+        se but makes sure several powerful security policy mutator functions
+        cannot be used from untrusted code, like ``allow_module`` and
+        ``allow_class`` from AccessControl.SecurityInfo and ``allow_type`` from
+        AccessControl.SimpleObjectPolicies.
         """
         from AccessControl import ModuleSecurityInfo as MSI
 
