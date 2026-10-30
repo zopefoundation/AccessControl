@@ -422,6 +422,9 @@ DANGEROUS_MODULES = frozenset((
     # transactions, the database
     'AccessControl', 'App', 'transaction', 'ZODB', 'Zope2',
     'zope.component.hooks', 'zope.interface',
+    # third-party network libraries: requests from the server itself can
+    # reach internal services, and httpx can use local Unix sockets
+    'aiohttp', 'httpx', 'pycurl', 'requests', 'urllib3',
 ))
 
 

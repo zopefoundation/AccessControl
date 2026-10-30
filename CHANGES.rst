@@ -12,8 +12,9 @@ For changes before version 3.0, see ``HISTORY.rst``.
   module security declarations, for example with ``allow_module`` or
   ``ModuleSecurityInfo``, raises ``Forbidden``.  The same is true for
   ``allow_class``, ``allow_type`` and other changes to
-  ``ContainerAssertions``.  Dangerous modules like
-  ``os``, ``subprocess`` and ``AccessControl`` itself that are
+  ``ContainerAssertions``.  Dangerous modules like ``os``, ``subprocess``,
+  ``AccessControl`` itself, and third-party network libraries like
+  ``requests`` and ``httpx``, that are
   fully accessible from restricted code, for example with ``allow_module``,
   are logged as a warning.  Pass ``dangerous_modules`` to change which
   modules are dangerous.  Calling it a second time does nothing.  Call
