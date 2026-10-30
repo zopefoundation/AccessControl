@@ -126,9 +126,12 @@ class ModuleSecurityTests(unittest.TestCase):
         # Malicious or careless code may try to remove safeguards
         MSI('AccessControl.tests.public_module').declarePublic('allow_class')
         MSI('AccessControl.tests.public_module').declarePublic('allow_module')
+        MSI('AccessControl.tests.public_module').declarePublic('allow_type')
 
         # Additional security declarations on the functions prevent this
         self.assertUnauth('AccessControl.tests.public_module',
                           ('allow_class',))
         self.assertUnauth('AccessControl.tests.public_module',
                           ('allow_module',))
+        self.assertUnauth('AccessControl.tests.public_module',
+                          ('allow_type',))
