@@ -22,6 +22,7 @@ from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from AccessControl.SecurityInfo import allow_class
 from AccessControl.SecurityInfo import allow_module
+from AccessControl.SecurityInfo import freeze_security_declarations
 from AccessControl.SecurityInfo import secureModule
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import setSecurityPolicy
@@ -36,7 +37,7 @@ ModuleSecurityInfo('AccessControl').declarePublic('getSecurityManager')  # NOQA
 
 # allow imports of utility_builtins
 
-for name in ('string', 'math', 'random', 'sets'):
+for name in ('string', 'math', 'random'):
     ModuleSecurityInfo(name).setDefaultAccess('allow')
 
 ModuleSecurityInfo('DateTime').declarePublic('DateTime')  # NOQA: D001

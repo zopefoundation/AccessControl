@@ -44,6 +44,7 @@ from logging import getLogger
 from Acquisition import Implicit
 from Persistence import Persistent
 
+from AccessControl import frozen
 from AccessControl.class_init import InitializeClass
 from AccessControl.ImplPython import _what_not_even_god_should_do
 
@@ -258,8 +259,8 @@ class ClassSecurityInformation(ClassSecurityInfo):
     access = 0
 
 
-_moduleSecurity = {}
-_appliedModuleSecurity = {}
+_moduleSecurity = frozen.FreezableDict()
+_appliedModuleSecurity = frozen.FreezableDict()
 
 
 def secureModule(mname, *imp):
@@ -333,6 +334,17 @@ class _ModuleSecurityInfo(SecurityInfo):
 
         return getattr(self, 'access', 0)
 
+    def _setaccess(self, names, access):
+        frozen.check_not_frozen()
+        super()._setaccess(names, access)
+
+    setDefaultAccess__roles__ = ACCESS_PRIVATE
+
+    def setDefaultAccess(self, access):
+        """Declare default attribute access policy."""
+        frozen.check_not_frozen()
+        super().setDefaultAccess(access)
+
     apply__roles__ = ACCESS_PRIVATE
 
     def apply(self, dict):
@@ -382,10 +394,104 @@ def allow_module(module_name):
 
 allow_module.__roles__ = ACCESS_PRIVATE
 
+# Modules that should never be fully accessible from restricted code.
+# A declaration for one of these, or a submodule, is logged by
+# check_dangerous_modules, which freeze_security_declarations calls.
+# PLEASE NOTE: This listing cannot ever be complete and it cannot guard
+# against malicious or sloppy code exposing other unsafe modules! Its
+# purpose is just informational, it is not a safe catch-all.
+DANGEROUS_MODULES = frozenset((
+    # processes and code execution
+    '_posixsubprocess', '_thread', 'asyncio', 'atexit', 'bdb', 'builtins',
+    'code', 'codeop', 'concurrent', 'copyreg', 'cProfile', 'ctypes',
+    '_ctypes', 'doctest', 'faulthandler', 'gc', 'importlib', 'inspect',
+    'logging', 'marshal', 'multiprocessing', 'nt', 'operator', 'os', 'pdb',
+    'pickle', '_pickle', 'pkgutil', 'posix', 'profile', 'pty', 'pydoc',
+    'runpy', 'shelve', 'signal', 'site', 'subprocess', 'sys', 'threading',
+    'timeit', 'trace', 'traceback', 'types', 'unittest', 'webbrowser',
+    'zipimport',
+    # filesystem
+    'bz2', 'codecs', 'compileall', 'configparser', 'dbm', 'ensurepip',
+    'fcntl', 'filecmp', 'fileinput', 'genericpath', 'glob', 'gzip', 'io',
+    '_io', 'linecache', 'lzma', 'mailbox', 'mmap', 'netrc', 'ntpath',
+    'pathlib', 'posixpath', 'py_compile', 'shutil', 'sqlite3', 'sysconfig',
+    'tarfile', 'tempfile', 'venv', 'zipapp', 'zipfile',
+    # network
+    'ftplib', 'http', 'imaplib', 'poplib', 'select', 'selectors', 'smtplib',
+    'socket', 'socketserver', 'ssl', 'urllib', 'wsgiref', 'xmlrpc',
+    # information about the system, or process wide state
+    'getpass', 'grp', 'locale', 'platform', 'pwd', 'resource',
+    # Zope: security declarations and policy, switching users or sites,
+    # transactions, the database
+    'AccessControl', 'App', 'transaction', 'ZODB', 'Zope2',
+    'zope.component.hooks', 'zope.interface',
+    # third-party network libraries: requests from the server itself can
+    # reach internal services, and httpx can use local Unix sockets
+    'aiohttp', 'httpx', 'pycurl', 'requests', 'urllib3',
+))
+
+
+def freeze_security_declarations(dangerous_modules=DANGEROUS_MODULES):
+    """Refuse changes to security declarations from now on.
+
+    Call this once all code has been loaded, for example when Zope has
+    started.  Afterwards, ModuleSecurityInfo, allow_module, allow_class and
+    allow_type raise Forbidden for any change, so new modules, classes and
+    types cannot be opened up to restricted code.
+
+    Normal class security declarations with ClassSecurityInfo still work,
+    because classes may be imported later, for example when loading objects
+    from the database.
+
+    Pending declarations are applied first, because importing a module from
+    restricted code would otherwise still need to change them.  Dangerous
+    modules that are fully accessible are logged as a warning, see
+    check_dangerous_modules.
+
+    Calling this when security declarations are already frozen does nothing.
+    """
+    if frozen.is_frozen():
+        return
+    # Most of these modules have likely already been imported, because the
+    # declarations are usually made in the module itself or its package.
+    # So this is fast.
+    for name in sorted(_moduleSecurity):
+        try:
+            secureModule(name, {}, {})
+        except ImportError:
+            LOG.info(f'Could not import {name!r} to apply its'
+                     ' module security declarations.')
+
+    check_dangerous_modules(dangerous_modules)
+    frozen.freeze()
+
+
+def check_dangerous_modules(dangerous_modules=DANGEROUS_MODULES):
+    """Log a warning for dangerous modules accessible from restricted code.
+
+    Only modules that are fully accessible are logged, for example with
+    allow_module, not modules where only specific names are public.
+    A submodule of a dangerous module is dangerous as well.  Pass
+    dangerous_modules to check other modules, for example ``{'my.package'}``.
+    """
+    for name in sorted(set(_moduleSecurity) | set(_appliedModuleSecurity)):
+        modsec = _appliedModuleSecurity.get(name) or _moduleSecurity[name]
+        access = getattr(modsec, 'access', 0)
+        if not access or isinstance(access, dict):
+            # Only specific names are accessible.
+            continue
+        parts = name.split('.')
+        for index in range(1, len(parts) + 1):
+            if '.'.join(parts[:index]) in dangerous_modules:
+                LOG.warning(
+                    f'Module {name!r} is accessible from restricted code.')
+                break
+
 
 def allow_class(Class):
     """Allow a class and all of its methods to be used from a
     restricted Script.  The argument Class must be a class."""
+    frozen.check_not_frozen()
     Class._security = sec = ClassSecurityInfo()
     sec.declareObjectPublic()
     sec.setDefaultAccess(1)
