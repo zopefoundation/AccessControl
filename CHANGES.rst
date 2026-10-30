@@ -4,7 +4,7 @@ Change log
 For changes before version 3.0, see ``HISTORY.rst``.
 
 
-7.6 (unreleased)
+7.6 (2026-10-30)
 ----------------
 
 - Add ``freeze_security_declarations``.  Call it once all code has been
