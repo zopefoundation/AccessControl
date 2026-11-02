@@ -485,6 +485,20 @@ def guarded_sum(sequence, start=0):
 safe_builtins['sum'] = guarded_sum
 
 
+def guarded_sorted(iterable, /, *, key=None, reverse=False):
+    return sorted(guarded_iter(iterable), key=key, reverse=reverse)
+
+
+safe_builtins['sorted'] = guarded_sorted
+
+
+def guarded_tuple(iterable=(), /):
+    return tuple(guarded_iter(iterable))
+
+
+safe_builtins['tuple'] = guarded_tuple
+
+
 def load_module(module, mname, mnameparts, validate, globals, locals):
     while mnameparts:
         nextname = mnameparts.pop(0)
