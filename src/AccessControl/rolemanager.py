@@ -27,7 +27,7 @@ from AccessControl.class_init import InitializeClass
 from AccessControl.interfaces import IRoleManager
 from AccessControl.Permission import Permission
 from AccessControl.Permission import getPermissions
-from AccessControl.PermissionMapping import RoleManager
+from AccessControl.PermissionMapping import RoleManager as BaseRoleManager
 from AccessControl.Permissions import change_permissions
 
 
@@ -47,7 +47,7 @@ def _string_hash(s):
 
 
 @implementer(IRoleManager)
-class RoleManager(Base, RoleManager):
+class RoleManager(Base, BaseRoleManager):
     """An object that has configurable permissions"""
     permissionMappingPossibleValues = Acquired
     security = ClassSecurityInfo()
