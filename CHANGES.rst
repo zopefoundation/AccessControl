@@ -14,9 +14,8 @@ For changes before version 3.0, see ``HISTORY.rst``.
 
 - Add ``guarded_sorted`` and ``guarded_tuple`` which pass their argument
   through ``guarded_iter``. RestrictedPython 8.6 removes the unguarded
-  ``sorted`` and ``tuple`` from ``safe_builtins``. As a consequence
-  ``sorted()`` and ``tuple()`` now raise ``Unauthorized`` for generators, the
-  same way a ``for`` loop over a generator already did.
+  ``sorted`` and ``tuple`` from ``safe_builtins``. Both keep accepting
+  generators, as their items come from an already guarded iteration.
   (`RestrictedPython#337 <https://github.com/zopefoundation/RestrictedPython/pull/337>`_)
 
 

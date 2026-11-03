@@ -16,6 +16,7 @@ import collections.abc
 import math
 import random
 import string
+import types
 from functools import reduce
 
 import RestrictedPython
@@ -486,6 +487,11 @@ safe_builtins['sum'] = guarded_sum
 
 
 def guarded_sorted(iterable, /, *, key=None, reverse=False):
+    if isinstance(iterable, types.GeneratorType):
+        # A generator is no container the security policy could validate
+        # against. Its items come from an iteration which was guarded
+        # already, so sort them as they are.
+        return sorted(iterable, key=key, reverse=reverse)
     return sorted(guarded_iter(iterable), key=key, reverse=reverse)
 
 
@@ -507,6 +513,9 @@ class guarded_tuple(metaclass=_GuardedTypeMeta):
     _type = tuple
 
     def __new__(cls, iterable=(), /):
+        if isinstance(iterable, types.GeneratorType):
+            # See guarded_sorted for the reasoning.
+            return tuple(iterable)
         return tuple(guarded_iter(iterable))
 
 
