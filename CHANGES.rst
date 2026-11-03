@@ -4,7 +4,7 @@ Change log
 For changes before version 3.0, see ``HISTORY.rst``.
 
 
-7.7 (unreleased)
+7.7 (2026-11-03)
 ----------------
 
 - Add ``guarded_bytes`` which passes an iterable argument through
