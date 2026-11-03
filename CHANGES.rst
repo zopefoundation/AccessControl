@@ -7,6 +7,11 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.7 (unreleased)
 ----------------
 
+- Add ``guarded_bytes`` which passes an iterable argument through
+  ``guarded_iter``. RestrictedPython 8.6 removes the unguarded ``bytes`` from
+  ``safe_builtins``.
+  (`RestrictedPython#337 <https://github.com/zopefoundation/RestrictedPython/pull/337>`_)
+
 - Add ``guarded_sorted`` and ``guarded_tuple`` which pass their argument
   through ``guarded_iter``. RestrictedPython 8.6 removes the unguarded
   ``sorted`` and ``tuple`` from ``safe_builtins``. Both keep accepting
