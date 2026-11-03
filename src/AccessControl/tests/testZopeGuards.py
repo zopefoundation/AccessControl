@@ -523,6 +523,13 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         self.assertEqual(guarded_tuple(), ())
         self.setSecurityManager(old)
 
+    def test_tuple_is_type_like(self):
+        from AccessControl.ZopeGuards import guarded_tuple
+        self.assertIsInstance((1, 2), guarded_tuple)
+        self.assertNotIsInstance([1, 2], guarded_tuple)
+        self.assertTrue(issubclass(tuple, guarded_tuple))
+        self.assertFalse(issubclass(list, guarded_tuple))
+
     def test_map_succeeds(self):
         from AccessControl.ZopeGuards import guarded_map
         sm = SecurityManager()  # accepts

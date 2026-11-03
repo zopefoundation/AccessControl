@@ -492,8 +492,19 @@ def guarded_sorted(iterable, /, *, key=None, reverse=False):
 safe_builtins['sorted'] = guarded_sorted
 
 
-def guarded_tuple(iterable=(), /):
-    return tuple(guarded_iter(iterable))
+class _GuardedTupleMeta(type):
+    """Let `isinstance(x, tuple)` and `issubclass(c, tuple)` keep working."""
+
+    def __instancecheck__(cls, instance):
+        return isinstance(instance, tuple)
+
+    def __subclasscheck__(cls, subclass):
+        return issubclass(subclass, tuple)
+
+
+class guarded_tuple(metaclass=_GuardedTupleMeta):
+    def __new__(cls, iterable=(), /):
+        return tuple(guarded_iter(iterable))
 
 
 safe_builtins['tuple'] = guarded_tuple
