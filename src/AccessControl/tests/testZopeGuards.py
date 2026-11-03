@@ -515,6 +515,13 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         self.assertEqual(guarded_sorted([-3, 1, 2], key=abs), [1, 2, -3])
         self.setSecurityManager(old)
 
+    def test_sorted_generator(self):
+        from AccessControl.ZopeGuards import guarded_sorted
+        sm = SecurityManager(reject=True)
+        old = self.setSecurityManager(sm)
+        self.assertEqual(guarded_sorted(x for x in [3, 1, 2]), [1, 2, 3])
+        self.setSecurityManager(old)
+
     def test_tuple_succeeds(self):
         from AccessControl.ZopeGuards import guarded_tuple
         sm = SecurityManager()  # accepts
