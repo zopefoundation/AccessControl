@@ -128,7 +128,7 @@ def f7():
         assert list(iter_) == list(iter_)
 
         assert sorted([*getattr(d, meth)()]) == expected[kind]
-        assert sorted(k for k in getattr(d, meth)()) == expected[kind]
+        assert sorted(tuple(getattr(d, meth)())) == expected[kind]
     assert {**d} == d
 
     assert 1 in d

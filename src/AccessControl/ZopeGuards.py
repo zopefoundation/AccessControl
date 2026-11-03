@@ -485,6 +485,31 @@ def guarded_sum(sequence, start=0):
 safe_builtins['sum'] = guarded_sum
 
 
+def guarded_sorted(iterable, /, *, key=None, reverse=False):
+    return sorted(guarded_iter(iterable), key=key, reverse=reverse)
+
+
+safe_builtins['sorted'] = guarded_sorted
+
+
+class _GuardedTupleMeta(type):
+    """Let `isinstance(x, tuple)` and `issubclass(c, tuple)` keep working."""
+
+    def __instancecheck__(cls, instance):
+        return isinstance(instance, tuple)
+
+    def __subclasscheck__(cls, subclass):
+        return issubclass(subclass, tuple)
+
+
+class guarded_tuple(metaclass=_GuardedTupleMeta):
+    def __new__(cls, iterable=(), /):
+        return tuple(guarded_iter(iterable))
+
+
+safe_builtins['tuple'] = guarded_tuple
+
+
 def load_module(module, mname, mnameparts, validate, globals, locals):
     while mnameparts:
         nextname = mnameparts.pop(0)

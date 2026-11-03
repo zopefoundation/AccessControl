@@ -479,6 +479,22 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         self.assertRaises(Unauthorized, guarded_sum, [1, 2, 3])
         self.setSecurityManager(old)
 
+    def test_sorted_fails(self):
+        from AccessControl import Unauthorized
+        from AccessControl.ZopeGuards import guarded_sorted
+        sm = SecurityManager(reject=True)
+        old = self.setSecurityManager(sm)
+        self.assertRaises(Unauthorized, guarded_sorted, [3, 1, 2])
+        self.setSecurityManager(old)
+
+    def test_tuple_fails(self):
+        from AccessControl import Unauthorized
+        from AccessControl.ZopeGuards import guarded_tuple
+        sm = SecurityManager(reject=True)
+        old = self.setSecurityManager(sm)
+        self.assertRaises(Unauthorized, guarded_tuple, [1, 2, 3])
+        self.setSecurityManager(old)
+
     def test_zip_succeeds(self):
         from AccessControl.ZopeGuards import guarded_zip
         sm = SecurityManager()  # accepts
@@ -489,6 +505,30 @@ class TestBuiltinFunctionGuards(GuardTestCase):
                          [(1, 3), (2, 2), (3, 1)])
         self.assertEqual(guarded_zip([1, 2, 3], [1]), [(1, 1)])
         self.setSecurityManager(old)
+
+    def test_sorted_succeeds(self):
+        from AccessControl.ZopeGuards import guarded_sorted
+        sm = SecurityManager()  # accepts
+        old = self.setSecurityManager(sm)
+        self.assertEqual(guarded_sorted([3, 1, 2]), [1, 2, 3])
+        self.assertEqual(guarded_sorted([3, 1, 2], reverse=True), [3, 2, 1])
+        self.assertEqual(guarded_sorted([-3, 1, 2], key=abs), [1, 2, -3])
+        self.setSecurityManager(old)
+
+    def test_tuple_succeeds(self):
+        from AccessControl.ZopeGuards import guarded_tuple
+        sm = SecurityManager()  # accepts
+        old = self.setSecurityManager(sm)
+        self.assertEqual(guarded_tuple([1, 2, 3]), (1, 2, 3))
+        self.assertEqual(guarded_tuple(), ())
+        self.setSecurityManager(old)
+
+    def test_tuple_is_type_like(self):
+        from AccessControl.ZopeGuards import guarded_tuple
+        self.assertIsInstance((1, 2), guarded_tuple)
+        self.assertNotIsInstance([1, 2], guarded_tuple)
+        self.assertTrue(issubclass(tuple, guarded_tuple))
+        self.assertFalse(issubclass(list, guarded_tuple))
 
     def test_map_succeeds(self):
         from AccessControl.ZopeGuards import guarded_map
