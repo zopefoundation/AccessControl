@@ -523,6 +523,35 @@ class TestBuiltinFunctionGuards(GuardTestCase):
         self.assertEqual(guarded_tuple(), ())
         self.setSecurityManager(old)
 
+    def test_bytes_fails(self):
+        from AccessControl import Unauthorized
+        from AccessControl.ZopeGuards import guarded_bytes
+        sm = SecurityManager(reject=True)
+        old = self.setSecurityManager(sm)
+        self.assertRaises(Unauthorized, guarded_bytes, [1, 2, 3])
+        self.setSecurityManager(old)
+
+    def test_bytes_succeeds(self):
+        from AccessControl.ZopeGuards import guarded_bytes
+        sm = SecurityManager()  # accepts
+        old = self.setSecurityManager(sm)
+        self.assertEqual(guarded_bytes([1, 2, 3]), b'\x01\x02\x03')
+        self.assertEqual(guarded_bytes(), b'')
+        self.assertEqual(guarded_bytes(2), b'\x00\x00')
+        self.assertEqual(guarded_bytes('ä', 'utf-8'), b'\xc3\xa4')
+        self.assertEqual(guarded_bytes('ä', encoding='utf-8'), b'\xc3\xa4')
+        self.assertEqual(guarded_bytes(b'ab'), b'ab')
+        self.assertEqual(guarded_bytes(bytearray(b'ab')), b'ab')
+        self.assertEqual(guarded_bytes(memoryview(b'ab')), b'ab')
+        self.setSecurityManager(old)
+
+    def test_bytes_is_type_like(self):
+        from AccessControl.ZopeGuards import guarded_bytes
+        self.assertIsInstance(b'ab', guarded_bytes)
+        self.assertNotIsInstance('ab', guarded_bytes)
+        self.assertTrue(issubclass(bytes, guarded_bytes))
+        self.assertFalse(issubclass(str, guarded_bytes))
+
     def test_tuple_is_type_like(self):
         from AccessControl.ZopeGuards import guarded_tuple
         self.assertIsInstance((1, 2), guarded_tuple)

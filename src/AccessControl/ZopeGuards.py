@@ -492,22 +492,42 @@ def guarded_sorted(iterable, /, *, key=None, reverse=False):
 safe_builtins['sorted'] = guarded_sorted
 
 
-class _GuardedTupleMeta(type):
-    """Let `isinstance(x, tuple)` and `issubclass(c, tuple)` keep working."""
+class _GuardedTypeMeta(type):
+    """Let `isinstance()` and `issubclass()` checks against a guarded type
+    behave like checks against the wrapped type `_type`."""
 
     def __instancecheck__(cls, instance):
-        return isinstance(instance, tuple)
+        return isinstance(instance, cls._type)
 
     def __subclasscheck__(cls, subclass):
-        return issubclass(subclass, tuple)
+        return issubclass(subclass, cls._type)
 
 
-class guarded_tuple(metaclass=_GuardedTupleMeta):
+class guarded_tuple(metaclass=_GuardedTypeMeta):
+    _type = tuple
+
     def __new__(cls, iterable=(), /):
         return tuple(guarded_iter(iterable))
 
 
 safe_builtins['tuple'] = guarded_tuple
+
+
+class guarded_bytes(metaclass=_GuardedTypeMeta):
+    _type = bytes
+
+    def __new__(cls, *args, **kw):
+        if len(args) == 1 and not kw:
+            source = args[0]
+            if (isinstance(source, (int, str, bytes, bytearray, memoryview))
+                    or hasattr(type(source), '__bytes__')):
+                # These are converted without iterating them.
+                return bytes(source)
+            return bytes(guarded_iter(source))
+        return bytes(*args, **kw)
+
+
+safe_builtins['bytes'] = guarded_bytes
 
 
 def load_module(module, mname, mnameparts, validate, globals, locals):
