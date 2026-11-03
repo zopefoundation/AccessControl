@@ -510,6 +510,9 @@ class _GuardedTupleMeta(type):
 
 class guarded_tuple(metaclass=_GuardedTupleMeta):
     def __new__(cls, iterable=(), /):
+        if isinstance(iterable, types.GeneratorType):
+            # See guarded_sorted for the reasoning.
+            return tuple(iterable)
         return tuple(guarded_iter(iterable))
 
 
