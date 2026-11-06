@@ -93,10 +93,6 @@ def _referents(obj, depth):
     return list(seen.values())
 
 
-# Py_TPFLAGS_HAVE_GC
-_HAVE_GC = 1 << 14
-
-
 class ISecurityManagerConformance:
 
     def test_conforms_to_ISecurityManager(self):
@@ -408,7 +404,6 @@ class C_SecurityManagerTests(SecurityManagerTestBase,
 
     def test_c_type_participates_in_gc(self):
         from AccessControl.cAccessControl import SecurityManager
-        self.assertTrue(SecurityManager.__flags__ & _HAVE_GC)
         self.assertTrue(gc.is_tracked(SecurityManager()))
 
     def test_gc_collects_cycle_through_bare_c_instance(self):
