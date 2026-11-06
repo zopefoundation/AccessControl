@@ -367,6 +367,38 @@ class SecurityManagerTestBase:
             del policy
             self.assertIsNone(ref())
 
+    def test_setting_context_stores_new_value_before_releasing_old(self):
+        # Code that runs while the old context is released, for example a
+        # __del__, must already see the new context.
+        seen = []
+        mgr = self._makeOne(_THREAD_ID, DummyContext())
+
+        class Observer:
+            def __del__(self):
+                seen.append(mgr._context)
+
+        mgr._context = Observer()
+        new = DummyContext()
+        mgr._context = new
+        self.assertEqual(len(seen), 1)
+        self.assertIs(seen[0], new)
+
+    def test_setting_policy_drops_cached_methods_before_releasing_old(self):
+        # Code that runs while the old policy is released must reach the new
+        # policy, not a cached bound method of the old one.
+        mgr = self._makeOne(_THREAD_ID, DummyContext())
+        new_policy = DummyPolicy()
+
+        class OldPolicy(DummyPolicy):
+            def __del__(self):
+                mgr.checkPermission('View', None)
+
+        mgr._policy = OldPolicy()
+        mgr.validate(None, None, None, None)
+        mgr.checkPermission('View', None)
+        mgr._policy = new_policy
+        self.assertIsNotNone(new_policy.CHECK_PERMISSION_ARGS)
+
     @unittest.skipIf(not getattr(sys, '_is_gil_enabled', lambda: True)(),
                      reason='Reference counts are not exact without the GIL.')
     def test_type_refcount_stable_across_instance_lifecycles(self):

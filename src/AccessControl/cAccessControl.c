@@ -1536,7 +1536,7 @@ SecurityManager_setattro(SecurityManager *self, PyObject *name, PyObject *v)
           Py_DECREF(name_as_bytes);
 
           Py_INCREF(v);
-          ASSIGN(self->thread_id, v);
+          Py_XSETREF(self->thread_id, v);
           return 0;
         }
       else if (! strcmp(name_s, "_context"))
@@ -1544,7 +1544,7 @@ SecurityManager_setattro(SecurityManager *self, PyObject *name, PyObject *v)
           Py_DECREF(name_as_bytes);
 
           Py_INCREF(v);
-          ASSIGN(self->context, v);
+          Py_XSETREF(self->context, v);
           return 0;
         }
       else if (! strcmp(name_s, "_policy"))
@@ -1552,17 +1552,9 @@ SecurityManager_setattro(SecurityManager *self, PyObject *name, PyObject *v)
           Py_DECREF(name_as_bytes);
 
           Py_INCREF(v);
-          ASSIGN(self->policy, v);
-          if (self->validate)
-            {
-              Py_DECREF(self->validate);
-              self->validate=0;
-            }
-          if (self->checkPermission)
-            {
-              Py_DECREF(self->checkPermission);
-              self->checkPermission=0;
-            }
+          Py_XSETREF(self->policy, v);
+          Py_CLEAR(self->validate);
+          Py_CLEAR(self->checkPermission);
           return 0;
         }
     }
