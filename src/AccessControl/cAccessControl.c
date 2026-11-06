@@ -508,7 +508,6 @@ static PyExtensionClass SecurityManagerType = {
     .tp_traverse = (traverseproc)SecurityManager_traverse,
     .tp_clear = (inquiry)SecurityManager_clear,
     .tp_methods = SecurityManager_methods,
-    .tp_new = PyType_GenericNew,
 };
 
 
