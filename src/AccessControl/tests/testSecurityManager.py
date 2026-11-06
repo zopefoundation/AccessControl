@@ -406,6 +406,14 @@ class C_SecurityManagerTests(SecurityManagerTestBase,
         from AccessControl.cAccessControl import SecurityManager
         self.assertTrue(gc.is_tracked(SecurityManager()))
 
+    def test_missing_context_is_reported_as_context(self):
+        from AccessControl.cAccessControl import SecurityManager
+        mgr = SecurityManager()
+        mgr._policy = DummyPolicy()
+        with self.assertRaises(AttributeError) as raised:
+            mgr.validate(None, None, None, None)
+        self.assertEqual(str(raised.exception), '_context')
+
     def test_gc_collects_cycle_through_bare_c_instance(self):
         # The C base type must work on its own, without the Python
         # subclass that ImplC.SecurityManager adds on top.

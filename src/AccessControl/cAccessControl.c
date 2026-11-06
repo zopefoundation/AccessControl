@@ -1384,7 +1384,7 @@ static void ZopeSecurityPolicy_dealloc(ZopeSecurityPolicy *self) {
   UNLESS (self->policy) { \
       PyErr_SetString(PyExc_AttributeError, "_policy"); return R; } \
   UNLESS (self->context) { \
-      PyErr_SetString(PyExc_AttributeError, "_policy"); return R; }
+      PyErr_SetString(PyExc_AttributeError, "_context"); return R; }
 
 #define GET_SECURITY_MANAGER_VALIDATE(self, R) \
   if (self->validate == NULL && \
