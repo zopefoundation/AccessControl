@@ -4,7 +4,7 @@ Change log
 For changes before version 3.0, see ``HISTORY.rst``.
 
 
-7.8 (unreleased)
+7.8 (2026-11-10)
 ----------------
 
 - Let the C ``SecurityManager`` take part in cyclic garbage collection.
