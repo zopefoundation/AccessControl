@@ -7,7 +7,12 @@ For changes before version 3.0, see ``HISTORY.rst``.
 7.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Let the C ``SecurityManager`` take part in cyclic garbage collection.
+  Its references to the security context, the policy and cached policy
+  methods were invisible to the collector, so reference cycles through a
+  security manager were never freed and leaked everything reachable from
+  them, for example whole ZODB connection caches.
+  (`#177 <https://github.com/zopefoundation/AccessControl/issues/177>`_)
 
 
 7.7 (2026-11-03)

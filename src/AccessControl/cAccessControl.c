@@ -371,6 +371,9 @@ static PyObject *SecurityManager_DTMLValidate(SecurityManager *self,
 static PyObject *SecurityManager_checkPermission(SecurityManager *self,
                                                  PyObject *args);
 static void SecurityManager_dealloc(SecurityManager *self);
+static int SecurityManager_traverse(SecurityManager *self,
+                                    visitproc visit, void *arg);
+static int SecurityManager_clear(SecurityManager *self);
 static PyObject *SecurityManager_getattro(SecurityManager *self,
                                           PyObject *name);
 static int SecurityManager_setattro(SecurityManager *self,
@@ -477,41 +480,34 @@ static PyMethodDef SecurityManager_methods[] = {
 	{ NULL, NULL }
 };
 
+/*
+** SecurityManager takes part in cyclic garbage collection: it references
+** its context, its policy and cached bound policy methods, and reference
+** cycles through those were never freed (issue #177).
+**
+** Unlike its siblings in this module the type is therefore declared
+** "new-style" (tp_flags set).  For an "old-style" declaration
+** (tp_flags == 0) PyExtensionClass_Export_ reads the tp_traverse slot as
+** the method chain and the tp_clear slot as the ExtensionClass flags, so
+** real tp_traverse/tp_clear slots cannot be declared that way.
+** Acquisition declares its wrapper types the same way.
+**
+** PyExtensionClass_Export_ installs PyType_GenericNew for new-style types,
+** which does not INCREF a static type per instance, so
+** SecurityManager_dealloc must not DECREF the type.
+*/
 static PyExtensionClass SecurityManagerType = {
-       PyVarObject_HEAD_INIT(NULL, 0)
-	"SecurityManager",			/* tp_name	*/
-	sizeof(SecurityManager),		/* tp_basicsize	*/
-	0,					/* tp_itemsize	*/
-	/* Standard methods 	*/
-	(destructor) SecurityManager_dealloc,/* tp_dealloc	*/
-	0,  					/* tp_vectorcall_offset*/
-	NULL,					/* tp_getattr	*/
-	NULL,					/* tp_setattr	*/
-	NULL,					/* tp_compare	*/
-	NULL,					/* tp_repr	*/
-	/* Method suites	*/
-	NULL,					/* tp_as_number	*/
-	NULL,					/* tp_as_sequence*/
-	NULL,					/* tp_as_mapping */
-	/* More standard ops  	*/
-	NULL,					/* tp_hash	*/
-	NULL,					/* tp_call	*/
-	NULL,					/* tp_str	*/
-	(getattrofunc)SecurityManager_getattro,	/* tp_getattro	*/
-	(setattrofunc)SecurityManager_setattro,	/* tp_setattro	*/
-	/* Reserved fields	*/
-	0,					/* tp_xxx3	*/
-	0,					/* tp_xxx4	*/
-	/* Docstring		*/
-	SecurityManager__doc__,		/* tp_doc	*/
-#ifdef COUNT_ALLOCS
-	0,					/* tp_alloc	*/
-	0,					/* tp_free	*/
-	0,					/* tp_maxalloc	*/
-	NULL,					/* tp_next	*/
-#endif
-	METHOD_CHAIN(SecurityManager_methods),	/* methods	*/
-	0,					/* flags	*/
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "SecurityManager",
+    .tp_basicsize = sizeof(SecurityManager),
+    .tp_dealloc = (destructor)SecurityManager_dealloc,
+    .tp_getattro = (getattrofunc)SecurityManager_getattro,
+    .tp_setattro = (setattrofunc)SecurityManager_setattro,
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE | Py_TPFLAGS_HAVE_GC,
+    .tp_doc = SecurityManager__doc__,
+    .tp_traverse = (traverseproc)SecurityManager_traverse,
+    .tp_clear = (inquiry)SecurityManager_clear,
+    .tp_methods = SecurityManager_methods,
 };
 
 
@@ -1388,7 +1384,7 @@ static void ZopeSecurityPolicy_dealloc(ZopeSecurityPolicy *self) {
   UNLESS (self->policy) { \
       PyErr_SetString(PyExc_AttributeError, "_policy"); return R; } \
   UNLESS (self->context) { \
-      PyErr_SetString(PyExc_AttributeError, "_policy"); return R; }
+      PyErr_SetString(PyExc_AttributeError, "_context"); return R; }
 
 #define GET_SECURITY_MANAGER_VALIDATE(self, R) \
   if (self->validate == NULL && \
@@ -1451,16 +1447,34 @@ SecurityManager_checkPermission(SecurityManager *self, PyObject *args)
                        permission, object, self->context);
 }
 
+static int
+SecurityManager_traverse(SecurityManager *self, visitproc visit, void *arg)
+{
+  Py_VISIT(self->thread_id);
+  Py_VISIT(self->context);
+  Py_VISIT(self->policy);
+  Py_VISIT(self->validate);
+  Py_VISIT(self->checkPermission);
+  return 0;
+}
+
+static int
+SecurityManager_clear(SecurityManager *self)
+{
+  Py_CLEAR(self->thread_id);
+  Py_CLEAR(self->context);
+  Py_CLEAR(self->policy);
+  Py_CLEAR(self->validate);
+  Py_CLEAR(self->checkPermission);
+  return 0;
+}
+
 static void
 SecurityManager_dealloc(SecurityManager *self)
 {
-  Py_XDECREF(self->thread_id);
-  Py_XDECREF(self->context);
-  Py_XDECREF(self->policy);
-  Py_XDECREF(self->validate);
-  Py_XDECREF(self->checkPermission);
-  Py_DECREF(Py_TYPE(self));	/* Extensionclass init incref'd */
-  Py_TYPE(self)->tp_free((PyObject*) self);
+  PyObject_GC_UnTrack(OBJECT(self));
+  SecurityManager_clear(self);
+  Py_TYPE(self)->tp_free(OBJECT(self));
 }
 
 static PyObject *
@@ -1522,7 +1536,7 @@ SecurityManager_setattro(SecurityManager *self, PyObject *name, PyObject *v)
           Py_DECREF(name_as_bytes);
 
           Py_INCREF(v);
-          ASSIGN(self->thread_id, v);
+          Py_XSETREF(self->thread_id, v);
           return 0;
         }
       else if (! strcmp(name_s, "_context"))
@@ -1530,7 +1544,7 @@ SecurityManager_setattro(SecurityManager *self, PyObject *name, PyObject *v)
           Py_DECREF(name_as_bytes);
 
           Py_INCREF(v);
-          ASSIGN(self->context, v);
+          Py_XSETREF(self->context, v);
           return 0;
         }
       else if (! strcmp(name_s, "_policy"))
@@ -1538,17 +1552,9 @@ SecurityManager_setattro(SecurityManager *self, PyObject *name, PyObject *v)
           Py_DECREF(name_as_bytes);
 
           Py_INCREF(v);
-          ASSIGN(self->policy, v);
-          if (self->validate)
-            {
-              Py_DECREF(self->validate);
-              self->validate=0;
-            }
-          if (self->checkPermission)
-            {
-              Py_DECREF(self->checkPermission);
-              self->checkPermission=0;
-            }
+          Py_XSETREF(self->policy, v);
+          Py_CLEAR(self->validate);
+          Py_CLEAR(self->checkPermission);
           return 0;
         }
     }
