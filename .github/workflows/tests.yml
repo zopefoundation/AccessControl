@@ -456,6 +456,9 @@ jobs:
         env:
           DOCKER_IMAGE: quay.io/pypa/${{ matrix.image }}
           PRE_CMD: linux32
+          # Docker 29.4.2 on ubuntu-26.04 blocks socketcall(2) which 32-bit
+          # glibc needs for networking, so DNS fails inside the container.
+          DOCKER_ARGS: --security-opt seccomp=unconfined
         run: |
           bash .manylinux.sh
 

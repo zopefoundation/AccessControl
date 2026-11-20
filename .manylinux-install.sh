@@ -63,5 +63,11 @@ echo "Fixing up the following wheels:"
 ls -l wheelhouse/accesscontrol*.whl
 # Bundle external shared libraries into the wheels
 for whl in wheelhouse/accesscontrol*.whl; do
+    if [[ "$whl" == *"-none-any.whl" ]]; then
+        # A pure Python wheel (e.g. PyPy does not build the C extension)
+        # cannot be repaired and is not published.
+        echo "Skipping pure Python wheel $whl"
+        continue
+    fi
     auditwheel repair "$whl" -w /io/wheelhouse/
 done
